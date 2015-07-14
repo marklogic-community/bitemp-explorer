@@ -37,3 +37,6 @@ MLW6-IngestYourOwn - some helper code to ingest your own data
 
 Documentation - Temporal Developer's Guide http://pubs.marklogic.com:8011/guide/temporal
 
+
+
+[![Join the chat at https://gitter.im/marklogic/bitemp-explorer](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/marklogic/bitemp-explorer?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
