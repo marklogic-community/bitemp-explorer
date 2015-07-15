@@ -51,7 +51,7 @@ function parseData(data, collection, numParts) {
         3.) collection specified is not null AND the collection string equals the item's filename. If a collection and a item's uri are both 'intern'.
       If 1 and 2 are met OR 1 and 3 are met, then push the object item to the array items.
 */
-      if (collection && ((collection.indexOf('.') !== -1 && item.uri.substring(0, collection.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) || (collection === item.uri)))  {
+      if (collection && ((collection.indexOf('.') !== -1 && item.uri.substring(0, item.uri.indexOf('.')) === collection.substring(0, collection.indexOf('.'))) || (collection === item.uri)))  {
         items.push(item);
       }
     }

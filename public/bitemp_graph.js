@@ -7,6 +7,7 @@ var barChart = function() {
   var uri;
   var isEditing;
   var isViewing;
+  var displayProperty = '';
   
   var margin = {
     top: 10,
@@ -34,7 +35,6 @@ var barChart = function() {
     } 
 
     function setupXAxis() {
-
       var mindate =
       moment.min(data.map(function(d){
         return moment(d.content.sysStart);
@@ -158,7 +158,9 @@ var barChart = function() {
     }
     
     function addBarChartData() {
-      var c = 0;
+
+      var c=0;
+
       split = g.selectAll('.split')
         .data(data)
         .enter()
@@ -210,7 +212,6 @@ var barChart = function() {
           return w;
         });
 
-
       split.append('text')
         .attr('class','tooltip-txt')
         .style('text-anchor', 'middle')
@@ -245,8 +246,13 @@ var barChart = function() {
           }
         }) 
         .text(function(d) {
-          return d.content.data;
+          if(/*displayProperty === undefined || displayProperty === null || displayProperty === ''*/ !displayProperty) {
+            displayProperty = 'data';
+          }
+          
+          return d.content[displayProperty];
         });
+      
     }
 
     setDimensions();
@@ -264,7 +270,6 @@ var barChart = function() {
     this.each(function() { ++n; });
     return n;
   };
-
 
   chart.data = function(value) {
     if (!arguments.length) {
@@ -335,6 +340,15 @@ var barChart = function() {
       return yAxisLabel;
     }
     yAxisLabel = value;
+    return chart;
+  };
+
+  chart.getDisplayProperty = function() {
+    return displayProperty;
+  };
+
+  chart.setDisplayProperty = function(str) {
+    displayProperty = str;
     return chart;
   };
 
