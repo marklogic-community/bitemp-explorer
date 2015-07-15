@@ -103,6 +103,27 @@ function edit(uri) {
   }
 }
 
+function changeTextInGraph(chart, params) {
+  var docProp = $('input[name = documentProperty]').val();
+  if(docProp === '') {
+    window.alert('Please enter a document property.');
+  }
+  else {
+    var chart = barChart()
+    .data(params.data)
+    .width(params.width)
+    .height(params.height)
+    .setDisplayProperty(docProp);
+
+    var selector = '#' + params.containerId;
+    d3.select(selector + ' .chart').remove();
+    var chartDiv = d3.select(selector).append('div').classed('chart', true).call(chart);
+
+
+  }
+}
+
+
 var getBarChart = function (params) {
   var chart = barChart()
     .data(params.data)
@@ -116,7 +137,6 @@ var getBarChart = function (params) {
   $('#editButton').click(function() {
     edit(chart.getCurrentURI());
   });
-
   $('#cancelButton').click(function() {
     cancel(chart);
   });
@@ -126,8 +146,7 @@ var getBarChart = function (params) {
   $('#saveButton').click(function() {
     save(chart);
   });
-
-
-  //return svg;
-};
-
+  $('#change-prop').click(function() {
+    changeTextInGraph(chart, params);
+  });
+}
