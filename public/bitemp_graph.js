@@ -32,7 +32,7 @@ var barChart = function() {
     
    
     function setDimensions() {
-      axisLabelMargin = 15;
+      axisLabelMargin = 35;
     } 
 
     function setupXAxis() {
