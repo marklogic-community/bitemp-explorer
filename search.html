@@ -7,15 +7,34 @@
 
     <style>
       body {
-        background-color: 
+        background: AliceBlue;
+        background-image: url("http://www.marklogic.com/wp-content/uploads/2015/05/on-demand-token.svg");
+        background-size: 100px 100px;
+        background-position: right top;
+        background-repeat: no-repeat;
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         font-size: 12px;
-     
       }
 
       h1 { 
         text-align: center;
         font-style: italic;
+        font-size: 20px;
+      }
+
+      #logo {
+        height: 150px;
+        width: 600px;
+        position: absolute;
+        left: 120px;
+        top: 200px;
+      }
+
+       #homeURL {
+        position: absolute;
+        left: 5px;
+        top: 4px;
+        font-size: 13px;
       }
 
       #dropdown {
@@ -126,12 +145,12 @@
       }
 
       #physicalDoc {
-        font-size: 1.35em;
+        font-size: 1.25em;
       }
 
       #page {
         position: relative;
-        left: 890px;
+        left: 860px;
         top: 50px;
       }
 
@@ -140,9 +159,11 @@
   </head>
   <body>
     <h1><u>MarkLogic Bitemporal Search Page</u></h1>
+    <a href="/" id="homeURL">Click to go to home page</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
+    <a href="http://www.marklogic.com/"> <img id="logo" src="http://siliconangle.tv/wp-content/uploads/2015/03/StorageReview-MarkLogic-Logo.jpg"></img></a>
     <div id= "page">
       <p id="instructSelect">Select a Temporal Collection</p>
       <select id="dropdown"></select>
