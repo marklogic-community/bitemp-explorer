@@ -648,7 +648,6 @@ var barChart = function() {
       });
 
       function lineShifter(textId, barId)  {
-
         $('#'+textId).change(function() {
           var input = $('#'+textId).val();
           var inputArray = input.split('-');
@@ -666,7 +665,7 @@ var barChart = function() {
               if (textId.includes('start')) {
                 dy = -(height-margin.top-margin.bottom-dy);
               }
-                $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+              $('#'+barId).attr('transform', 'translate(0,'+dy+')');
             }
           }
           else {
