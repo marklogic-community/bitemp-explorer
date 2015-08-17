@@ -650,6 +650,8 @@ var getBarChart = function (params, docProp) {
 
   $('#select-prop').change(function() {
     var selectedText = $(this).find('option:selected').text();
+    $('#selectTempColl').empty();
+    $('#selectTempColl').append($('<option>').text('Choose a temporal collection'));
     getBarChart(params, selectedText);
   });
 };
