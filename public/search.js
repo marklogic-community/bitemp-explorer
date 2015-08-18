@@ -1,5 +1,5 @@
 /* global parseData */
-var firstDoc, lastDoc;
+var firstDoc, lastDoc, uriArr;
 
 function generateOps() {
   var operators = ['None', 'ALN_EQUALS', 'ALN_CONTAINS', 'ALN_CONTAINED_BY', 'ALN_MEETS', 'ALN_MET_BY', 'ALN_BEFORE', 'ALN_AFTER', 'ALN_STARTS', 'ALN_STARTED_BY', 'ALN_FINISHES', 'ALN_FINISHED_BY', 'ALN_OVERLAPS', 'ALN_OVERLAPPED_BY', 'ISO_OVERLAPS', 'ISO CONTAINS', 'ISO_PRECEDES', 'ISO_SUCCEEDS', 'ISO_IMM_PRECEDES', 'ISO_IMM_SUCCEEDS', 'ISO_EQUALS'];
@@ -51,7 +51,8 @@ $('#resetButton').click(function() {
   $('#valDropdown, #sysDropdown').val('None');
   $('#queryText').empty();
   document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the blue bars to create your selected time range*';
-  $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage').css({'visibility': 'hidden'});
+  $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage, #numDocs, #next, #prev').css({'visibility': 'hidden'});
+  $('#bulletList').empty();
 });
 
 function runSearchQuery() {
@@ -120,7 +121,9 @@ function formatData(response) {
   var result = [];
   if(response.values) {
     for(var i = 0; i < response.values.length; i++) {
-      result.push({content: response.values[i]});
+      var responseVals = response.values[i];
+      responseVals.uri = response.uri[i];
+      result.push({content: responseVals});
     }
   }
   return result;
@@ -147,6 +150,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
         var data = [];
         var drag = true;
         if(dataToDisplay !== null) {
+          uriArr = dataToDisplay.uri;
           data = formatData(dataToDisplay);
           if (data.length <= 0) {
             $('#errorMessage').css({'visibility': 'visible'});
@@ -174,7 +178,6 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
           document.getElementById('valDropdown').disabled=true;
           document.getElementById('sysDropdown').disabled=true;
         }
-
         getBarChart({
           data: data,
           width: 800,
@@ -202,6 +205,11 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
           document.getElementById('valDropdown').disabled=true;
           document.getElementById('sysDropdown').disabled=true;
         }
+        if(dataToDisplay !== null) {
+          firstDoc = 1;
+          lastDoc = 10;
+          displayDocs(firstDoc, lastDoc);        
+        }
       },
       error: function(jqXHR, textStatus, errorThrown)
       {
@@ -225,7 +233,7 @@ $('#search').click(function() {
   firstDoc = 1;
   lastDoc = 10;
   displayDocs(firstDoc, lastDoc);
-  $('#next, #prev').css({'visibility': 'visible'});
+  $('#next, #prev, #numDocs').css({'visibility': 'visible'});
 });
 
 //function when the next button is clicked
@@ -271,8 +279,14 @@ function displayDocs(start, end) {
   });
 
   function onDisplayDocs(data, textStatus, response) {
-    var docs;
-    var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
+    var docs, totalDocLen;
+    $('#next, #prev, #numDocs').css({'visibility': 'visible'});
+    if (uriArr) {
+      totalDocLen = uriArr.length;
+    }
+    else {
+      totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
+    }
     if (totalDocLen > 10) {
       docs = parseData(data, null, 2);
       document.getElementById('next').disabled = false;
@@ -296,6 +310,7 @@ function displayDocs(start, end) {
     }
 
     if (parseInt(totalDocLen) === 0) {
+      $('#next, #prev, #numDocs').css({'visibility': 'hidden'});
       document.getElementById('numDocs').innerHTML = start - 1 + ' to ' + end + ' of ' + totalDocLen;
     }
     else {
@@ -305,50 +320,70 @@ function displayDocs(start, end) {
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page
     //Checks if docs has a defined value
+
     for (var i=0; docs && i < docs.length ; i++)
     {
       var uri = docs[i].uri;
-      var uriLogical;
-      var collArr = docs[i].collections.collections;
-      for (var t = 0; t < collArr.length; t++) {
-        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
-          uriLogical = collArr[t];
+      if (uriArr) {
+        for(var k = 0; k < uriArr.length; k++) {
+          if(uriArr[k] === uri) {
+            createBulletList(docs[i]);
+          }
         }
       }
-
-      var sysStart = docs[i].content.sysStart;
-      var sysEnd = docs[i].content.sysEnd;
-      var validStart = docs[i].content.valStart;
-      var validEnd = docs[i].content.valEnd;
-
-      bullet
-        .append($('<hr id=\'break\'>')
-        )
-        .append(
-          $('<div>')
-            .addClass('result')
-            .append(
-              $('<em>')
-                .attr('id', 'physicalDoc')
-                .attr('class', 'definition')
-                .attr('title', 'Physical Document: Represent specific visual effects which are intended to be reproduced in a precise manner, and carry no connotation as to their semantic meaning')
-                .text(uri)
-            )
-            .append(
-              $('<a>')
-                .attr('href', '/?collection='+uriLogical)
-                .attr('class', 'definition')
-                .css('color', 'MediumBlue')
-                .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
-                .text('('+uriLogical+')')
-            )
-            .append(buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: '))
-            .append(buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: '))
-            .append('<br>')
-        );
+      else {
+        createBulletList(docs[i]);
+      }
     }
+    uriArr = null;
   }
 }
+
+function createBulletList(doc) {
+  var uri = doc.uri;
+  var uriLogical;
+  var collArr = doc.collections.collections;
+  var selectedColl = getSelected('dropdown');
+  for (var t = 0; t < collArr.length; t++) {
+    if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
+      uriLogical = collArr[t];
+    }
+  }
+
+  var sysStart = doc.content.sysStart;
+  var sysEnd = doc.content.sysEnd;
+  var validStart = doc.content.valStart;
+  var validEnd = doc.content.valEnd;
+
+  $('#bulletList')
+    .append($('<hr id=\'break\'>')
+    )
+    .append(
+      $('<div>')
+        .addClass('result')
+        .append(
+          $('<em>')
+            .attr('id', uri)
+            .css('font-size', '1.25em')
+            .attr('class', 'definition')
+            .attr('title', 'Physical Document: Represent specific visual effects which are intended to be reproduced in a precise manner, and carry no connotation as to their semantic meaning')
+            .text(uri)
+        )
+        .append(
+          $('<a>')
+            .attr('href', '/?collection='+uriLogical)
+            .attr('class', 'definition')
+            .css('color', 'MediumBlue')
+            .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
+            .text('('+uriLogical+')')
+        )
+        .append(buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: '))
+        .append(buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: '))
+        .append('<br>')
+    );
+}
+
+
 /**
 * Appends the dates to the bullet list.
 *

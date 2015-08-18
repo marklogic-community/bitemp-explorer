@@ -336,8 +336,9 @@ var barChart = function() {
           var str = '';
 
           setDefaultDispPropBehavior(d);
-          if (displayProperty.indexOf('.') === -1) {
-            str = d.content[displayProperty];
+          if(window.location.href === 'http://localhost:3000/search') { 
+            propTooltip.text(d.content.uri);
+            document.getElementById(d.content.uri).style.backgroundColor = '#3399FF';
           }
           else {
             str = path(d, 'content.' + displayProperty);
@@ -348,6 +349,11 @@ var barChart = function() {
           return propTooltip.style('visibility', 'visible');
         })
         .on('mouseout', function(d) {
+          if(window.location.href === 'http://localhost:3000/search') { 
+            document.getElementById(d.content.uri).removeAttribute("style");
+            document.getElementById(d.content.uri).onMouseOver = function() { this.className = 'hover'; }
+            document.getElementById(d.content.uri).style.fontSize = '1.25em';
+          }
           var opac = 1;
           propTooltip.text('');
           if (d.uri === uri) { //Keep selected document with different opacity, if moused-over
@@ -397,8 +403,13 @@ var barChart = function() {
             return color(d.content[displayProperty]);
           }
           else {
-            var str = path(d, 'content.' + displayProperty);
-            return color(str);
+            if (displayProperty.indexOf('.') === -1) {
+              return color(d.content[displayProperty]);
+            }
+            else {
+              var str = path(d, 'content.' + displayProperty);
+              return color(str);
+            }
           }
         })
         .attr('x', function(d) {
@@ -471,12 +482,17 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          setDefaultDispPropBehavior(d);
-          if (displayProperty.indexOf('.') === -1) {
-            str = d.content[displayProperty];
+          if(window.location.href === 'http://localhost:3000/search') { 
+            str = d.content.uri;
           }
           else {
-            str = path(d, 'content.' + displayProperty);
+            setDefaultDispPropBehavior(d);
+            if (displayProperty.indexOf('.') === -1) {
+              str = d.content[displayProperty];
+            }
+            else {
+              str = path(d, 'content.' + displayProperty);
+            }
           }
           var alreadyInGraph = false;
           for(var i = 0; i < displayedProps.length; i++) {

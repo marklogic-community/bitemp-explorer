@@ -54,8 +54,18 @@ function get (context, params) {
     ),
     query: 'cts.search(\n' + '&emsp;cts.andQuery([\n' + '&emsp;&emsp;cts.collectionQuery("'+collection+'"),\n' + '&emsp;&emsp;cts.periodRangeQuery(\n' + '&emsp;&emsp;&emsp;"' + sysAxis +'",\n'+ '&emsp;&emsp;&emsp;"' + sysOperator +'",\n'+ '&emsp;&emsp;&emsp;' + 'cts.period(\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.sysStart+'"),\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.sysEnd+'")\n' + '&emsp;&emsp;&emsp;)\n' + '&emsp;&emsp;)]\n' +'&emsp;)\n' + ')'
   }
+
   }
+
   result.collection = collection;
+  
+  var arrayValues = result.values.toArray();
+  var uriArr = [];
+  for(var i = 0; i<arrayValues.length; i++) {
+    uriArr[i] = xdmp.nodeUri(arrayValues[i]);
+  }
+  result.uri = uriArr;
+
   return result;
 }
 
