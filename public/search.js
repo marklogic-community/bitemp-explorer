@@ -177,17 +177,29 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
           document.getElementById('dropdown').disabled=true;
           document.getElementById('valDropdown').disabled=true;
           document.getElementById('sysDropdown').disabled=true;
+          if (getSelected('sysDropdown') !== 'None') {
+            document.getElementById('dragLeft').style.stroke = '#000080';
+            document.getElementById('dragRight').style.stroke = '#000080';
+            document.getElementById('dragLeft').draggable = 'disable'
+          }
+          if (getSelected('valDropdown') !== 'None') {
+            document.getElementById('dragUp').style.stroke = '#000080';
+            document.getElementById('dragDown').style.stroke = '#000080';
+          }
         }
-        getBarChart({
-          data: data,
-          width: 800,
-          height: 600,
-          xAxisLabel: 'System',
-          yAxisLabel: 'Valid',
-          timeRanges: timeRanges,
-          draggableBars: drag,
-          containerId: 'bar-chart-large'
-        }, null);
+
+        else {
+          getBarChart({
+            data: data,
+            width: 650,
+            height: 450,
+            xAxisLabel: 'System',
+            yAxisLabel: 'Valid',
+            timeRanges: timeRanges,
+            draggableBars: drag,
+            containerId: 'bar-chart-large'
+          }, null);
+        }
 
         if (visibleBars) {
           if (getSelected('sysDropdown') !== 'None') {
@@ -323,10 +335,12 @@ function displayDocs(start, end) {
 
     for (var i=0; docs && i < docs.length ; i++)
     {
+      console.log(docs[i]);
       var uri = docs[i].uri;
       if (uriArr) {
         for(var k = 0; k < uriArr.length; k++) {
           if(uriArr[k] === uri) {
+            //console.log(docs[i]);
             createBulletList(docs[i]);
           }
         }

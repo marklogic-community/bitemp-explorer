@@ -547,7 +547,7 @@ var barChart = function() {
           .style('cursor', 'pointer')
           .style('z-index', '1')
           .attr('stroke-width', '8')
-          .attr('stroke', 'MediumBlue ')
+          .attr('stroke', 'Blue ')
           .data([ {'x':0, 'y':0} ])
           .attr('class', 'hide')
           .attr('id', id)
@@ -561,7 +561,10 @@ var barChart = function() {
           $('#endSysBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#endSysBox').css({'border': '2px solid MediumBlue'});
+          if ($('#dragLeft').css( "stroke" ) === 'rgb(0, 0, 128)') {
+            dragLeft.on('drag', null);
+          }
+          $('#endSysBox').css({'border': '2px solid Blue'});
           $('#endSysBox').css({'font-size': '1.3em'});
           $('#vertBar2').css({'font-weight': 'bold'});
           var scale = xScale.invert( d.x + width - margin.left - margin.right );
@@ -588,7 +591,10 @@ var barChart = function() {
           $('#startSysBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#startSysBox').css({'border': '2px solid MediumBlue'});
+          if ($('#dragRight').css( "stroke" ) === 'rgb(0, 0, 128)') {
+            dragRight.on('drag', null);
+          }
+          $('#startSysBox').css({'border': '2px solid Blue'});
           $('#vertBar1').css({'font-weight': 'bold'});
           $('#startSysBox').css({'font-size': '1.3em'});
           var scale = xScale.invert( d.x );
@@ -615,7 +621,10 @@ var barChart = function() {
           $('#startValBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#startValBox').css({'border': '2px solid MediumBlue'});
+          if ($('#dragUp').css( "stroke" ) === 'rgb(0, 0, 128)') {
+            dragUp.on('drag', null);
+          }
+          $('#startValBox').css({'border': '2px solid Blue'});
           $('#horzBar1').css({'font-weight': 'bold'});
           $('#startValBox').css({'font-size': '1.3em'});
           var scale = yScale.invert( d.y + height-margin.top-margin.bottom);
@@ -643,7 +652,11 @@ var barChart = function() {
           $('#endValBox').css({'font-size': '1.1em'});
         })
         .on('drag', function(d,i) {
-          $('#endValBox').css({'border': '2px solid MediumBlue'});
+          if ($('#dragDown').css( "stroke" ) === 'rgb(0, 0, 128)') {
+            dragDown.on('drag', null);
+          }
+          console.log($('#dragDown').css( "stroke" ));
+          $('#endValBox').css({'border': '2px solid Blue'});
           $('#horzBar2').css({'font-weight': 'bold'});
           $('#endValBox').css({'font-size': '1.3em'});
           var scale = yScale.invert(d.y);
