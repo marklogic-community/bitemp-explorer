@@ -3,7 +3,6 @@ function get (context, params) {
   var valPeriod;
   var sysPeriod;
 
-<<<<<<< HEAD
   var valOperator = params.valSelectedOp;
   var sysOperator = params.sysSelectedOp;
 
@@ -12,8 +11,8 @@ function get (context, params) {
 
   if(valOperator === 'None' && sysOperator === 'None') {
     query = cts.andQuery([
-              cts.notQuery(cts.collectionQuery("lsqt")),   
-              cts.collectionQuery(collection)                      
+              cts.notQuery(cts.collectionQuery("lsqt")),
+              cts.collectionQuery(collection)
             ])
   }
   else {
