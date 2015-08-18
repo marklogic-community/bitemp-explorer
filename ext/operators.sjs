@@ -3,6 +3,7 @@ function get (context, params) {
   var valPeriod;
   var sysPeriod;
 
+<<<<<<< HEAD
   var valOperator = params.valSelectedOp;
   var sysOperator = params.sysSelectedOp;
 
