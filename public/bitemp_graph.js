@@ -336,9 +336,8 @@ var barChart = function() {
           var str = '';
 
           setDefaultDispPropBehavior(d);
-          if(window.location.href === 'http://localhost:3000/search') { 
-            propTooltip.text(d.content.uri);
-            document.getElementById(d.content.uri).style.backgroundColor = '#3399FF';
+          if (displayProperty.indexOf('.') === -1) {
+            str = d.content[displayProperty];
           }
           else {
             str = path(d, 'content.' + displayProperty);
@@ -349,11 +348,6 @@ var barChart = function() {
           return propTooltip.style('visibility', 'visible');
         })
         .on('mouseout', function(d) {
-          if(window.location.href === 'http://localhost:3000/search') { 
-            document.getElementById(d.content.uri).removeAttribute("style");
-            document.getElementById(d.content.uri).onMouseOver = function() { this.className = 'hover'; }
-            document.getElementById(d.content.uri).style.fontSize = '1.25em';
-          }
           var opac = 1;
           propTooltip.text('');
           if (d.uri === uri) { //Keep selected document with different opacity, if moused-over
@@ -403,13 +397,8 @@ var barChart = function() {
             return color(d.content[displayProperty]);
           }
           else {
-            if (displayProperty.indexOf('.') === -1) {
-              return color(d.content[displayProperty]);
-            }
-            else {
-              var str = path(d, 'content.' + displayProperty);
-              return color(str);
-            }
+            var str = path(d, 'content.' + displayProperty);
+            return color(str);
           }
         })
         .attr('x', function(d) {
@@ -547,7 +536,7 @@ var barChart = function() {
           .style('cursor', 'pointer')
           .style('z-index', '1')
           .attr('stroke-width', '8')
-          .attr('stroke', 'Blue ')
+          .attr('stroke', 'Blue')
           .data([ {'x':0, 'y':0} ])
           .attr('class', 'hide')
           .attr('id', id)
@@ -594,7 +583,6 @@ var barChart = function() {
           createFilledRectangle();
         })
         .on('drag', function(d,i) {
-          console.log($('#dragRight'));
           if ($('#dragRight').css( "stroke" ) === 'rgb(0, 0, 128)') {
             dragRight.on('drag', null);
           }
@@ -614,7 +602,6 @@ var barChart = function() {
           }
             d.y += 0;
           writeQuery();
-          console.log($('#dragRight'));
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
           });
@@ -664,7 +651,6 @@ var barChart = function() {
           if ($('#dragDown').css( "stroke" ) === 'rgb(0, 0, 128)') {
             dragDown.on('drag', null);
           }
-          console.log($('#dragDown').css( "stroke" ));
           $('#endValBox').css({'border': '2px solid Blue'});
           $('#horzBar2').css({'font-weight': 'bold'});
           $('#endValBox').css({'font-size': '1.2em'});
@@ -722,20 +708,21 @@ var barChart = function() {
       lineShifter('endValBox', 'dragDown');
 
       //right vertical line
-      var left = lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft');
+      lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft');
       $('#endSysBox').val(format(xScale.invert(width - margin.left - margin.right)));
 
       //left vertical line
-      var right = lineCreator(3, 3, 0, height-margin.top-margin.bottom, dragRight, 'dragRight');
+      lineCreator(3, 3, 0, height-margin.top-margin.bottom, dragRight, 'dragRight');
       $('#startSysBox').val(format(xScale.invert(0)));
 
       //bottom horizontal line
-      var up = lineCreator(0, width - margin.left, height - margin.bottom -margin.top-3, height - margin.bottom - margin.top-3 , dragUp, 'dragUp');
+      lineCreator(0, width - margin.left, height - margin.bottom -margin.top-3, height - margin.bottom - margin.top-3 , dragUp, 'dragUp');
       $('#startValBox').val(format(yScale.invert(height -margin.top- margin.bottom)));
 
       //top horizontal line
-      var down = lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
+      lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
       $('#endValBox').val(format(yScale.invert(0)));
+      
       createFilledRectangle();
 
       function createFilledRectangle() {
@@ -780,9 +767,8 @@ var barChart = function() {
           .style('fill', '#3399FF')
           .style('opacity', '.6')
           .style('visibility', 'hidden')
-          .style('z-index', -100)
           .attr('id', 'filledRect')
-          .attr('x',x)
+          .attr('x', x)
           .attr('y', y)
           .attr('width', widthRect)
           .attr('height',  heightRect);

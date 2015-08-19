@@ -40,16 +40,14 @@ $('#sysDropdown').change(function() {
 });
 
 $('#searchQueryButton').click(function() {
-  document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
-  document.getElementById('queryText').style.fontWeight = "bold";
-  document.getElementById('queryText').style.border = "3px black solid";
-  $('#filledRect').css({'visibility': 'visible'})
   runSearchQuery();
 });
+
 $('#resetBarsButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
 });
+
 $('#resetButton').click(function() {
   writeQuery();
   var selectedColl = getSelected('dropdown');
@@ -61,7 +59,7 @@ $('#resetButton').click(function() {
   document.getElementById('queryText').style.border = "1px black solid";
   document.getElementById('queryText').value = 'No query was run';
   $('#valDropdown, #sysDropdown').val('None');
-  $('#queryText').empty();
+  $('#queryText').val('');
   document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the blue bars to create your selected time range*';
   $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage, #numDocs, #next, #prev').css({'visibility': 'hidden'});
   $('#searchQueryButton').css({'visibility': 'visible'});
@@ -111,6 +109,7 @@ function runSearchQuery() {
     lastDoc = 10;
     $('#searchQueryButton, #filledRect').css({'visibility': 'hidden'});
     document.getElementById('queryText').value = 'No query was run';
+    document.getElementById('dragInstruct').innerHTML = '*View all the documents for this collection on the right and click reset to reload the page*'.bold();
     $('#resetButton').css({'visibility': 'visible'});
     document.getElementById('valDropdown').disabled = true;
     document.getElementById('sysDropdown').disabled = true;
@@ -118,35 +117,20 @@ function runSearchQuery() {
     displayDocs(firstDoc, lastDoc);  
   }
 
-  $.ajax({
-      url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd,
-      success: function(response, textStatus)
-      {
-        displayQuery(response);
-        ajaxTimesCall(response.collection, response, false);
-      },
-      error: function(jqXHR, textStatus, errorThrown)
-      {
-        console.log('problem');
-      }
-  });
-
-}
-
-function displayQuery(response) {
-  document.getElementById('queryText').innerHTML = response.query;
-}
-
-function formatData(response) {
-  var result = [];
-  if(response.values) {
-    for(var i = 0; i < response.values.length; i++) {
-      var responseVals = response.values[i];
-      responseVals.uri = response.uri[i];
-      result.push({content: responseVals});
-    }
+  else {
+    $.ajax({
+        url: '/v1/resources/operators?rs:collection='+selectedColl+'&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd,
+        success: function(response, textStatus)
+        {
+          ajaxTimesCall(response.collection, response, false);
+        },
+        error: function(jqXHR, textStatus, errorThrown)
+        {
+          console.log('problem');
+        }
+    });
   }
-  return result;
+
 }
 
 $('#dropdown').change(function() {
@@ -171,8 +155,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
         var drag = true;
         if(dataToDisplay !== null) {
           uriArr = dataToDisplay.uri;
-          data = formatData(dataToDisplay);
-          if (data.length <= 0) {
+          if (!dataToDisplay.values) {
             $('#errorMessage').css({'visibility': 'visible'});
           }
           drag = false;
@@ -193,6 +176,10 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
           document.getElementById('horzBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;' + $('#endValBox').val().bold();
           document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
           $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
+            // document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
+          document.getElementById('queryText').style.fontWeight = "bold";
+          document.getElementById('queryText').style.border = "3px black solid";
+          $('#filledRect').css({'visibility': 'visible'})
           $('#resetButton').css({'visibility': 'visible'});
           document.getElementById('dropdown').disabled=true;
           document.getElementById('valDropdown').disabled=true;
@@ -209,7 +196,6 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
         }
 
         else {
-          console.log(' get bar chart called')
           getBarChart({
             data: data,
             width: 650,
@@ -299,7 +285,7 @@ function displayDocs(start, end) {
   //call to get all documents (excluding .lsqt) from the collection selected in the drop down list
   $.ajax(
   {
-    url: '/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22'+selectedColl+'%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=10&category=content&category=collections&start='+start,
+    url: '/v1/search?structuredQuery={%20%22search%22:{%20%22query%22:{%20%22and-not-query%22:%20{%20%22positive-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22'+selectedColl+'%22%20]%20}%20},%20%22negative-query%22:%20{%20%22collection-query%22:%20{%20%22uri%22:%20[%20%22lsqt%22%20]%20}%20}%20}%20},%20%22options%22:{%20%22search-option%22:[%22unfiltered%22]%20}%20}%20}&format=json&pageLength=100&category=content&category=collections&start='+start,
     headers:
     {
       'Accept': 'multipart/mixed'
@@ -353,15 +339,15 @@ function displayDocs(start, end) {
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page
     //Checks if docs has a defined value
+    docs = parseData(data, null, 2);
+    
+    var i = 0;
 
-    for (var i=0; docs && i < docs.length ; i++)
-    {
-      console.log(docs[i]);
-      var uri = docs[i].uri;
+    while(docs[i] !== undefined) {
       if (uriArr) {
+        var uri = docs[i].uri;
         for(var k = 0; k < uriArr.length; k++) {
           if(uriArr[k] === uri) {
-            //console.log(docs[i]);
             createBulletList(docs[i]);
           }
         }
@@ -369,35 +355,10 @@ function displayDocs(start, end) {
       else {
         createBulletList(docs[i]);
       }
+      i++;
     }
     uriArr = null;
   }
-}
-
-function writeQuery() {
-  var valOperator = getSelected('valDropdown');
-  var sysOperator = getSelected('sysDropdown');
-  var collection = getSelected('dropdown');
-  var valAxis = 'myValid';
-  var sysAxis = 'mySystem';
-  var valStart = document.getElementById('startValBox').value;
-  var valEnd = document.getElementById('endValBox').value;
-  var sysStart = document.getElementById('startSysBox').value;
-  var sysEnd = document.getElementById('endSysBox').value;
-
-  var text;
-  if (valOperator !== 'None' && sysOperator !== 'None') {
-    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + valAxis +'",\n'+ '\t\t\t"' + valOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+valStart+'"),\n' + '\t\t\t\txs.dateTime("'+valEnd+'")\n' + '\t\t\t)\n' + '\t\t),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + sysAxis +'",\n'+ '\t\t\t"' + sysOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+sysStart+'"),\n' + '\t\t\t\txs.dateTime("'+sysEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' + '\t)\n' + ')';
-  }
-
-  else if (valOperator !== 'None') {
-    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + valAxis +'",\n'+ '\t\t\t"' + valOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+valStart+'"),\n' + '\t\t\t\txs.dateTime("'+valEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' +'\t)\n' + ')';
-  }
-
-  else if (sysOperator !== 'None') {
-    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + sysAxis +'",\n'+ '\t\t\t"' + sysOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+sysStart+'"),\n' + '\t\t\t\txs.dateTime("'+sysEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' +'\t)\n' + ')';
-  }
-  document.getElementById('queryText').value = text;
 }
 
 function createBulletList(doc) {
@@ -424,7 +385,7 @@ function createBulletList(doc) {
         .addClass('result')
         .append(
           $('<em>')
-            .attr('id', uri)
+            .attr('id', 'physicalDoc')
             .css('font-size', '1.25em')
             .attr('class', 'definition')
             .attr('title', 'Physical Document: Represent specific visual effects which are intended to be reproduced in a precise manner, and carry no connotation as to their semantic meaning')
@@ -481,4 +442,30 @@ function shortenDate( date ) {
     return 'Infinity';
   }
   return  date[0]+'. '+date[1]+' '+date[2]+', '+date[3]+' '+date[4];
+}
+
+function writeQuery() {
+  var valOperator = getSelected('valDropdown');
+  var sysOperator = getSelected('sysDropdown');
+  var collection = getSelected('dropdown');
+  var valAxis = 'myValid';
+  var sysAxis = 'mySystem';
+  var valStart = document.getElementById('startValBox').value;
+  var valEnd = document.getElementById('endValBox').value;
+  var sysStart = document.getElementById('startSysBox').value;
+  var sysEnd = document.getElementById('endSysBox').value;
+
+  var text;
+  if (valOperator !== 'None' && sysOperator !== 'None') {
+    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + valAxis +'",\n'+ '\t\t\t"' + valOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+valStart+'"),\n' + '\t\t\t\txs.dateTime("'+valEnd+'")\n' + '\t\t\t)\n' + '\t\t),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + sysAxis +'",\n'+ '\t\t\t"' + sysOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+sysStart+'"),\n' + '\t\t\t\txs.dateTime("'+sysEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' + '\t)\n' + ')';
+  }
+
+  else if (valOperator !== 'None') {
+    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + valAxis +'",\n'+ '\t\t\t"' + valOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+valStart+'"),\n' + '\t\t\t\txs.dateTime("'+valEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' +'\t)\n' + ')';
+  }
+
+  else if (sysOperator !== 'None') {
+    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + sysAxis +'",\n'+ '\t\t\t"' + sysOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+sysStart+'"),\n' + '\t\t\t\txs.dateTime("'+sysEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' +'\t)\n' + ')';
+  }
+  document.getElementById('queryText').value = text;
 }
