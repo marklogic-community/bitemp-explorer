@@ -157,7 +157,7 @@ function loadData(collection) {
 
 $('#pick-doc').click(function () {
   var uriCollection = $('input[name = collection]').val();
-  if(uriCollection === '') {
+  if (uriCollection === '') {
     window.alert('Please enter a uri.');
   }
   else {
