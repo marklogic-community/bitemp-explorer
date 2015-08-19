@@ -16,9 +16,11 @@ function getSelected(id) {
 
 $('#valDropdown')
   .change(function() {
-    $('#dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
+    writeQuery();
+    $('#filledRect, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'hidden'});
+    var selectedColl = getSelected('dropdown');
     if (getSelected('sysDropdown') === 'None') {
-      $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
+      $('#resetBarsButton').css({'visibility': 'hidden'});
     }
     if (getSelected('valDropdown') !== 'None') {
       $('#searchQueryButton, #resetBarsButton, #dragUp, #dragDown, .valTimesDisplay, #startValBox, #endValBox').css({'visibility': 'visible'});
@@ -26,9 +28,11 @@ $('#valDropdown')
   });
 
 $('#sysDropdown').change(function() {
-  $('#dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
+  writeQuery();
+  $('#filledRect, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
+  var selectedColl = getSelected('dropdown');
   if (getSelected('valDropdown') === 'None') {
-    $('#searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
+    $('#resetBarsButton').css({'visibility': 'hidden'});
   }
   if (getSelected('sysDropdown') !== 'None') {
     $('#searchQueryButton, #resetBarsButton, #dragRight, #dragLeft, .sysTimesDisplay, #startSysBox, #endSysBox').css({'visibility': 'visible'});
@@ -36,6 +40,10 @@ $('#sysDropdown').change(function() {
 });
 
 $('#searchQueryButton').click(function() {
+  document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
+  document.getElementById('queryText').style.fontWeight = "bold";
+  document.getElementById('queryText').style.border = "3px black solid";
+  $('#filledRect').css({'visibility': 'visible'})
   runSearchQuery();
 });
 $('#resetBarsButton').click(function() {
@@ -43,15 +51,20 @@ $('#resetBarsButton').click(function() {
   ajaxTimesCall(selectedColl, null, true);
 });
 $('#resetButton').click(function() {
+  writeQuery();
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, false);
   document.getElementById('valDropdown').disabled = false;
   document.getElementById('sysDropdown').disabled = false;
   document.getElementById('dropdown').disabled = false;
+  document.getElementById('queryText').style.fontWeight = "normal";
+  document.getElementById('queryText').style.border = "1px black solid";
+  document.getElementById('queryText').value = 'No query was run';
   $('#valDropdown, #sysDropdown').val('None');
   $('#queryText').empty();
   document.getElementById('dragInstruct').innerHTML = '*Select an operator and drag the blue bars to create your selected time range*';
   $('#resetButton, .sysTimesDisplay, .valTimesDisplay, #errorMessage, #numDocs, #next, #prev').css({'visibility': 'hidden'});
+  $('#searchQueryButton').css({'visibility': 'visible'});
   $('#bulletList').empty();
 });
 
@@ -94,8 +107,15 @@ function runSearchQuery() {
   }
 
   if(valSelectedOp === 'None' && sysSelectedOp === 'None' ) {
-    ajaxTimesCall(selectedColl, null, false);
-    return;
+    firstDoc = 1;
+    lastDoc = 10;
+    $('#searchQueryButton, #filledRect').css({'visibility': 'hidden'});
+    document.getElementById('queryText').value = 'No query was run';
+    $('#resetButton').css({'visibility': 'visible'});
+    document.getElementById('valDropdown').disabled = true;
+    document.getElementById('sysDropdown').disabled = true;
+    document.getElementById('dropdown').disabled = true;
+    displayDocs(firstDoc, lastDoc);  
   }
 
   $.ajax({
@@ -189,6 +209,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars) {
         }
 
         else {
+          console.log(' get bar chart called')
           getBarChart({
             data: data,
             width: 650,
@@ -351,6 +372,32 @@ function displayDocs(start, end) {
     }
     uriArr = null;
   }
+}
+
+function writeQuery() {
+  var valOperator = getSelected('valDropdown');
+  var sysOperator = getSelected('sysDropdown');
+  var collection = getSelected('dropdown');
+  var valAxis = 'myValid';
+  var sysAxis = 'mySystem';
+  var valStart = document.getElementById('startValBox').value;
+  var valEnd = document.getElementById('endValBox').value;
+  var sysStart = document.getElementById('startSysBox').value;
+  var sysEnd = document.getElementById('endSysBox').value;
+
+  var text;
+  if (valOperator !== 'None' && sysOperator !== 'None') {
+    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + valAxis +'",\n'+ '\t\t\t"' + valOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+valStart+'"),\n' + '\t\t\t\txs.dateTime("'+valEnd+'")\n' + '\t\t\t)\n' + '\t\t),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + sysAxis +'",\n'+ '\t\t\t"' + sysOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+sysStart+'"),\n' + '\t\t\t\txs.dateTime("'+sysEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' + '\t)\n' + ')';
+  }
+
+  else if (valOperator !== 'None') {
+    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + valAxis +'",\n'+ '\t\t\t"' + valOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+valStart+'"),\n' + '\t\t\t\txs.dateTime("'+valEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' +'\t)\n' + ')';
+  }
+
+  else if (sysOperator !== 'None') {
+    text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\t\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + sysAxis +'",\n'+ '\t\t\t"' + sysOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+sysStart+'"),\n' + '\t\t\t\txs.dateTime("'+sysEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' +'\t)\n' + ')';
+  }
+  document.getElementById('queryText').value = text;
 }
 
 function createBulletList(doc) {

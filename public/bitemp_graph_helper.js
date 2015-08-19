@@ -53,7 +53,7 @@ var addTempColls = function(id, search) {
       for (var k = 0; k < dropArray.length; k++) {
         addToDrop.append($('<option>').text(dropArray[k])) ;
         if( k === 0 && search) {
-          ajaxTimesCall(dropArray[k], null);
+          ajaxTimesCall(dropArray[k], null, false);
         }
       }
     },
