@@ -598,7 +598,6 @@ var barChart = function() {
             d.x += d3.event.dx;
           }
           writeQuery();
-
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
           });
