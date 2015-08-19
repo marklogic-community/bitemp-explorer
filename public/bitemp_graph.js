@@ -4,7 +4,7 @@ var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
   var height = 300;
-  var uri, isEditing, isViewing, isDeleting, logicURI;
+  var uri, isEditing, isViewing, isDeleting;
   var xMin = null;
   var xMax = null;
   var yMin = null;
@@ -27,8 +27,7 @@ var barChart = function() {
   var xAxisLabel = 'System Time';
   var yAxisLabel = 'Valid Time';
 
-  var color =
-    d3.scale.category10();
+  var color = d3.scale.category10();
 
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
@@ -68,10 +67,6 @@ var barChart = function() {
   }
 
   var chart = function(container) {
-
-    function setDimensions() {
-      axisLabelMargin = 0;
-    }
 
     function setupXAxis() {
       // minStart: earliest system start
@@ -259,8 +254,8 @@ var barChart = function() {
         .append('text')
         .attr('class', 'axis-label')
         .attr('transform', 'rotate(-90)')
-        .attr('y', -margin.left+65)
-        .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin-190) / 2)
+        .attr('y', -margin.left + 65)
+        .attr('x', -(height - margin.top + margin.bottom - axisLabelMargin - 190) / 2)
         .style('text-anchor', 'left')
         .text(yAxisLabel);
     }
@@ -320,7 +315,7 @@ var barChart = function() {
 
       //factor out some code appearing multiple times
       function setDefaultDispPropBehavior(d) {
-        if(!displayProperty || displayProperty === 'data') {
+        if (!displayProperty || displayProperty === 'data') {
           displayProperty = 'data';
           if(!d.content[displayProperty]) {
             displayProperty = validStart;
@@ -385,7 +380,7 @@ var barChart = function() {
               setLastDoc(this);
             }
             if (chart.getViewing()) {
-              fillText(datum['content'], false, 'contents');
+              fillText(datum.content, false, 'contents');
             }
           }
         })
@@ -550,16 +545,15 @@ var barChart = function() {
           $('#vertBar2').css({'font-weight': 'bold'});
           var scale = xScale.invert( d.x + width - margin.left - margin.right );
           $('#endSysBox').val(format(scale));
-          if (d.x+d3.event.dx >= 0) {
+          if (d.x + d3.event.dx >= 0) {
             d.x = 0;
           }
           else if(d.x + d3.event.dx <= -1*(width - margin.left - margin.right)){
-            d.x = -1*(width - margin.left - margin.right);
+            d.x = -(width - margin.left - margin.right);
           }
           else {
-            d.x+=d3.event.dx;
+            d.x += d3.event.dx;
           }
-            d.y += 0;
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
         });
@@ -584,9 +578,8 @@ var barChart = function() {
             d.x = width - margin.left - margin.right;
           }
           else {
-            d.x+=d3.event.dx;
+            d.x += d3.event.dx;
           }
-            d.y += 0;
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
           });
@@ -613,7 +606,6 @@ var barChart = function() {
           else {
             d.y+=d3.event.dy;
           }
-          d.x += 0;
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
           });
@@ -632,7 +624,7 @@ var barChart = function() {
           $('#endValBox').css({'font-size': '1.3em'});
           var scale = yScale.invert(d.y);
           $('#endValBox').val(format(scale));
-          if(d.y+d3.event.dy <= 0 ) {
+          if (d.y + d3.event.dy <= 0) {
             d.y = 0;
           }
           else if(d.y+d3.event.dy >= (height-margin.top-margin.bottom)) {
@@ -641,9 +633,9 @@ var barChart = function() {
           else {
             d.y += d3.event.dy;
           }
-          d.x += 0;
+
           d3.select(this).attr('transform', function(d,i){
-            return 'translate(' + [ d.x,d.y ] + ')';
+            return 'translate(' + [d.x, d.y] + ')';
         });
       });
 
@@ -697,7 +689,7 @@ var barChart = function() {
     }
 
     function addDisplayDocAndPropData() {
-      if(document.getElementById('uriEntered')) {
+      if (document.getElementById('uriEntered')) {
         $.urlParam = function(name) {
           var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
           if (results === null) {
@@ -709,14 +701,14 @@ var barChart = function() {
         };
 
         var uriParameter = $.urlParam('collection');
-        if(!uriParameter) {
+        if (!uriParameter) {
           uriParameter = 'addr.json';
         }
-        if(!displayProperty) {
+        if (!displayProperty) {
           displayProperty = 'data';
         }
 
-        if(data.length > 0) {
+        if (data.length > 0) {
           document.getElementById('uriEntered').innerHTML = 'You are displaying documents in: ' + uriParameter.bold() + ' with property: ' + displayProperty.bold();
         }
         else {
@@ -896,7 +888,7 @@ var barChart = function() {
   };
 
   chart.setDisplayProperty = function(str) {
-    if(!str) {
+    if (!str) {
       displayProperty = 'data';
     }
     else {

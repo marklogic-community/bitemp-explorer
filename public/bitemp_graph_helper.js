@@ -290,11 +290,11 @@ function edit(chart) {
   }
 }
 
-//Gets all temporal collections the uri belongs to.
+//Gets all temporal collections in database
 function getTemporalColl(uri) {
   var docColl = $.ajax({
     url: '/manage/v2/databases/Documents/temporal/collections?format=json',
-    uri: uri,
+    uriref: uri,
     success: function(data, textStatus) {
     },
     error: function(jqXHR, textStatus, errorThrown) {
@@ -303,7 +303,7 @@ function getTemporalColl(uri) {
     async: false,
   });
 
- return JSON.parse(docColl.responseText);
+  return JSON.parse(docColl.responseText);
 }
 
 //Gets all collections the uri belongs to.
@@ -354,7 +354,6 @@ var deleteDoc = function (chart) {
     collArr = collArr.collections;
     tempColl = findCommonColl(collArr, tempCollArr);
   }
-  var counter = 0;
 
   if (tempColl) {
     $.ajax( //Gets a temporal collection
