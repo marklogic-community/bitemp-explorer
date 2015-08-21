@@ -51,7 +51,10 @@ var addTempColls = function(id, search) {
 
       //Append the collection names to the drop down list
       for (var k = 0; k < dropArray.length; k++) {
-        addToDrop.append($('<option>').text(dropArray[k])) ;
+        var unwantedColl = ['ACollection', "Ashley'sCollection", "Hilary'sCollection", 'anotherCollection', 'okay', 'secondCollection', 'CS_Puns'];
+        if(!(unwantedColl.indexOf(dropArray[k]) > -1)) {
+          addToDrop.append($('<option>').text(dropArray[k]));
+        }
         if( k === 0 && search) {
           ajaxTimesCall(dropArray[k], null, false);
         }
@@ -232,11 +235,27 @@ function saveNewDoc() {
     data = data.replace(/ /g, '');
     //docData = jQuery.parseXML(data);
   }
+  // $.ajax({
+  //   url: '/v1/documents',
+  //   uri: newURI,
+  //   type: 'PUT',
+  //   data: docData,
+  //   success: function(data) {
+  //     loadData(selectedColl);
+  //   },
+  //   error: function(jqXHR, textStatus) {
+  //     window.alert('The creation of your new document did not work.');
+  //     $('#dialogCreateDoc').dialog('close');
+  //   },
+  //   collection: selectedColl,
+  //   format: format
+  // });
   $.ajax({
-    url: '/v1/documents',
+    url: '/v1/documents/?temporal-collection=' + selectedColl,
     uri: newURI,
     type: 'PUT',
-    data: docData,
+    data: data,
+    processData: false,
     success: function(data) {
       loadData(selectedColl);
     },
@@ -244,8 +263,7 @@ function saveNewDoc() {
       window.alert('The creation of your new document did not work.');
       $('#dialogCreateDoc').dialog('close');
     },
-    collection: selectedColl,
-    format: format
+    contentType: 'application/' + format.toLowerCase(),
   });
 }
 

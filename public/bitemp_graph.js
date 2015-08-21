@@ -241,8 +241,8 @@ var barChart = function() {
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
-        .attr('y', height - 20)
-        .attr('x', (width - margin.left)/2)
+        .attr('y', height - 35)
+        .attr('x', (width - margin.left-120)/2)
         .text(xAxisLabel);
     }
 
@@ -338,6 +338,9 @@ var barChart = function() {
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
+            if(str instanceof Array) {
+              str = '[' + str.toString() + ']';
+            }
           }
           else {
             str = path(d, 'content.' + displayProperty);
@@ -478,6 +481,9 @@ var barChart = function() {
             setDefaultDispPropBehavior(d);
             if (displayProperty.indexOf('.') === -1) {
               str = d.content[displayProperty];
+              if(str instanceof Array) {
+                str = '[' + str.toString() + ']';
+              }
             }
             else {
               str = path(d, 'content.' + displayProperty);

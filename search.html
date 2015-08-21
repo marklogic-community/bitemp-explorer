@@ -43,7 +43,7 @@
       #startValBox {
         resize: none;
         position: absolute;
-        left: 215px;
+        left: 175px;
         top: 178px;
         z-index: 2px;
         font-size: 1em;
@@ -52,7 +52,7 @@
       #endValBox {
         resize: none;
         position: absolute;
-        left: 215px;
+        left: 175px;
         top: 210px;
         font-size: 1em;
       }
@@ -71,19 +71,19 @@
 
       #horzBar1 {
         position: absolute;
-        left: 149px;
+        left: 109px;
         top: 170px;
       }
 
       #horzBar2 {
         position: absolute;
-        left: 155px;
+        left: 115px;
         top: 200px;
       }
 
       #resetBarsButton {
         position: absolute;
-        left: 408px;
+        left: 398px;
         top: 215px;
         height: 18px;
         width: 85px;
@@ -94,7 +94,7 @@
 
       #searchQueryButton {
         position: absolute;
-        left: 405px;
+        left: 395px;
         top: 175px;
         height: 27px;
         width: 90px;
@@ -150,21 +150,12 @@
 
       #resetButton {
         position: absolute;
-        left: 408px;
+        left: 388px;
         top: 182px;
         height: 20px;
         width: 110px;
         font-size: 1.2em;
         text-align: center;
-        visibility: hidden;
-        font-family: 'Muli', sans-serif;
-      }
-
-      #errorMessage {
-        position: absolute;
-        left: 317px;
-        top: 210px;
-        color: #000080;
         visibility: hidden;
         font-family: 'Muli', sans-serif;
       }
@@ -225,7 +216,7 @@
 
       #bar-chart-large {
         position: absolute;
-        left: 50px;
+        left: 70px;
         top: 260px;
       }
 
@@ -321,7 +312,7 @@
 
       #valTimes {
         position: relative;
-        left: 142px;
+        left: 102px;
         top: 30px;
         margin-bottom: 0px;
         font-size: 15px;
@@ -331,12 +322,12 @@
 
       #dragInstruct {
         position: absolute;
-        left: 340px;
+        left: 290px;
         top: 120px;
         font-size: 13px;
         text-wrap: normal;
         display: block;
-        width: 250px;
+        width: 310px;
         text-align: center;
         color: #000080;
         font-family: 'Muli', sans-serif;
@@ -391,16 +382,6 @@
         font-size: 1.0em;
       }
 
-      #search {
-        position: absolute;
-        left: 0px;
-        top: 80px;
-        height: 30px;
-        width: 80px;
-        font-size: 1.2em;
-        font-family: 'Muli', sans-serif;
-      }
-
       #prev {
         position: absolute;
         left: 0px;
@@ -426,10 +407,11 @@
 
       #numDocs {
         position: absolute;
-        left: 50px;
-        top: 110px;
+        left: 0px;
+        top: 70px;
         font-size: 1.2em;
         font-family: 'Muli', sans-serif;
+        font-weight: bold;
       }
 
       #next {
@@ -452,7 +434,7 @@
 
       #page {
         position: relative;
-        left: 840px;
+        left: 820px;
         top: -4px;
       }
 
@@ -487,6 +469,7 @@
         top: 127px;
         font-size: 1.1em;
         font-family: 'Muli', sans-serif;
+        visibility: hidden;
       }
 
       #searchPage {
@@ -513,7 +496,6 @@ possible to rewind the information “as it actually was” in combination with
     <button id="searchQueryButton">Run Query</button>
     <button id="resetBarsButton" type='reset' class="hide">Reset Bars</button>
     <button id="resetButton">Reset Graph</button>
-    <p id='errorMessage'>(There are no documents in this selected time range)</p>
     <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries.
 Temporal queries, for example, are interval operations on time period such as,
 period equalities, containment and overlaps." class="definition">Operators:</p>
@@ -529,10 +511,9 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
       <div id= "page">
         <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection:</span></p>
         <select id="dropdown" class="font"></select>
-        <button type="button" id="search">Search</button>
         <button type="button" id="next">Next</button>
         <button type="button" id="prev">Prev</button>
-        <p id="numDocs"></p>
+        <p id="numDocs">No documents displaying</p>
           <ul id="bulletList"></ul>
       </div>
 
@@ -549,7 +530,7 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
 
     <div id="ctsQuery">
       <p id='ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
-      <textarea rows="15" cols="50" color="blue" id="queryText" readonly></textarea>
+      <textarea rows="10" cols="57" color="blue" id="queryText" readonly></textarea>
     </div>
     <div class="hide sysTimesDisplay">
       <p id="vertBar1">Start Time:</p>
