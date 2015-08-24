@@ -338,9 +338,6 @@ var barChart = function() {
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
-            if(str instanceof Array) {
-              str = '[' + str.toString() + ']';
-            }
           }
           else {
             str = path(d, 'content.' + displayProperty);
@@ -477,7 +474,6 @@ var barChart = function() {
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
-            34
           }
           else {
             str = path(d, 'content.' + displayProperty);
