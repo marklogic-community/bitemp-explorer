@@ -310,6 +310,7 @@ function displayDocs(start, end) {
       var uri = docs[i].uri;
       var uriLogical;
       var collArr = docs[i].collections.collections;
+      console.log(collArr);
       for (var t = 0; t < collArr.length; t++) {
         if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
           uriLogical = collArr[t];
