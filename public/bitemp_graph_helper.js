@@ -228,26 +228,9 @@ function saveNewDoc() {
   var docData;
 
   if (format === 'JSON') {
-    //docData = jQuery.parseJSON(data);
   } else {
     data = data.replace(/ /g, '');
-    //docData = jQuery.parseXML(data);
   }
-  // $.ajax({
-  //   url: '/v1/documents',
-  //   uri: newURI,
-  //   type: 'PUT',
-  //   data: docData,
-  //   success: function(data) {
-  //     loadData(selectedColl);
-  //   },
-  //   error: function(jqXHR, textStatus) {
-  //     window.alert('The creation of your new document did not work.');
-  //     $('#dialogCreateDoc').dialog('close');
-  //   },
-  //   collection: selectedColl,
-  //   format: format
-  // });
   $.ajax({
     url: '/v1/documents/?temporal-collection=' + selectedColl,
     uri: newURI,

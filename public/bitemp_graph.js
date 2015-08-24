@@ -474,16 +474,13 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href === 'http://localhost:3000/search') { 
+          if(window.location.href.endsWith('/search')) { 
             str = d.content.uri;
           }
           else {
             setDefaultDispPropBehavior(d);
             if (displayProperty.indexOf('.') === -1) {
               str = d.content[displayProperty];
-              if(str instanceof Array) {
-                str = '[' + str.toString() + ']';
-              }
             }
             else {
               str = path(d, 'content.' + displayProperty);
@@ -557,7 +554,7 @@ var barChart = function() {
           createFilledRectangle();
         })
         .on('drag', function(d,i) {
-          if ($('#dragLeft').css( "stroke" ) === 'rgb(0, 0, 128)') {
+          if ($('#dragLeft').css( 'stroke' ) === 'rgb(0, 0, 128)') {
             dragLeft.on('drag', null);
           }
           $('#endSysBox').css({'border': '2px solid Blue'});
@@ -574,7 +571,6 @@ var barChart = function() {
           else {
             d.x+=d3.event.dx;
           }
-            d.y += 0;
           writeQuery();
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
@@ -606,7 +602,6 @@ var barChart = function() {
           else {
             d.x+=d3.event.dx;
           }
-            d.y += 0;
           writeQuery();
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
@@ -638,7 +633,6 @@ var barChart = function() {
           else {
             d.y+=d3.event.dy;
           }
-          d.x += 0;
           writeQuery();
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
@@ -671,7 +665,6 @@ var barChart = function() {
           else {
             d.y += d3.event.dy;
           }
-          d.x += 0;
           writeQuery();
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
@@ -734,51 +727,52 @@ var barChart = function() {
 
       function createFilledRectangle() {
         $('#filledRect').remove();
-          x1 = $('#dragLeft')[0].__data__.x;
-          x2 = $('#dragRight')[0].__data__.x;
-          y1 = $('#dragUp')[0].__data__.y;
-          y2 = $('#dragDown')[0].__data__.y;
+        //these variables define the area of a rectangle
+        x1 = $('#dragLeft')[0].__data__.x;
+        x2 = $('#dragRight')[0].__data__.x;
+        y1 = $('#dragUp')[0].__data__.y;
+        y2 = $('#dragDown')[0].__data__.y;
 
-          var x, y, widthRect, heightRect;
-          if(getSelected('valDropdown') !== 'None' && getSelected('sysDropdown') !== 'None') {
-            x = x2+7;
-            y = y2 + 7;
-            widthRect = width - margin.left + x1 - x2 - 14;
-            heightRect = height-margin.top-margin.bottom + y1 - y2 - 14;
-          }
+        var x, y, widthRect, heightRect;
+        if(getSelected('valDropdown') !== 'None' && getSelected('sysDropdown') !== 'None') {
+          x = x2+7;
+          y = y2 + 7;
+          widthRect = width - margin.left + x1 - x2 - 14;
+          heightRect = height-margin.top-margin.bottom + y1 - y2 - 14;
+        }
 
-          else if(getSelected('valDropdown') !== 'None') {
-            //only have val times
-            x = 0;
-            y = y2 + 7;
-            widthRect = width - margin.left;
-            heightRect = height-margin.top-margin.bottom + y1 - y2 - 14;
-          }
-          else if(getSelected('sysDropdown') !== 'None') {
-            //only have sys times
-            x = x2 + 7;
-            y = 0;
-            widthRect = width - margin.left + x1 - x2 - 14;
-            heightRect = height-margin.top-margin.bottom;
-          }
+        else if(getSelected('valDropdown') !== 'None') {
+          //only have val times
+          x = 0;
+          y = y2 + 7;
+          widthRect = width - margin.left;
+          heightRect = height-margin.top-margin.bottom + y1 - y2 - 14;
+        }
+        else if(getSelected('sysDropdown') !== 'None') {
+          //only have sys times
+          x = x2 + 7;
+          y = 0;
+          widthRect = width - margin.left + x1 - x2 - 14;
+          heightRect = height-margin.top-margin.bottom;
+        }
 
-          else {
-            x=0;
-            y=0;
-            widthRect = width - margin.left;
-            heightRect = height-margin.top-margin.bottom;
-          }
+        else {
+          x=0;
+          y=0;
+          widthRect = width - margin.left;
+          heightRect = height-margin.top-margin.bottom;
+        }
 
-          g.append('rect')
-          .style('stroke', 'black')
-          .style('fill', '#3399FF')
-          .style('opacity', '.6')
-          .style('visibility', 'hidden')
-          .attr('id', 'filledRect')
-          .attr('x', x)
-          .attr('y', y)
-          .attr('width', widthRect)
-          .attr('height',  heightRect);
+        g.append('rect')
+        .style('stroke', 'black')
+        .style('fill', '#3399FF')
+        .style('opacity', '.6')
+        .style('visibility', 'hidden')
+        .attr('id', 'filledRect')
+        .attr('x', x)
+        .attr('y', y)
+        .attr('width', widthRect)
+        .attr('height',  heightRect);
       }
 
     }

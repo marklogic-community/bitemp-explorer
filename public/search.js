@@ -104,10 +104,10 @@ function runSearchQuery(firstDoc, lastDoc) {
     }
     valStart = new Date(valStart).toISOString();
     valEnd = new Date(valEnd).toISOString();
-    url = url + '&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd;
+    url += '&rs:valAxis='+valAxis+'&rs:valSelectedOp='+valSelectedOp+'&rs:valStart='+valStart+'&rs:valEnd='+valEnd;
   }
   else {
-    url = url + '&rs:valSelectedOp=None';
+    url += '&rs:valSelectedOp=None';
   }
   if(sysSelectedOp !== 'None') {
     sysAxis = 'mySystem';
@@ -119,7 +119,7 @@ function runSearchQuery(firstDoc, lastDoc) {
     }
     sysStart = new Date(sysStart).toISOString();
     sysEnd = new Date(sysEnd).toISOString();
-    url = url + '&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd;
+    url += '&rs:sysAxis='+sysAxis+'&rs:sysSelectedOp='+sysSelectedOp+'&rs:sysStart='+sysStart+'&rs:sysEnd='+sysEnd;
   }
   else {
     url = url + '&rs:sysSelectedOp=None';
@@ -179,7 +179,6 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars, firstDoc, lastD
       url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
       success: function(response, textStatus)
       {
-        console.log(response)
         var data = [];
         var drag = true;
         if(dataToDisplay !== null) {
@@ -202,7 +201,6 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars, firstDoc, lastD
           document.getElementById('vertBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;' + $('#endSysBox').val().bold();
           document.getElementById('horzBar1').innerHTML = 'Start Time:'+ '&nbsp;&nbsp;' + $('#startValBox').val().bold();
           document.getElementById('horzBar2').innerHTML = 'End Time:' + '&nbsp;&nbsp;' + $('#endValBox').val().bold();
-          // document.getElementById('dragInstruct').innerHTML = '*View the query below the graph and click reset to reload the page*'.bold();
           $('#startSysBox, #endSysBox, #endValBox, #startValBox, #searchQueryButton, #resetBarsButton').css({'visibility': 'hidden'});
           document.getElementById('queryText').style.fontWeight = "bold";
           document.getElementById('queryText').style.border = "3px black solid";
