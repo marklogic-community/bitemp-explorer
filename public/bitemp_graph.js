@@ -719,7 +719,7 @@ var barChart = function() {
     }
 
     getAxisSetup();
-    setDimensions();
+    axisLabelMargin = 0;
     setupXAxis();
     setupYAxis();
     setupBarChartLayout();
