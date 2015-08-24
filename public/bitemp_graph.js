@@ -475,7 +475,13 @@ var barChart = function() {
               str = d.content[displayProperty];
             }
             else {
-              str = path(d, 'content.' + displayProperty);
+              setDefaultDispPropBehavior(d);
+              if (displayProperty.indexOf('.') === -1) {
+                str = d.content[displayProperty];
+              }
+              else {
+                str = path(d, 'content.' + displayProperty);
+              }
             }
           }
           var alreadyInGraph = false;
