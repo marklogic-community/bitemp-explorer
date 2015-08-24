@@ -271,7 +271,6 @@ function displayDocs(start, end) {
   });
 
   function onDisplayDocs(data, textStatus, response) {
-    console.log(response);
     var docs;
     var totalDocLen = response.getResponseHeader('vnd.marklogic.result-estimate');
     if (totalDocLen > 10) {

@@ -376,7 +376,6 @@ var deleteDoc = function (chart) {
 function deleteSuccess(response, tempColl, chart) {
   var tempDate = new Date(response[chart.getSystemEnd()]);
   var ajax = true;
-  var currDate = new Date();
 
   var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
 
@@ -388,9 +387,6 @@ function deleteSuccess(response, tempColl, chart) {
     if (tempDate.valueOf() > sysBoxDate.valueOf()){
       ajax = false;
     }
-  }
-  else if (currDate.valueOf() < tempDate.valueOf()) {
-    ajax = false;
   }
 
   if (ajax === true) {
