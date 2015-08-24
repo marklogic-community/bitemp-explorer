@@ -33,29 +33,14 @@ function proxy(req, port, res) {
     headers['user-agent'] = 'curl/7.37.1';
   }
 
-  var mlReqOptions = {
-    uri: 'http://' + conn.host + ':' + port + req.originalUrl,
-    method: req.method,
-    path: req.path + (queryString ? '?' + queryString : ''),
-    headers: headers,
-    auth: {
-      user: conn.user,
-      password: conn.password,
-      sendImmediately: false
-    }
+  req.auth = {
+    user: conn.user,
+    password: conn.password,
+    sendImmediately: false
   };
 
-  if (req.headers['content-type'] === 'application/json') {
-    mlReqOptions.json = true;
-  }
+  req.pipe(request('http://' + conn.host + ':' + port + req.originalUrl)).pipe(res);
 
-  var mlReq = request(mlReqOptions);
-
-  req.pipe(mlReq).pipe(res);
-
-  mlReq.on('error', function(error) {
-    console.log('error: ' + error);
-  });
 }
 
 function getData(collection, res) {
