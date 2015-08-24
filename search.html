@@ -98,6 +98,7 @@
         top: 175px;
         height: 27px;
         width: 90px;
+        visibility: hidden;
       }
 
       button {
@@ -331,6 +332,7 @@
         text-align: center;
         color: #000080;
         font-family: 'Muli', sans-serif;
+        visibility: hidden;
       }
 
       #sysDropdown {
@@ -412,6 +414,7 @@
         font-size: 1.2em;
         font-family: 'Muli', sans-serif;
         font-weight: bold;
+        visibility: hidden;
       }
 
       #next {
@@ -501,15 +504,15 @@ Temporal queries, for example, are interval operations on time period such as,
 period equalities, containment and overlaps." class="definition">Operators:</p>
     <div id="valTimes">
       <p class='definition' title='The time at which something actually occured'><b>Valid Time:</b></p>
-      <select id="valDropdown"></select>
+      <select id="valDropdown" disabled></select>
     </div>
     <p id="dragInstruct">*Select an operator and drag the blue bars to create your selected time range*</p>
     <div id="sysTimes">
       <p class='definition' title='The time at which something is recorded in the database'><b>System Time:</b></p>
-      <select id="sysDropdown"></select>
+      <select id="sysDropdown" disabled></select>
     </div>
       <div id= "page">
-        <p id="instructSelect">Select a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection:</span></p>
+        <p id="instructSelect">Choose a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection:</span></p>
         <select id="dropdown" class="font"></select>
         <button type="button" id="next">Next</button>
         <button type="button" id="prev">Prev</button>

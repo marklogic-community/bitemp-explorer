@@ -30,6 +30,7 @@ var addTempColls = function(id, search) {
     {
       if (search) {
         generateOps();
+        $('#' + id).append($('<option>').text('--Select--'));
       }
       else {
         $('#' + id).empty();
@@ -51,10 +52,7 @@ var addTempColls = function(id, search) {
 
       //Append the collection names to the drop down list
       for (var k = 0; k < dropArray.length; k++) {
-        var unwantedColl = ['ACollection', "Ashley'sCollection", "Hilary'sCollection", 'anotherCollection', 'okay', 'secondCollection', 'CS_Puns'];
-        if(!(unwantedColl.indexOf(dropArray[k]) > -1)) {
-          addToDrop.append($('<option>').text(dropArray[k]));
-        }
+        addToDrop.append($('<option>').text(dropArray[k]));
         if( k === 0 && search) {
           ajaxTimesCall(dropArray[k], null, false);
         }

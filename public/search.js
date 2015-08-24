@@ -49,7 +49,7 @@ $('#searchQueryButton').click(function() {
 $('#resetBarsButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
-});
+}); 
 
 $('#resetButton').click(function() {
   writeQuery();
@@ -136,11 +136,22 @@ function runSearchQuery(firstDoc, lastDoc) {
 $('#dropdown').change(function() {
   $('#next, #prev, .hide, #startValBox, #endValBox, #startSysBox, #endSysBox').css({'visibility': 'hidden'});
   var selectedColl = getSelected('dropdown');
-  ajaxTimesCall(selectedColl, null, false);
+  if (selectedColl === '--Select--') {
+    $('#searchQueryButton, #dragInstruct').css({'visibility': 'hidden'});
+    document.getElementById('numDocs').innerHTML = '';
+    document.getElementById('valDropdown').disabled=true;
+    document.getElementById('sysDropdown').disabled=true;
+    $('#queryText').val('');
+  }
+  else {
+    $('#searchQueryButton, #numDocs, #dragInstruct').css({'visibility': 'visible'});
+    ajaxTimesCall(selectedColl, null, false);
+    document.getElementById('numDocs').innerHTML = 'No documents displaying';
+    document.getElementById('valDropdown').disabled=false;
+    document.getElementById('sysDropdown').disabled=false;
+    document.getElementById('numDocs').innerHTML = 'No documents displaying';
+  }
   $('#bulletList').empty();
-  document.getElementById('numDocs').innerHTML = 'No documents displaying';
-  document.getElementById('valDropdown').disabled=false;
-  document.getElementById('sysDropdown').disabled=false;
   document.getElementById('valDropdown').selectedIndex = 0;
   document.getElementById('sysDropdown').selectedIndex = 0;
 });
@@ -281,9 +292,7 @@ function displayDocs(start, end, data) {
   $('#next, #prev, #numDocs').css({'visibility': 'visible'});
   var docs = data;
   var totalDocLen;
-  console.log(docs)
   if(docs.values !== null) {
-    console.log(docs.uri.length)
     totalDocLen = docs.uri.length;
   }
   else {
@@ -358,8 +367,8 @@ function createBulletList(doc) {
   var uriLogical;
   var collArr = doc.collections;
   var selectedColl = getSelected('dropdown');
-  for (var t = 0; collArr && t < collArr.length; t++) {
-    if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
+  for (var t = 0; t < collArr.length; t++) {
+    if(collArr[t].includes('.json') || collArr[t].includes('.xml')) {
       uriLogical = collArr[t];
     }
   }
