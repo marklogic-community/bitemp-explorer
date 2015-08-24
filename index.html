@@ -4,7 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Bitemporal Document Insert/Update Demo</title>
+    <title>Bitemporal Demo</title>
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="http://owwgdpc6ll4w6eh4717xd1x4.wpengine.netdna-cdn.com/wp-content/mu-plugins/images/favicon.ico?cache=2">
 
     <style>
       body {
@@ -20,7 +23,7 @@
       h1 {
         text-align: center;
         font-style: italic;
-        font-size: 20px;
+        font-size: 23px;
         font-family: 'Muli', sans-serif;
       }
 
@@ -143,7 +146,7 @@
       }
 
       .axis-label {
-        font-size: 20px;
+        font-size: 17px;
         font-weight: bold;
         font-family: 'Muli', sans-serif;
       }
@@ -215,9 +218,9 @@
 
       #textBoxForSelectingURI, #changeDocProp, #sysStartBox {
         background-repeat:repeat-x;
-        border:1px solid #d1c7ac;
+        border:1px solid black;
         width: 140px;
-        color:#333333;
+        color: black;
         padding:3px;
         margin-right:4px;
         margin-bottom:8px;
@@ -243,7 +246,7 @@
         -o-transition: all 0.15s linear;
         transition: all 0.15s linear;
         font-family: 'Muli', sans-serif;
-        top: 305px;
+        top: 310px;
         left: 0px;
       }
 
@@ -281,7 +284,7 @@
       <input class= "muliFont" type="text" id="changeDocProp" name="documentProperty" value="">
 
       <input class="muliFont" type="button" id="change-prop" value="Submit">
-      <p>Select a property.</p><br><br>
+      <p>Select a property:</p><br><br>
 
       <select id="select-prop">
         <option>Choose a property</option>
@@ -296,15 +299,12 @@
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
 
     <div id="bar-chart-large"> </div>
     <div id="editDocDiv">
@@ -359,6 +359,7 @@
     <script type="text/javascript">
       $('#saveButton').hide();
       $('#cancelButton').hide();
+
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
         var results = new RegExp("[\?&]" + name + "=([^&#]*)").exec(window.location.href);
@@ -379,3 +380,4 @@
     </script>
   </body>
 </html>
+

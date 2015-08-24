@@ -376,7 +376,6 @@ var deleteDoc = function (chart) {
 function deleteSuccess(response, tempColl, chart) {
   var tempDate = new Date(response[chart.getSystemEnd()]);
   var ajax = true;
-  var currDate = new Date();
 
   var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
 
@@ -388,9 +387,6 @@ function deleteSuccess(response, tempColl, chart) {
     if (tempDate.valueOf() > sysBoxDate.valueOf()){
       ajax = false;
     }
-  }
-  else if (currDate.valueOf() < tempDate.valueOf()) {
-    ajax = false;
   }
 
   if (ajax === true) {
@@ -421,6 +417,9 @@ function deleteSuccess(response, tempColl, chart) {
 function setupDelete(chart) {
   var uri = chart.getCurrentURI();
   document.getElementById('deleteErrMessage').innerHTML = '';
+  var date = moment().toISOString();
+  date = date.split('.');
+  $("#sysStartBox").val(date[0]);
   if (!uri) { // No uri selected
     return;
   }
@@ -593,6 +592,8 @@ var getBarChart = function (params, docProp) {
 
   $('#select-prop').change(function() {
     var selectedText = $(this).find('option:selected').text();
+    $('#selectTempColl').empty();
+    $('#selectTempColl').append($('<option>').text('Choose a temporal collection'));
     getBarChart(params, selectedText);
   });
 
