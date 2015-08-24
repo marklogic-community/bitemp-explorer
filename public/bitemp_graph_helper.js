@@ -421,6 +421,7 @@ function deleteSuccess(response, tempColl, chart) {
 function setupDelete(chart) {
   var uri = chart.getCurrentURI();
   document.getElementById('deleteErrMessage').innerHTML = '';
+  document.getElementById('sysStartBox').value = new Date().toISOString();
   if (!uri) { // No uri selected
     return;
   }

@@ -5,6 +5,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Document Insert/Update Demo</title>
+    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.min.css" rel="stylesheet">
+    <link rel="shortcut icon" href="http://owwgdpc6ll4w6eh4717xd1x4.wpengine.netdna-cdn.com/wp-content/mu-plugins/images/favicon.ico?cache=2">
+
 
     <style>
       body {
@@ -296,15 +300,12 @@
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
 
     <div id="bar-chart-large"> </div>
     <div id="editDocDiv">
@@ -335,6 +336,7 @@
           <p align="center"> These will be the documents contents, choose to your liking! </p>
           <textarea class="muliFont" rows="14" cols="45" id="newDocContents"> </textarea>
         </div>
+        <link rel="shortcut icon" href="http://marklogic.com" />
       </div>
       <div id="editViewDelButtons">
         <button id="createDoc"> Create a Document </button>
@@ -347,7 +349,7 @@
         <button id="cancelButton" hidden="true"> Cancel </button>
         <textarea class="muliFont" rows="12" cols="40" id="contents" hidden = "true"> </textarea>
         <div id="sysTimeDiv" class="hideSysTimeBoxes" class="muliFont">
-          <p id="sysStartTxt"> <b> sysStart: </b> <input class="muliFont" type="text" id="sysStartBox">
+          <p id="sysStartTxt"> <b> sysStart: </b> <input class="muliFont" type="text"  value="text" id="sysStartBox">
         </div>
         <div id="deleteButtonsDiv" class="hideSysTimeBoxes">
           <button id="deleteOKButton"> OK </button>
