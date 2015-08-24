@@ -219,6 +219,7 @@ function initNewJSON(response) {
 
 function saveNewDoc() {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  data = jQuery.parseJSON(data);
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -229,6 +230,7 @@ function saveNewDoc() {
   var docData;
 
   if (format === 'JSON') {
+<<<<<<< HEAD
   } else {
     data = data.replace(/ /g, '');
   }
@@ -237,6 +239,17 @@ function saveNewDoc() {
     uri: newURI,
     type: 'PUT',
     data: data,
+=======
+    docData = JSON.stringify(data);
+  } else {
+    data = data.replace(/ /g, '');
+    docData = jQuery.parseXML(data);
+  }
+  $.ajax({
+    url: '/v1/documents/?uri=' + newURI + '&temporal-collection=' + selectedColl,
+    type: 'PUT',
+    data: docData,
+>>>>>>> Rebased
     processData: false,
     success: function(data) {
       loadData(selectedColl);
@@ -296,6 +309,7 @@ function getTemporalColl(uri) {
     url: '/manage/v2/databases/Documents/temporal/collections?format=json',
     uriref: uri,
     success: function(data, textStatus) {
+      
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('Problem');
@@ -400,7 +414,7 @@ function deleteSuccess(response, tempColl, chart) {
       },
       error: function(jqXHR, textStatus) {
         cancel(chart);
-        window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
+        window.alert('Delete didn\'t work, most likely an error in the date? Sample date: 2015-09-31T00:00:00Z');
       },
     });
   }
@@ -486,7 +500,9 @@ function addDataToMenu(chart, params) {
     $('#select-prop').empty();
     var propsInGraph = {};
     var docProp = chart.getDisplayProperty();
-    propsInGraph[docProp] = true;
+    if (params.data.length > 0) {
+      propsInGraph[docProp] = true;
+    }
 
     for(var i = 0; i < params.data.length; i++) {
       findProperties(params.data[i].content, null, propsInGraph);

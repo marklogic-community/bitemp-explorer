@@ -566,10 +566,7 @@ var barChart = function() {
           else {
             d.x += d3.event.dx;
           }
-<<<<<<< HEAD
           writeQuery();
-=======
->>>>>>> Rebasing
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
         });
@@ -600,10 +597,8 @@ var barChart = function() {
           else {
             d.x += d3.event.dx;
           }
-<<<<<<< HEAD
           writeQuery();
-=======
->>>>>>> Rebasing
+
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
           });
@@ -634,10 +629,7 @@ var barChart = function() {
           else {
             d.y+=d3.event.dy;
           }
-<<<<<<< HEAD
           writeQuery();
-=======
->>>>>>> Rebasing
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
           });
@@ -669,11 +661,7 @@ var barChart = function() {
           else {
             d.y += d3.event.dy;
           }
-<<<<<<< HEAD
           writeQuery();
-=======
-
->>>>>>> Rebasing
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [d.x, d.y] + ')';
         });
