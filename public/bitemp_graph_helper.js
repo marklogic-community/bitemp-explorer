@@ -248,7 +248,6 @@ function saveNewDoc(chart) {
   var format = formatList.options[formatList.selectedIndex].value;
  
   if (format === 'JSON') {
-<<<<<<< HEAD
   } else {
     data = data.replace(/ /g, '');
   }
@@ -258,17 +257,16 @@ function saveNewDoc(chart) {
     uri: newURI,
     type: 'PUT',
     data: data,
-=======
     docData = JSON.stringify(data);
   } else {
     data = data.replace(/ /g, '');
     docData = jQuery.parseXML(data);
   }
+  
   $.ajax({
     url: '/v1/documents/?uri=' + newURI + '&temporal-collection=' + selectedColl,
     type: 'PUT',
     data: docData,
->>>>>>> Rebased
     processData: false,
     success: function(data) {
       loadData(selectedColl);
