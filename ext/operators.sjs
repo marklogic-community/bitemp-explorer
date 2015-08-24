@@ -5,11 +5,8 @@ function get (context, params) {
   var valPeriod;
   var sysPeriod;
 
-<<<<<<< HEAD
   var uri = params.uri;
 
-=======
->>>>>>> 76b29afb906e18b6de99d7e7ae74b48374e6f1cf
   var valAxis = params.valAxis;
   var sysAxis = params.sysAxis;
   
