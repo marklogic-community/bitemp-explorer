@@ -417,6 +417,9 @@ function deleteSuccess(response, tempColl, chart) {
 function setupDelete(chart) {
   var uri = chart.getCurrentURI();
   document.getElementById('deleteErrMessage').innerHTML = '';
+  var date = moment().toISOString();
+  date = date.split('.');
+  $("#sysStartBox").val(date[0]);
   if (!uri) { // No uri selected
     return;
   }
@@ -537,9 +540,6 @@ var getBarChart = function (params, docProp) {
 
   $('#deleteButton').click(function() {
     setupDelete(chart);
-    var date = moment().toISOString();
-    date = date.split('.');
-    $("#sysStartBox").val(date[0]);
     chart.setDeleting(true);
   });
 
