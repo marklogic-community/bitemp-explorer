@@ -4,8 +4,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Bitemporal Document Insert/Update Demo</title>
-     <link rel="shortcut icon" href="http://owwgdpc6ll4w6eh4717xd1x4.wpengine.netdna-cdn.com/wp-content/mu-plugins/images/favicon.ico?cache=2">
+    <title>Bitemporal Demo</title>
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+    <link rel="shortcut icon" href="http://owwgdpc6ll4w6eh4717xd1x4.wpengine.netdna-cdn.com/wp-content/mu-plugins/images/favicon.ico?cache=2">
 
     <style>
       body {
@@ -297,15 +299,12 @@
     </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
     <script type="text/javascript" src="public/moment.js"></script>
     <script type="text/javascript" src="public/d3.js"></script>
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
-    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
 
     <div id="bar-chart-large"> </div>
     <div id="editDocDiv">
@@ -360,14 +359,6 @@
     <script type="text/javascript">
       $('#saveButton').hide();
       $('#cancelButton').hide();
-
-      $(document).ready(function() {
-        var date = moment().toISOString();
-        console.log(date)
-        var date = date.split('.');
-        console.log(date[0])
-       $("#sysStartBox").val(date[0]);
-      });
 
       //found from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery
       $.urlParam = function(name) {
