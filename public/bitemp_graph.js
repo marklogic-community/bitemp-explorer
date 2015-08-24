@@ -338,9 +338,6 @@ var barChart = function() {
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
-            if(str instanceof Array) {
-              str = '[' + str.toString() + ']';
-            }
           }
           else {
             str = path(d, 'content.' + displayProperty);
@@ -474,15 +471,8 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-<<<<<<< HEAD
-          if(window.location.href.endsWith('/search')) { 
+          if(window.location.href.endsWith('/search')) {
             str = d.content.uri;
-=======
-          setDefaultDispPropBehavior(d);
-          if (displayProperty.indexOf('.') === -1) {
-            str = d.content[displayProperty];
-            34
->>>>>>> going to rebase
           }
           else {
             setDefaultDispPropBehavior(d);
@@ -490,7 +480,13 @@ var barChart = function() {
               str = d.content[displayProperty];
             }
             else {
-              str = path(d, 'content.' + displayProperty);
+              setDefaultDispPropBehavior(d);
+              if (displayProperty.indexOf('.') === -1) {
+                str = d.content[displayProperty];
+              }
+              else {
+                str = path(d, 'content.' + displayProperty);
+              }
             }
           }
           var alreadyInGraph = false;
