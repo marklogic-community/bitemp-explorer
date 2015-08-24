@@ -93,6 +93,7 @@ var drawChart = function(params, docProp) {
 };
 
 function clearTextArea() {
+  var currDate = new Date();
   document.getElementById('contents').value = '';
   document.getElementById('sysStartBox').value = '';
   document.getElementById('newDocContents').value = '';
@@ -381,8 +382,8 @@ function deleteSuccess(response, tempColl, chart) {
   //Add a system time to ajax request if specified
   var sysBoxDate = document.getElementById('sysStartBox').value;
   if (sysBoxDate !== '') {
-    url += '&system-time='+sysBoxDate;
     sysBoxDate = new Date(sysBoxDate);
+    url += '&system-time='+sysBoxDate.toISOString();
     if (tempDate.valueOf() > sysBoxDate.valueOf()){
       ajax = false;
     }
