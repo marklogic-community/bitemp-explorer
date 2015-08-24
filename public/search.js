@@ -1,5 +1,6 @@
 /* global parseData */
 var firstDoc, lastDoc;
+var properTimes;
 
 function generateOps() {
   var operators = ['None', 'ALN_EQUALS', 'ALN_CONTAINS', 'ALN_CONTAINED_BY', 'ALN_MEETS', 'ALN_MET_BY', 'ALN_BEFORE', 'ALN_AFTER', 'ALN_STARTS', 'ALN_STARTED_BY', 'ALN_FINISHES', 'ALN_FINISHED_BY', 'ALN_OVERLAPS', 'ALN_OVERLAPPED_BY', 'ISO_OVERLAPS', 'ISO CONTAINS', 'ISO_PRECEDES', 'ISO_SUCCEEDS', 'ISO_IMM_PRECEDES', 'ISO_IMM_SUCCEEDS', 'ISO_EQUALS'];
@@ -7,6 +8,20 @@ function generateOps() {
     $('#valDropdown').append($('<option>').text(operators[i]));
     $('#sysDropdown').append($('<option>').text(operators[i]));
   }
+}
+
+function getSysAndVal() {
+  var selectedColl = getSelected('dropdown');
+  $.ajax({
+    url: '/v1/resources/axisSetup?rs:collection=' + selectedColl,
+    async: false,
+    success: function(response, textStatus) {
+      properTimes = response;
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('problem: ' + errorThrown);
+    }
+  });
 }
 
 function getSelected(id) {
@@ -154,6 +169,7 @@ $('#dropdown').change(function() {
   $('#bulletList').empty();
   document.getElementById('valDropdown').selectedIndex = 0;
   document.getElementById('sysDropdown').selectedIndex = 0;
+  getSysAndVal();
 });
 
 //function to make ajax call to get min and max times
@@ -163,6 +179,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars, firstDoc, lastD
       url: '/v1/resources/temporal-range?rs:collection='+selectedColl,
       success: function(response, textStatus)
       {
+        console.log(response)
         var data = [];
         var drag = true;
         if(dataToDisplay !== null) {
@@ -229,10 +246,6 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars, firstDoc, lastD
           }
         }
 
-        // if (!timeRanges.sysStart) {
-        //   document.getElementById('valDropdown').disabled=true;
-        //   document.getElementById('sysDropdown').disabled=true;
-        // }
         if(dataToDisplay !== null) {
           displayDocs(firstDoc, lastDoc, dataToDisplay);        
         }
@@ -253,14 +266,6 @@ function toReturnDate(time) {
     return null;
   }
 }
-
-//function when search button is clicked
-// $('#search').click(function() {
-//   firstDoc = 1;
-//   lastDoc = 10;
-//   runSearchQuery(firstDoc, lastDoc);
-//   $('#next, #prev, #numDocs').css({'visibility': 'visible'});
-// });
 
 //function when the next button is clicked
 $('#next').click(function() {
@@ -373,10 +378,10 @@ function createBulletList(doc) {
     }
   }
 
-  var sysStart = doc.sysStart;
-  var sysEnd = doc.sysEnd;
-  var validStart = doc.valStart;
-  var validEnd = doc.valEnd;
+  var sysStart = doc[properTimes.sysStart];
+  var sysEnd = doc[properTimes.sysEnd];
+  var valStart = doc[properTimes.valStart];
+  var valEnd = doc[properTimes.valEnd];
 
   $('#bulletList')
     .append($('<hr id=\'break\'>')
@@ -400,7 +405,7 @@ function createBulletList(doc) {
             .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
             .text('('+uriLogical+')')
         )
-        .append(buildDate(new Date(validStart), new Date(validEnd), 'Valid Time: '))
+        .append(buildDate(new Date(valStart), new Date(valEnd), 'Valid Time: '))
         .append(buildDate(new Date(sysStart), new Date(sysEnd), 'System Time: '))
         .append('<br>')
     );
