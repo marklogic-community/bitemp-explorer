@@ -10,12 +10,14 @@ function get (context, params) {
 
   if(valOperator === 'None' && sysOperator === 'None') {
     result.values = 
-      cts.search(
-        cts.andQuery([
-          cts.notQuery(cts.collectionQuery("lsqt")),   
-          cts.collectionQuery(collection)                      
-        ])
-      );
+      fn.subsequence(
+        cts.search(
+          cts.andQuery([
+            cts.notQuery(cts.collectionQuery("lsqt")),   
+            cts.collectionQuery(collection)                      
+          ])
+        ), params.start, 10
+      )
     result.collection = collection;
   }
   else {
@@ -27,36 +29,42 @@ function get (context, params) {
       sysPeriod = cts.period(params.sysStart, params.sysEnd);
       result = {
       values: 
-        cts.search(
-          cts.andQuery([
-            cts.collectionQuery(collection),
-            cts.periodRangeQuery(valAxis, valOperator, valPeriod),
-            cts.periodRangeQuery(sysAxis, sysOperator, sysPeriod)]
-          )
+        fn.subsequence(
+          cts.search(
+            cts.andQuery([
+              cts.collectionQuery(collection),
+              cts.periodRangeQuery(valAxis, valOperator, valPeriod),
+              cts.periodRangeQuery(sysAxis, sysOperator, sysPeriod)]
+            )
+          ), params.start, 10
         )
       }
     }
     else if(sysOperator === 'None') {
       valPeriod = cts.period(params.valStart, params.valEnd);
       result = {
-        values: 
-        cts.search(
-          cts.andQuery([
-            cts.collectionQuery(collection),
-            cts.periodRangeQuery(valAxis, valOperator, valPeriod)]
-          )
+      values: 
+        fn.subsequence(
+          cts.search(
+            cts.andQuery([
+              cts.collectionQuery(collection),
+              cts.periodRangeQuery(valAxis, valOperator, valPeriod)]
+            )
+          ), params.start, 10
         )
       }
     }
     else if(valOperator === 'None') {
       sysPeriod = cts.period(params.sysStart, params.sysEnd);
       result = {
-        values:
-        cts.search(
-          cts.andQuery([
-            cts.collectionQuery(collection),
-            cts.periodRangeQuery(sysAxis, sysOperator, sysPeriod)]
-          )
+      values:
+        fn.subsequence(
+          cts.search(
+            cts.andQuery([
+              cts.collectionQuery(collection),
+              cts.periodRangeQuery(sysAxis, sysOperator, sysPeriod)]
+            )
+          ), params.start, 10
         )
       }
     }

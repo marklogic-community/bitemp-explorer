@@ -91,7 +91,7 @@ function runSearchQuery(firstDoc, lastDoc) {
   var sysSelectedOp = getSelected('sysDropdown');
 
   var valAxis, sysAxis, valStart, valEnd, sysStart, sysEnd;
-  var url = '/v1/resources/operators?rs:collection='+selectedColl;
+  var url = '/v1/resources/operators?rs:collection='+selectedColl+'&rs:start='+firstDoc;
 
 
   if(valSelectedOp !== 'None') {
