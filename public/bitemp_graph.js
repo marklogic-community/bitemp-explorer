@@ -467,7 +467,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href.endsWith('/search')) {
+          if(window.location.href.endsWith('/search')) { 
             str = d.content.uri;
           }
           else {
