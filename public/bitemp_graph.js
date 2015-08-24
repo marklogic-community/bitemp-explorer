@@ -333,9 +333,6 @@ var barChart = function() {
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
-            if(str instanceof Array) {
-              str = '[' + str.toString() + ']';
-            }
           }
           else {
             str = path(d, 'content.' + displayProperty);
