@@ -541,6 +541,9 @@ var getBarChart = function (params, docProp) {
 
   $('#deleteButton').click(function() {
     setupDelete(chart);
+    var date = moment().toISOString();
+    date = date.split('.');
+    $("#sysStartBox").val(date[0]);
     chart.setDeleting(true);
   });
 
