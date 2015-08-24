@@ -474,8 +474,15 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
+<<<<<<< HEAD
           if(window.location.href.endsWith('/search')) { 
             str = d.content.uri;
+=======
+          setDefaultDispPropBehavior(d);
+          if (displayProperty.indexOf('.') === -1) {
+            str = d.content[displayProperty];
+            34
+>>>>>>> going to rebase
           }
           else {
             setDefaultDispPropBehavior(d);
