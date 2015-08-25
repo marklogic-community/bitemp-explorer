@@ -30,6 +30,7 @@ var addTempColls = function(id, search) {
     {
       if (search) {
         generateOps();
+        $('#' + id).append($('<option>').text('--Select--'));
       }
       else {
         $('#' + id).empty();
@@ -51,9 +52,9 @@ var addTempColls = function(id, search) {
 
       //Append the collection names to the drop down list
       for (var k = 0; k < dropArray.length; k++) {
-        addToDrop.append($('<option>').text(dropArray[k])) ;
+        addToDrop.append($('<option>').text(dropArray[k]));
         if( k === 0 && search) {
-          ajaxTimesCall(dropArray[k], null);
+          ajaxTimesCall(dropArray[k], null, false);
         }
       }
     },
@@ -227,16 +228,15 @@ function saveNewDoc() {
   var docData;
 
   if (format === 'JSON') {
-    //docData = jQuery.parseJSON(data);
   } else {
     data = data.replace(/ /g, '');
-    //docData = jQuery.parseXML(data);
   }
   $.ajax({
-    url: '/v1/documents',
+    url: '/v1/documents/?temporal-collection=' + selectedColl,
     uri: newURI,
     type: 'PUT',
-    data: docData,
+    data: data,
+    processData: false,
     success: function(data) {
       loadData(selectedColl);
     },
@@ -244,8 +244,7 @@ function saveNewDoc() {
       window.alert('The creation of your new document did not work.');
       $('#dialogCreateDoc').dialog('close');
     },
-    collection: selectedColl,
-    format: format
+    contentType: 'application/' + format.toLowerCase(),
   });
 }
 

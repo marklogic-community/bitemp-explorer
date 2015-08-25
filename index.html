@@ -274,7 +274,7 @@
       <p>Change the logical document display to the specified URI of a logical document.</p>
       <p>Don't forget to include the "dot extension" ie .json.</p>
 
-      <b class="enterInstruct">Enter <span class="enterInstruct" class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span></b><br>
+      <b class="enterInstruct">Enter <span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span></b><br>
       <input class= "muliFont" type="text" name="collection" id="textBoxForSelectingURI" value="">
       <input class= "muliFont" type="button" id="pick-doc" value="Submit">
 
@@ -284,11 +284,9 @@
       <input class= "muliFont" type="text" id="changeDocProp" name="documentProperty" value="">
 
       <input class="muliFont" type="button" id="change-prop" value="Submit">
-      <p>Select a property:</p><br><br>
+      <p>Select a Property:</p><br><br>
 
-      <select id="select-prop">
-        <option>Choose a property</option>
-      </select>
+      <select id="select-prop"></select>
     </div>
 
     <p id="uriEntered"></p>
@@ -332,7 +330,7 @@
               <option>XML</option>
             </select>
           </div>
-          <p align="center"> These will be the documents contents, choose to your liking! </p>
+          <p align="center"> These will be the document's contents, choose to your liking! </p>
           <textarea class="muliFont" rows="14" cols="45" id="newDocContents"> </textarea>
         </div>
       </div>
@@ -347,7 +345,7 @@
         <button id="cancelButton" hidden="true"> Cancel </button>
         <textarea class="muliFont" rows="12" cols="40" id="contents" hidden = "true"> </textarea>
         <div id="sysTimeDiv" class="hideSysTimeBoxes" class="muliFont">
-          <p id="sysStartTxt"> <b> sysStart: </b> <input class="muliFont" type="text" id="sysStartBox">
+          <p id="sysStartTxt"> <b> sysStart: </b> <input spellcheck='false' class="muliFont" type="text" id="sysStartBox">
         </div>
         <div id="deleteButtonsDiv" class="hideSysTimeBoxes">
           <button id="deleteOKButton"> OK </button>

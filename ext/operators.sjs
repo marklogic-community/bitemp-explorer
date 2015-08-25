@@ -1,61 +1,63 @@
 function get (context, params) {
-
   var collection = params.collection;
-
   var valPeriod;
   var sysPeriod;
 
-  var uri = params.uri;
-
-  var valAxis = params.valAxis;
   var valOperator = params.valSelectedOp;
-
-  var sysAxis = params.sysAxis;
-
   var sysOperator = params.sysSelectedOp;
 
-  var result;
-  if(valAxis.length>0 && sysAxis.length>0) {
-    valPeriod = cts.period(params.valStart, params.valEnd);
-    sysPeriod = cts.period(params.sysStart, params.sysEnd);
-  result = {
-    values: cts.search(
-    cts.andQuery([
-      cts.collectionQuery(collection),
-      cts.periodRangeQuery(valAxis, valOperator, valPeriod),
-      cts.periodRangeQuery(sysAxis, sysOperator, sysPeriod)]
-    )
-    ),
+  var result = {};
+  var query = {};
 
-    query: 'cts.search(\n' + '&emsp;cts.andQuery([\n' + '&emsp;&emsp;cts.collectionQuery("'+collection+'"),\n' + '&emsp;&emsp;cts.periodRangeQuery(\n' + '&emsp;&emsp;&emsp;"' + valAxis +'",\n'+ '&emsp;&emsp;&emsp;"' + valOperator +'",\n'+ '&emsp;&emsp;&emsp;' + 'cts.period(\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.valStart+'"),\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.valEnd+'")\n' + '&emsp;&emsp;&emsp;)\n' + '&emsp;&emsp;),\n' + '&emsp;&emsp;cts.periodRangeQuery(\n' + '&emsp;&emsp;&emsp;"' + sysAxis +'",\n'+ '&emsp;&emsp;&emsp;"' + sysOperator +'",\n'+ '&emsp;&emsp;&emsp;' + 'cts.period(\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.sysStart+'"),\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.sysEnd+'")\n' + '&emsp;&emsp;&emsp;)\n' + '&emsp;&emsp;)]\n' + '&emsp;)\n' + ')'
+  if(valOperator === 'None' && sysOperator === 'None') {
+    query = cts.andQuery([
+              cts.notQuery(cts.collectionQuery("lsqt")),   
+              cts.collectionQuery(collection)                      
+            ])
   }
+  else {
+    var valAxis = params.valAxis;
+    var sysAxis = params.sysAxis;
+
+    if(sysOperator !== 'None' && valOperator !== 'None') {
+      valPeriod = cts.period(params.valStart, params.valEnd);
+      sysPeriod = cts.period(params.sysStart, params.sysEnd);
+      query = cts.andQuery([
+                cts.collectionQuery(collection),
+                cts.periodRangeQuery(valAxis, valOperator, valPeriod),
+                cts.periodRangeQuery(sysAxis, sysOperator, sysPeriod)]
+              )
+    }
+    else if(sysOperator === 'None') {
+      valPeriod = cts.period(params.valStart, params.valEnd);
+      query = cts.andQuery([
+                cts.collectionQuery(collection),
+                cts.periodRangeQuery(valAxis, valOperator, valPeriod)]
+              )
+    }
+    else if(valOperator === 'None') {
+      sysPeriod = cts.period(params.sysStart, params.sysEnd);
+      query = cts.andQuery([
+                cts.collectionQuery(collection),
+                cts.periodRangeQuery(sysAxis, sysOperator, sysPeriod)]
+              )
+    }
   }
-  else if(valAxis.length>0) {
-    valPeriod = cts.period(params.valStart, params.valEnd);
-    result = {
-    values: cts.search(
-    cts.andQuery([
-      cts.collectionQuery(collection),
-      cts.periodRangeQuery(valAxis, valOperator, valPeriod)]
-    )
-    ),
-    query: 'cts.search(\n' + '&emsp;cts.andQuery([\n' + '&emsp;&emsp;cts.collectionQuery("'+collection+'"),\n' + '&emsp;&emsp;cts.periodRangeQuery(\n' + '&emsp;&emsp;&emsp;"' + valAxis +'",\n'+ '&emsp;&emsp;&emsp;"' + valOperator +'",\n'+ '&emsp;&emsp;&emsp;' + 'cts.period(\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.valStart+'"),\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.valEnd+'")\n' + '&emsp;&emsp;&emsp;)\n' + '&emsp;&emsp;)]\n' +'&emsp;)\n' + ')'
-  }
-  }
-  else if(sysAxis.length>0) {
-    sysPeriod = cts.period(params.sysStart, params.sysEnd);
-    result = {
-    values:
-    cts.search(
-    cts.andQuery([
-      cts.collectionQuery(collection),
-      cts.periodRangeQuery(sysAxis, sysOperator, sysPeriod)]
-    )
-    ),
-    query: 'cts.search(\n' + '&emsp;cts.andQuery([\n' + '&emsp;&emsp;cts.collectionQuery("'+collection+'"),\n' + '&emsp;&emsp;cts.periodRangeQuery(\n' + '&emsp;&emsp;&emsp;"' + sysAxis +'",\n'+ '&emsp;&emsp;&emsp;"' + sysOperator +'",\n'+ '&emsp;&emsp;&emsp;' + 'cts.period(\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.sysStart+'"),\n' + '&emsp;&emsp;&emsp;&emsp;xs.dateTime("'+params.sysEnd+'")\n' + '&emsp;&emsp;&emsp;)\n' + '&emsp;&emsp;)]\n' +'&emsp;)\n' + ')'
-  }
-  }
+
+  result.values = fn.subsequence(cts.search(query), params.start, 10);
   result.collection = collection;
+  result.totalLength = cts.estimate(query);
+
+  var arrayValues = result.values.toArray();
+  var uriArr = [];
+  var collections = [];
+  for(var i = 0; i<arrayValues.length; i++) {
+    uriArr[i] = xdmp.nodeUri(arrayValues[i]);
+    collections[i] = xdmp.documentGetCollections(uriArr[i]);
+  }
+  result.uri = uriArr;
+  result.collections = collections;
+
   return result;
 }
 
