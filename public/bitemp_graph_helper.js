@@ -262,11 +262,11 @@ function saveNewDoc(chart) {
     data = data.replace(/ /g, '');
     docData = jQuery.parseXML(data);
   }
-  
+
   $.ajax({
-    url: '/v1/documents/?uri=' + newURI + '&temporal-collection=' + selectedColl,
+    url: '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl,
     type: 'PUT',
-    data: docData,
+    data: data,
     processData: false,
     success: function(data) {
       loadData(selectedColl);
