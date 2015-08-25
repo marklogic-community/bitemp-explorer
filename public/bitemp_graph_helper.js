@@ -168,7 +168,7 @@ function cancel(chart) {
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
-  
+
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
   
