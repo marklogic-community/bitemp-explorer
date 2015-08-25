@@ -170,6 +170,20 @@ function cancel(chart) {
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
+  var uri = chart.getCurrentURI();
+  var logURI = chart.getLogicalURI();
+  console.log('Logical uri: ' + logURI);
+  console.log('URI: '+uri);
+  
+  var collArr = getDocColls(uri);
+  var tempCollections = getTemporalColl(uri);
+  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
+
+  var tempColl;
+  if (collArr && tempCollArr) {
+    collArr = collArr.collections;
+    tempColl = findCommonColl(collArr, tempCollArr);
+  }
 
   if (document.getElementById('sysStartBox').value) {
     data[chart.getSystemStart()] = document.getElementById('sysStartBox').value;
@@ -179,18 +193,28 @@ function save(chart) {
     cancel(chart);
   };
   var fail = function(data) {
-    window.alert('PUT didn\'t work: ' + data);
+    window.alert('POST didn\'t work: ' + data);
   };
-  console.log('Saving');   //Only working on mac, bug filed with MarkLogic
+  var contType;
+  if (uri.endsWith('.json')) {
+    contType = 'application/json';
+    data = JSON.stringify(data);
+  } else {
+    contType = 'application/xml';
+    //data = jQuery.stringify
+  }
+
+  console.log('data is ' + data + 'and contType is ' + contType);
+  
   $.ajax({
-    type: 'PUT',
-    contentType: 'application/json',
-    url: '/v1/documents/?uri=' + chart.getCurrentURI()+'&temporal-collection=myTemporal',
-    processData: false,
-    data: JSON.stringify(data),
+    type: 'POST',
+    format: contType,
+    url: '/v1/documents?uri='+uri,
+    data: data,
     success: success,
-    error: fail
+    error: fail 
   });
+  
 }
 
 function initNewXML(response) {
@@ -228,15 +252,26 @@ function saveNewDoc() {
   var docData;
 
   if (format === 'JSON') {
+<<<<<<< HEAD
+=======
+    docData = jQuery.parseJSON(data);
+>>>>>>> rebasing
   } else {
     data = data.replace(/ /g, '');
   }
   $.ajax({
+<<<<<<< HEAD
     url: '/v1/documents/?temporal-collection=' + selectedColl,
     uri: newURI,
     type: 'PUT',
     data: data,
     processData: false,
+=======
+    url: '/v1/documents?uri=' + newURI,
+    uri: newURI,
+    type: 'PUT',
+    data: JSON.stringify(docData),
+>>>>>>> rebasing
     success: function(data) {
       loadData(selectedColl);
     },

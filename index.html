@@ -227,6 +227,11 @@
         font-size: 13px;
       }
 
+      #time {
+        font-size: 16px;
+        font-family: 'Muli', sans-serif;
+      }
+
       #select-prop {
         position: absolute;
         display: block;
@@ -354,6 +359,17 @@
       </div>
       </div>
     </div> <!-- End editDocDiv -->
+    <h4>Current Time: <span id="time"/></h4>
+    <script type="text/javascript">
+      <!--
+      function updateTime() {
+        var currentTime = new Date().toISOString();
+        setTimeout("updateTime()",1000);
+        document.getElementById('time').innerHTML = currentTime.substring(0, currentTime.indexOf('.'));
+      }
+      updateTime();
+      //-->
+    </script>
 
     <script type="text/javascript">
       $('#saveButton').hide();
