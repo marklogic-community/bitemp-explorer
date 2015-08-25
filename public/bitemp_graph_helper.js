@@ -140,14 +140,11 @@ function fillText(data, isEditing, id, chart) {
   }
 
   else {//view json doc
-    var strToAdd = '';
     if (isEditing) {
       data[chart.getSystemStart()] = null;
       data[chart.getSystemEnd()] = null;
-
     }
-    strToAdd += JSON.stringify(data, null, 2);
-    textArea.value += strToAdd;
+    textArea.value = JSON.stringify(data, null, 2);
     textArea.readOnly = !isEditing;
   }
 }
@@ -170,6 +167,7 @@ function cancel(chart) {
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
+  
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
   
@@ -193,12 +191,21 @@ function save(chart) {
   var fail = function(data) {
     window.alert('PUT didn\'t work: ' + data);
   };
+  var contType;
+  if (uri.endsWith('.json')) {
+    contType = 'application/json';
+    data = JSON.stringify(data);
+  } else {
+    contType = 'application/xml';
+    //data = jQuery.stringify
+  }
+  
   $.ajax({
     type: 'PUT',
-    contentType: 'application/' + logURI.substring(logURI.indexOf('.') + 1, logURI.length),
-    url: '/v1/documents/?uri=' + uri+'&temporal-collection='+tempColl ,
+    contentType: contType,
+    url: '/v1/documents/?uri='+uri+'&temporal-collection='+tempColl,
     processData: false,
-    data: JSON.stringify(data),
+    data: data,
     success: success,
     error: fail
   });
@@ -228,7 +235,7 @@ function initNewJSON(response) {
   dialogArea.value += '}';
 }
 
-function saveNewDoc() {
+function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
 
@@ -238,18 +245,18 @@ function saveNewDoc() {
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
-  var docData;
-
+ 
   if (format === 'JSON') {
-    docData = JSON.stringify(data);
+    data = JSON.stringify(data);
   } else {
     data = data.replace(/ /g, '');
     docData = jQuery.parseXML(data);
   }
+
   $.ajax({
-    url: '/v1/documents/?uri=' + newURI + '&temporal-collection=' + selectedColl,
+    url: '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl,
     type: 'PUT',
-    data: docData,
+    data: data,
     processData: false,
     success: function(data) {
       loadData(selectedColl);
@@ -587,7 +594,7 @@ var getBarChart = function (params, docProp) {
       height: 500,
       buttons: {
         Save: function() {
-          saveNewDoc();
+          saveNewDoc(chart);
           $(this).dialog('close');
         },
         Cancel: function() {

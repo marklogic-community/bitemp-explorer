@@ -35,6 +35,7 @@ var barChart = function() {
 
   function getAxisSetup() {
     var uriInGraph;
+    console.log("AXISSETUP");
     if(data.length > 0) {
       //get a uri of one of the physical documents being displayed
       for(var i = 0; i < data.length && !uriInGraph; i++) {
