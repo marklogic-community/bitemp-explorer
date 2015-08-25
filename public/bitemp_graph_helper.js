@@ -169,6 +169,20 @@ function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = data.replace(/\//g, '');
   data = jQuery.parseJSON(data);
+  var uri = chart.getCurrentURI();
+  var logURI = chart.getLogicalURI();
+  console.log('Logical uri: ' + logURI);
+  console.log('URI: '+uri);
+  
+  var collArr = getDocColls(uri);
+  var tempCollections = getTemporalColl(uri);
+  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
+
+  var tempColl;
+  if (collArr && tempCollArr) {
+    collArr = collArr.collections;
+    tempColl = findCommonColl(collArr, tempCollArr);
+  }
 
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
@@ -231,7 +245,7 @@ function save(chart) {
     url: url,
     data: data,
     success: success,
-    error: fail
+    error: fail 
   });
 
 }
@@ -297,6 +311,7 @@ function saveNewDoc(chart) {
     url: url,
     type: 'PUT',
     data: data,
+    processData: false,
     success: function(data) {
       loadData(newURI);
     },
