@@ -310,6 +310,11 @@ function saveNewDoc(chart) {
     type: 'PUT',
     data: data,
     processData: false,
+    url: '/v1/documents/?temporal-collection=' + selectedColl,
+    uri: newURI,
+    type: 'PUT',
+    data: data,
+    processData: false,
     success: function(data) {
       loadData(newURI);
     },
