@@ -95,7 +95,7 @@ function runSearchQuery(firstDoc, lastDoc) {
 
 
   if(valSelectedOp !== 'None') {
-    valAxis = 'myValid';
+    valAxis = properTimes.valAxis;
     valStart = document.getElementById('startValBox').value;
     valEnd = document.getElementById('endValBox').value;
     if (valStart >= valEnd) {
@@ -110,7 +110,7 @@ function runSearchQuery(firstDoc, lastDoc) {
     url += '&rs:valSelectedOp=None';
   }
   if(sysSelectedOp !== 'None') {
-    sysAxis = 'mySystem';
+    sysAxis = properTimes.sysAxis;
     sysStart = document.getElementById('startSysBox').value;
     sysEnd = document.getElementById('endSysBox').value;
     if (sysStart >= sysEnd) {
@@ -295,8 +295,8 @@ function displayDocs(start, end, data) {
   $('#next, #prev, #numDocs').css({'visibility': 'visible'});
   var docs = data;
   var totalDocLen;
-  if(docs.values !== null) {
-    totalDocLen = docs.uri.length;
+  if(docs.totalLength !== null) {
+    totalDocLen = docs.totalLength;
   }
   else {
     totalDocLen = 0;
@@ -329,13 +329,18 @@ function displayDocs(start, end, data) {
   else {
     document.getElementById('numDocs').innerHTML = 'Displaying '+ start + ' to ' + end + ' of ' + totalDocLen + ' documents';
   }
-
   //Loops through the documents to get the URI and the valid and system times
   //Calls functions to display the information on the search page
   //Checks if docs has a defined value
-  for(var i = start-1; docs.values && i<end; i++) {
+  if(docs.values.length === undefined) {
+    end = 1;
+  }
+  else {
+    end = docs.values.length;
+  }
+  for(var i = 0; i<end; i++) {
     var doc = docs.values[i];
-    if(totalDocLen === 1) {
+    if(docs.values.length === undefined || totalDocLen === 1) {
       doc = docs.values;
     }
     if(typeof doc === 'string'){
@@ -358,7 +363,6 @@ function displayDocs(start, end, data) {
       doc = JSON.stringify(doc);
       doc = JSON.parse(doc);
     }
-
     doc.uri = docs.uri[i];
     doc.collections = docs.collections[i];
     createBulletList(doc); 
@@ -452,8 +456,8 @@ function writeQuery() {
   var valOperator = getSelected('valDropdown');
   var sysOperator = getSelected('sysDropdown');
   var collection = getSelected('dropdown');
-  var valAxis = 'myValid';
-  var sysAxis = 'mySystem';
+  var valAxis = properTimes.valAxis;
+  var sysAxis = properTimes.sysAxis;
   var valStart = new Date(document.getElementById('startValBox').value).toISOString();
   var valEnd =  new Date(document.getElementById('endValBox').value).toISOString();
   var sysStart =  new Date(document.getElementById('startSysBox').value).toISOString();
