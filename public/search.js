@@ -223,7 +223,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars, firstDoc, lastD
         else {
           getBarChart({
             data: data,
-            width: 600,
+            width: 570,
             height: 445,
             xAxisLabel: 'System',
             yAxisLabel: 'Valid',
