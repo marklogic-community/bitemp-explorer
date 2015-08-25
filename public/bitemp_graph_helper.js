@@ -171,6 +171,18 @@ function cancel(chart) {
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
+  var uri = chart.getCurrentURI();
+  var logURI = chart.getLogicalURI();
+  
+  var collArr = getDocColls(uri);
+  var tempCollections = getTemporalColl(uri);
+  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
+
+  var tempColl;
+  if (collArr && tempCollArr) {
+    collArr = collArr.collections;
+    tempColl = findCommonColl(collArr, tempCollArr);
+  }
 
   if (document.getElementById('sysStartBox').value) {
     data[chart.getSystemStart()] = document.getElementById('sysStartBox').value;
@@ -182,16 +194,16 @@ function save(chart) {
   var fail = function(data) {
     window.alert('PUT didn\'t work: ' + data);
   };
-  console.log('Saving');   //Only working on mac, bug filed with MarkLogic
   $.ajax({
     type: 'PUT',
-    contentType: 'application/json',
-    url: '/v1/documents/?uri=' + chart.getCurrentURI()+'&temporal-collection=myTemporal',
+    contentType: 'application/' + logURI.substring(logURI.indexOf('.') + 1, logURI.length),
+    url: '/v1/documents/?uri=' + uri+'&temporal-collection='+tempColl ,
     processData: false,
     data: JSON.stringify(data),
     success: success,
     error: fail
   });
+  
 }
 
 function initNewXML(response) {
