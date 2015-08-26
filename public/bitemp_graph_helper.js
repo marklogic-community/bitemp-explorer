@@ -167,8 +167,6 @@ function save(chart) {
   data = jQuery.parseJSON(data);
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
-  console.log('Logical uri: ' + logURI);
-  console.log('URI: '+uri);
   
   var collArr = getDocColls(uri);
   var tempCollections = getTemporalColl(uri);
