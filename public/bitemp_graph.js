@@ -467,7 +467,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href.endsWith('/search')) { 
+          if(window.location.href.endsWith('/search')) {
             str = d.content.uri;
           }
           else {
@@ -476,7 +476,13 @@ var barChart = function() {
               str = d.content[displayProperty];
             }
             else {
-              str = path(d, 'content.' + displayProperty);
+              setDefaultDispPropBehavior(d);
+              if (displayProperty.indexOf('.') === -1) {
+                str = d.content[displayProperty];
+              }
+              else {
+                str = path(d, 'content.' + displayProperty);
+              }
             }
           }
           var alreadyInGraph = false;

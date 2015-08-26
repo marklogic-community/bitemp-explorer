@@ -378,9 +378,9 @@ function displayDocs(start, end, data) {
         if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
           uriLogical = collArr[t];
         }
+        doc = JSON.stringify(doc);
+        doc = JSON.parse(doc);
       }
-      doc = JSON.stringify(doc);
-      doc = JSON.parse(doc);
     }
     doc.uri = docs.uri[i];
     doc.collections = docs.collections[i];
@@ -395,6 +395,7 @@ function createBulletList(doc) {
   var selectedColl = getSelected('dropdown');
   for (var t = 0; t < collArr.length; t++) {
     if(collArr[t].includes('.json') || collArr[t].includes('.xml')) {
+      //console.log(collArr[t])
       uriLogical = collArr[t];
     }
   }

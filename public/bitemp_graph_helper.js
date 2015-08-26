@@ -224,23 +224,17 @@ function save(chart) {
   } else {
     contType = 'application/xml';
   }
-
-  $.ajax({
-    type: 'PUT',
-    format: contType,
-    processData: false,
-    url: url,
   
   $.ajax({
     type: 'PUT',
     format: contType,
     processData: false,
     url: '/v1/documents?uri='+uri,
->>>>>>> rebasing
     data: data,
     success: success,
     error: fail 
   });
+  
 }
 
 
