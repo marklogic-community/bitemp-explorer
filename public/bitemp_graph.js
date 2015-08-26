@@ -470,7 +470,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href.endsWith('/search')) { 
+          if(window.location.href.endsWith('/search')) {
             str = d.content.uri;
           }
           else {
@@ -717,7 +717,7 @@ var barChart = function() {
       //top horizontal line
       lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
       $('#endValBox').val(format(yScale.invert(0)));
-      
+
       createFilledRectangle();
 
       function createFilledRectangle() {

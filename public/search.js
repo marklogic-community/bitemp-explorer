@@ -64,7 +64,7 @@ $('#searchQueryButton').click(function() {
 $('#resetBarsButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
-}); 
+});
 
 $('#resetButton').click(function() {
   writeQuery();
@@ -123,7 +123,7 @@ function runSearchQuery(firstDoc, lastDoc) {
   }
   else {
     url = url + '&rs:sysSelectedOp=None';
-  } 
+  }
 
   if (valSelectedOp === 'None' && sysSelectedOp === 'None') {
     $('#searchQueryButton, #filledRect').css({'visibility': 'hidden'});
@@ -132,9 +132,9 @@ function runSearchQuery(firstDoc, lastDoc) {
     $('#resetButton').css({'visibility': 'visible'});
     document.getElementById('valDropdown').disabled = true;
     document.getElementById('sysDropdown').disabled = true;
-    document.getElementById('dropdown').disabled = true; 
+    document.getElementById('dropdown').disabled = true;
   }
-  
+
   $.ajax({
       url: url,
       success: function(response, textStatus)
@@ -245,7 +245,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars, firstDoc, lastD
         }
 
         if(dataToDisplay !== null) {
-          displayDocs(firstDoc, lastDoc, dataToDisplay);        
+          displayDocs(firstDoc, lastDoc, dataToDisplay);
         }
       },
       error: function(jqXHR, textStatus, errorThrown)
@@ -396,7 +396,7 @@ function displayDocs(start, end, data) {
     }
     doc.uri = docs.uri[i];
     doc.collections = docs.collections[i];
-    createBulletList(doc); 
+    createBulletList(doc);
   }
 }
 

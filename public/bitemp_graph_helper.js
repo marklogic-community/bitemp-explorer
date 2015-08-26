@@ -167,11 +167,13 @@ function cancel(chart) {
 
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
+  data = data.replace(/\//g, '');
   data = jQuery.parseJSON(data);
-  
+
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
-  
+  var url = '/v1/documents?uri='+uri;
+
   var collArr = getDocColls(uri);
   var tempCollections = getTemporalColl(uri);
   var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
@@ -180,18 +182,28 @@ function save(chart) {
   if (collArr && tempCollArr) {
     collArr = collArr.collections;
     tempColl = findCommonColl(collArr, tempCollArr);
+    url += '&temporal-collection='+tempColl;
   }
 
-  if (document.getElementById('sysStartBox').value) {
-    data[chart.getSystemStart()] = document.getElementById('sysStartBox').value;
+  if (document.getElementById('sysStartBox').value !== '') {
+    console.log('Using date from lower text box');
+    var date = new Date(document.getElementById('sysStartBox').value).toISOString();
+    if (date !== 'Invalid Date') {
+      url += '&system-time=' + date;
+      data[chart.getSystemStart()] = date;
+    }
   }
 
   var success = function() {
     cancel(chart);
+    loadData(logURI);
   };
-  var fail = function(data) {
-    window.alert('PUT didn\'t work: ' + data);
-    console.log(data);
+  var fail = function(response) {
+    console.log('PUT didn\'t work');
+    if (response['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-SYSTEMTIME-BACKWARDS') {
+      window.alert('Temporal time cannot go backwards, please use a future time');
+      //cancel(chart);
+    }
   };
   var contType;
   if (uri.endsWith('.json')) {
@@ -202,18 +214,16 @@ function save(chart) {
     //data = jQuery.stringify
   }
 
-  console.log('data is ' + data + ' and contType is ' + contType);
-  
   $.ajax({
     type: 'PUT',
     format: contType,
     processData: false,
-    url: '/v1/documents?uri='+uri,
+    url: url,
     data: data,
     success: success,
-    error: fail 
+    error: fail
   });
-  
+
 }
 
 
@@ -250,7 +260,7 @@ function saveNewDoc(chart) {
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
- 
+
   if (format === 'JSON') {
     data = JSON.stringify(data);
   } else {
@@ -263,7 +273,7 @@ function saveNewDoc(chart) {
     type: 'PUT',
     data: data,
     success: function(data) {
-      loadData(selectedColl);
+      loadData(newURI);
     },
     error: function(jqXHR, textStatus) {
       window.alert('The creation of your new document did not work.');
@@ -320,7 +330,7 @@ function getTemporalColl(uri) {
     url: '/manage/v2/databases/Documents/temporal/collections?format=json',
     uriref: uri,
     success: function(data, textStatus) {
-      
+
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('Problem');
@@ -478,7 +488,6 @@ function changeTextInGraph(chart, params) {
   }
 }
 
-
 /*
  * @param obj
  * @param path
@@ -491,9 +500,6 @@ function findProperties(obj, path, properties) {
       if (obj.hasOwnProperty(prop)) {
         newPath = path ? path + '.' + prop : prop;
         if (Array.isArray(obj[prop])) {
-          // for (var item in obj[prop]) {
-          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
-          // }
           properties[newPath] = true;
         } else if (typeof obj[prop] === 'object') {
           findProperties(obj[prop], newPath, properties);
