@@ -378,7 +378,6 @@ function createBulletList(doc) {
   var selectedColl = getSelected('dropdown');
   for (var t = 0; t < collArr.length; t++) {
     if(collArr[t].includes('.json') || collArr[t].includes('.xml')) {
-      //console.log(collArr[t])
       uriLogical = collArr[t];
     }
   }
