@@ -372,11 +372,13 @@ function displayDocs(start, end, data) {
 }
 
 function createBulletList(doc) {
+  console.log(doc)
   var uri = doc.uri;
   var uriLogical;
   var collArr = doc.collections;
   var selectedColl = getSelected('dropdown');
   for (var t = 0; t < collArr.length; t++) {
+    console.log(collArr[t])
     if(collArr[t].includes('.json') || collArr[t].includes('.xml')) {
       //console.log(collArr[t])
       uriLogical = collArr[t];
