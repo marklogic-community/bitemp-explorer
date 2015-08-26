@@ -64,7 +64,7 @@ $('#searchQueryButton').click(function() {
 $('#resetBarsButton').click(function() {
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
-}); 
+});
 
 $('#resetButton').click(function() {
   writeQuery();
@@ -123,7 +123,7 @@ function runSearchQuery(firstDoc, lastDoc) {
   }
   else {
     url = url + '&rs:sysSelectedOp=None';
-  } 
+  }
 
   if (valSelectedOp === 'None' && sysSelectedOp === 'None') {
     $('#searchQueryButton, #filledRect').css({'visibility': 'hidden'});
@@ -132,9 +132,9 @@ function runSearchQuery(firstDoc, lastDoc) {
     $('#resetButton').css({'visibility': 'visible'});
     document.getElementById('valDropdown').disabled = true;
     document.getElementById('sysDropdown').disabled = true;
-    document.getElementById('dropdown').disabled = true; 
+    document.getElementById('dropdown').disabled = true;
   }
-  
+
   $.ajax({
       url: url,
       success: function(response, textStatus)
@@ -245,7 +245,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars, firstDoc, lastD
         }
 
         if(dataToDisplay !== null) {
-          displayDocs(firstDoc, lastDoc, dataToDisplay);        
+          displayDocs(firstDoc, lastDoc, dataToDisplay);
         }
       },
       error: function(jqXHR, textStatus, errorThrown)
@@ -332,13 +332,13 @@ function displayDocs(start, end, data) {
   //Loops through the documents to get the URI and the valid and system times
   //Calls functions to display the information on the search page
   //Checks if docs has a defined value
-  if(docs.values.length === undefined) {
+  if (docs.values && docs.values.length) {
     end = 1;
   }
-  else {
-    end = docs.values.length;
+  else if (docs.values) {
+    end = 0;
   }
-  for(var i = 0; i<end; i++) {
+  for (var i = 0; i<end; i++) {
     var doc = docs.values[i];
     if(docs.values.length === undefined || totalDocLen === 1) {
       doc = docs.values;
@@ -360,12 +360,43 @@ function displayDocs(start, end, data) {
           doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
         }
       }
+    }
+    //Loops through the documents to get the URI and the valid and system times
+    //Calls functions to display the information on the search page
+    //Checks if docs has a defined value
+    for (var i=0; docs && i < docs.length ; i++)
+    {
+      var uri = docs[i].uri;
+      var uriLogical;
+      var collArr = docs[i].collections.collections;
+      console.log(collArr);
+      for (var t = 0; t < collArr.length; t++) {
+        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
+          uriLogical = collArr[t];
+        }
+      }
+    }
+
+    //Loops through the documents to get the URI and the valid and system times
+    //Calls functions to display the information on the search page
+    //Checks if docs has a defined value
+    for (var i=0; docs && i < docs.length ; i++)
+    {
+      var uri = docs[i].uri;
+      var uriLogical;
+      var collArr = docs[i].collections.collections;
+      console.log(collArr);
+      for (var t = 0; t < collArr.length; t++) {
+        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
+          uriLogical = collArr[t];
+        }
+      }
       doc = JSON.stringify(doc);
       doc = JSON.parse(doc);
     }
     doc.uri = docs.uri[i];
     doc.collections = docs.collections[i];
-    createBulletList(doc); 
+    createBulletList(doc);
   }
 }
 

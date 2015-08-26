@@ -94,6 +94,7 @@ var drawChart = function(params, docProp) {
 };
 
 function clearTextArea() {
+  var currDate = new Date();
   document.getElementById('contents').value = '';
   document.getElementById('sysStartBox').value = '';
   document.getElementById('newDocContents').value = '';
@@ -140,14 +141,11 @@ function fillText(data, isEditing, id, chart) {
   }
 
   else {//view json doc
-    var strToAdd = '';
     if (isEditing) {
       data[chart.getSystemStart()] = null;
       data[chart.getSystemEnd()] = null;
-
     }
-    strToAdd += JSON.stringify(data, null, 2);
-    textArea.value += strToAdd;
+    textArea.value = JSON.stringify(data, null, 2);
     textArea.readOnly = !isEditing;
   }
 }
@@ -169,29 +167,65 @@ function cancel(chart) {
 
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
+  data = data.replace(/\//g, '');
   data = jQuery.parseJSON(data);
 
-  if (document.getElementById('sysStartBox').value) {
-    data[chart.getSystemStart()] = document.getElementById('sysStartBox').value;
+  var uri = chart.getCurrentURI();
+  var logURI = chart.getLogicalURI();
+  var url = '/v1/documents?uri='+uri;
+
+  var collArr = getDocColls(uri);
+  var tempCollections = getTemporalColl(uri);
+  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
+
+  var tempColl;
+  if (collArr && tempCollArr) {
+    collArr = collArr.collections;
+    tempColl = findCommonColl(collArr, tempCollArr);
+    url += '&temporal-collection='+tempColl;
+  }
+
+  if (document.getElementById('sysStartBox').value !== '') {
+    console.log('Using date from lower text box');
+    var date = new Date(document.getElementById('sysStartBox').value).toISOString();
+    if (date !== 'Invalid Date') {
+      url += '&system-time=' + date;
+      data[chart.getSystemStart()] = date;
+    }
   }
 
   var success = function() {
     cancel(chart);
+    loadData(logURI);
   };
-  var fail = function(data) {
-    window.alert('PUT didn\'t work: ' + data);
+  var fail = function(response) {
+    console.log('PUT didn\'t work');
+    if (response['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-SYSTEMTIME-BACKWARDS') {
+      window.alert('Temporal time cannot go backwards, please use a future time');
+      //cancel(chart);
+    }
   };
-  console.log('Saving');   //Only working on mac, bug filed with MarkLogic
+  var contType;
+  if (uri.endsWith('.json')) {
+    contType = 'application/json';
+    data = JSON.stringify(data);
+  } else {
+    contType = 'application/xml';
+    //data = jQuery.stringify
+  }
+
   $.ajax({
     type: 'PUT',
-    contentType: 'application/json',
-    url: '/v1/documents/?uri=' + chart.getCurrentURI()+'&temporal-collection=myTemporal',
+    format: contType,
     processData: false,
-    data: JSON.stringify(data),
+    url: url,
+    data: data,
     success: success,
     error: fail
   });
+
 }
+
 
 function initNewXML(response) {
   var dialogArea = document.getElementById('newDocContents');
@@ -216,8 +250,9 @@ function initNewJSON(response) {
   dialogArea.value += '}';
 }
 
-function saveNewDoc() {
+function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  data = jQuery.parseJSON(data);
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -225,20 +260,20 @@ function saveNewDoc() {
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
-  var docData;
 
   if (format === 'JSON') {
+    data = JSON.stringify(data);
   } else {
     data = data.replace(/ /g, '');
+    docData = jQuery.parseXML(data);
   }
+
   $.ajax({
-    url: '/v1/documents/?temporal-collection=' + selectedColl,
-    uri: newURI,
+    url: '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl,
     type: 'PUT',
     data: data,
-    processData: false,
     success: function(data) {
-      loadData(selectedColl);
+      loadData(newURI);
     },
     error: function(jqXHR, textStatus) {
       window.alert('The creation of your new document did not work.');
@@ -289,12 +324,13 @@ function edit(chart) {
   }
 }
 
-//Gets all temporal collections the uri belongs to.
+//Gets all temporal collections in database
 function getTemporalColl(uri) {
   var docColl = $.ajax({
     url: '/manage/v2/databases/Documents/temporal/collections?format=json',
-    uri: uri,
+    uriref: uri,
     success: function(data, textStatus) {
+
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('Problem');
@@ -302,7 +338,7 @@ function getTemporalColl(uri) {
     async: false,
   });
 
- return JSON.parse(docColl.responseText);
+  return JSON.parse(docColl.responseText);
 }
 
 //Gets all collections the uri belongs to.
@@ -353,7 +389,6 @@ var deleteDoc = function (chart) {
     collArr = collArr.collections;
     tempColl = findCommonColl(collArr, tempCollArr);
   }
-  var counter = 0;
 
   if (tempColl) {
     $.ajax( //Gets a temporal collection
@@ -381,8 +416,8 @@ function deleteSuccess(response, tempColl, chart) {
   //Add a system time to ajax request if specified
   var sysBoxDate = document.getElementById('sysStartBox').value;
   if (sysBoxDate !== '') {
-    url += '&system-time='+sysBoxDate;
     sysBoxDate = new Date(sysBoxDate);
+    url += '&system-time='+sysBoxDate.toISOString();
     if (tempDate.valueOf() > sysBoxDate.valueOf()){
       ajax = false;
     }
@@ -400,7 +435,7 @@ function deleteSuccess(response, tempColl, chart) {
       },
       error: function(jqXHR, textStatus) {
         cancel(chart);
-        window.alert('Delete didn\'t work, error code: ' + jqXHR.status);
+        window.alert('Delete didn\'t work, most likely an error in the date? Sample date: 2015-09-31T00:00:00Z\n\n Or perhaps LSQT is not set for this collecion');
       },
     });
   }
@@ -453,7 +488,6 @@ function changeTextInGraph(chart, params) {
   }
 }
 
-
 /*
  * @param obj
  * @param path
@@ -466,9 +500,6 @@ function findProperties(obj, path, properties) {
       if (obj.hasOwnProperty(prop)) {
         newPath = path ? path + '.' + prop : prop;
         if (Array.isArray(obj[prop])) {
-          // for (var item in obj[prop]) {
-          //   findProperties(obj[prop][item], newPath + '[' + item + ']', properties);
-          // }
           properties[newPath] = true;
         } else if (typeof obj[prop] === 'object') {
           findProperties(obj[prop], newPath, properties);
@@ -486,7 +517,9 @@ function addDataToMenu(chart, params) {
     $('#select-prop').empty();
     var propsInGraph = {};
     var docProp = chart.getDisplayProperty();
-    propsInGraph[docProp] = true;
+    if (params.data.length > 0) {
+      propsInGraph[docProp] = true;
+    }
 
     for(var i = 0; i < params.data.length; i++) {
       findProperties(params.data[i].content, null, propsInGraph);
@@ -571,7 +604,7 @@ var getBarChart = function (params, docProp) {
       height: 500,
       buttons: {
         Save: function() {
-          saveNewDoc();
+          saveNewDoc(chart);
           $(this).dialog('close');
         },
         Cancel: function() {
