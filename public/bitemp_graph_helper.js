@@ -141,11 +141,6 @@ function fillText(data, isEditing, id, chart) {
 
   else {//view json doc
     var strToAdd = '';
-    if (isEditing) {
-      data[chart.getSystemStart()] = null;
-      data[chart.getSystemEnd()] = null;
-
-    }
     strToAdd += JSON.stringify(data, null, 2);
     textArea.value += strToAdd;
     textArea.readOnly = !isEditing;
@@ -204,11 +199,12 @@ function save(chart) {
     //data = jQuery.stringify
   }
 
-  console.log('data is ' + data + 'and contType is ' + contType);
+  console.log('data is ' + data + ' and contType is ' + contType);
   
   $.ajax({
-    type: 'POST',
+    type: 'PUT',
     format: contType,
+    processData: false,
     url: '/v1/documents?uri='+uri,
     data: data,
     success: success,
@@ -252,26 +248,15 @@ function saveNewDoc() {
   var docData;
 
   if (format === 'JSON') {
-<<<<<<< HEAD
-=======
     docData = jQuery.parseJSON(data);
->>>>>>> rebasing
   } else {
     data = data.replace(/ /g, '');
   }
   $.ajax({
-<<<<<<< HEAD
-    url: '/v1/documents/?temporal-collection=' + selectedColl,
-    uri: newURI,
-    type: 'PUT',
-    data: data,
-    processData: false,
-=======
     url: '/v1/documents?uri=' + newURI,
     uri: newURI,
     type: 'PUT',
     data: JSON.stringify(docData),
->>>>>>> rebasing
     success: function(data) {
       loadData(selectedColl);
     },
