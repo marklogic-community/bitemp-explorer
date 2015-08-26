@@ -474,7 +474,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href.endsWith('/search')) { 
+          if(window.location.href.endsWith('/search')) {
             str = d.content.uri;
           }
           else {
@@ -565,8 +565,8 @@ var barChart = function() {
           if (d.x+d3.event.dx >= 0) {
             d.x = 0;
           }
-          else if(d.x + d3.event.dx <= -1*(width - margin.left - margin.right)){
-            d.x = -1*(width - margin.left - margin.right);
+          else if(d.x + d3.event.dx <= -1*(width - margin.left - margin.right) + $('#dragRight')[0].__data__.x + 16){
+            d.x = -1*(width - margin.left - margin.right) + $('#dragRight')[0].__data__.x + 16;
           }
           else {
             d.x+=d3.event.dx;
@@ -596,8 +596,8 @@ var barChart = function() {
           if (d.x+d3.event.dx <= 0) {
             d.x = 0;
           }
-          else if(d.x + d3.event.dx >= width - margin.left - margin.right){
-            d.x = width - margin.left - margin.right;
+          else if(d.x + d3.event.dx >= width - margin.left - margin.right + $('#dragLeft')[0].__data__.x - 16){
+            d.x = width - margin.left - margin.right + $('#dragLeft')[0].__data__.x - 16;
           }
           else {
             d.x+=d3.event.dx;
@@ -627,8 +627,8 @@ var barChart = function() {
           if (d.y+d3.event.dy >= 0) {
               d.y = 0;
           }
-          else if(d.y + d3.event.dy <= -1*(height-margin.top-margin.bottom -5)){
-            d.y = -1*(height-margin.top-margin.bottom -5);
+          else if(d.y + d3.event.dy <= -1*(height-margin.top-margin.bottom)+ $('#dragDown')[0].__data__.y +15){
+            d.y = -1*(height-margin.top-margin.bottom) + $('#dragDown')[0].__data__.y + 15;
           }
           else {
             d.y+=d3.event.dy;
@@ -659,8 +659,8 @@ var barChart = function() {
           if(d.y+d3.event.dy <= 0 ) {
             d.y = 0;
           }
-          else if(d.y+d3.event.dy >= (height-margin.top-margin.bottom)) {
-            d.y = height-margin.top-margin.bottom;
+          else if(d.y+d3.event.dy >= (height-margin.top-margin.bottom + $('#dragUp')[0].__data__.y -15)) {
+            d.y = height-margin.top-margin.bottom + $('#dragUp')[0].__data__.y - 15;
           }
           else {
             d.y += d3.event.dy;
@@ -671,40 +671,113 @@ var barChart = function() {
         });
       });
 
-      function lineShifter(textId, barId)  {
-        $('#'+textId).change(function() {
-          var input = $('#'+textId).val();
-          var inputArray = input.split('-');
-          if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
-            var date = new Date(input).toISOString();
-            if (textId.includes('Sys')) {
-              var dx = xScale(moment(date).toDate());
-              if (textId.includes('end')) {
-                dx = -(width - margin.left - dx);
-              }
-              $('#'+barId)[0].__data__.x = dx;
-              $('#'+barId).attr('transform', 'translate('+dx+', 0)');
-            }
-            else {
-              var dy = yScale(moment(date).toDate());
-              if (textId.includes('start')) {
-                dy = -(height-margin.top-margin.bottom-dy);
-              }
-              $('#'+barId).attr('transform', 'translate(0,'+dy+')');
-            }
-            writeQuery();
-            createFilledRectangle();
+      $('#startSysBox').change(function() {
+        var input = $(this).val();
+        var inputArray = input.split('-');
+        if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
+          var date = new Date(input).toISOString();
+          var dx = xScale(moment(date).toDate());
+          if ($('#endSysBox').val() < date) {
+            alert('Start time cannot be greater than or equal to end time');
+            return;
           }
-          else {
-            window.alert('Please enter a valid date. \n [Example: 2015-08-14]');
-          }
-        });
-      }
+          $('#dragRight')[0].__data__.x = dx;
+          $('#dragRight').attr('transform', 'translate('+dx+', 0)');
+          writeQuery();
+          createFilledRectangle();
+        }
+      });
 
-      lineShifter('startSysBox', 'dragRight');
-      lineShifter('endSysBox', 'dragLeft');
-      lineShifter('startValBox', 'dragUp');
-      lineShifter('endValBox', 'dragDown');
+      $('#endSysBox').change(function() {
+        var input = $(this).val();
+        var inputArray = input.split('-');
+        if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
+          var date = new Date(input).toISOString();
+          var dx = -(width - margin.left - xScale(moment(date).toDate()));
+          if ($('#startSysBox').val() > date) {
+            alert('End time cannot be less than or equal to start time');
+            return;
+          }
+          $('#dragLeft')[0].__data__.x = dx;
+          $('#dragLeft').attr('transform', 'translate('+dx+', 0)');
+          writeQuery();
+          createFilledRectangle();
+        }
+      });
+
+      $('#startValBox').change(function() {
+        var input = $(this).val();
+        var inputArray = input.split('-');
+        if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
+          var date = new Date(input).toISOString();
+          var dy = -(height-margin.top-margin.bottom-yScale(moment(date).toDate()));
+          if ($('#endValBox').val() < date) {
+            alert('Start time cannot be greater than or equal to end time');
+            return;
+          }
+          $('#dragUp')[0].__data__.y = dy;
+          $('#dragUp').attr('transform', 'translate(0,'+dy+')');
+          writeQuery();
+          createFilledRectangle();
+        }
+      });
+
+      $('#endValBox').change(function() {
+        var input = $(this).val();
+        var inputArray = input.split('-');
+        if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
+          var date = new Date(input).toISOString();
+          var dy = yScale(moment(date).toDate());
+          if ($('#startValBox').val() > date) {
+            alert('End time cannot be less than or equal to start time');
+            return;
+          }
+          $('#dragDown')[0].__data__.y = dy;
+          $('#dragDown').attr('transform', 'translate(0,'+dy+')');
+          writeQuery();
+          createFilledRectangle();
+        }
+      });
+
+      // function lineShifter(textId, barId)  {
+      //   $('#'+textId).change(function() {
+      //     var input = $('#'+textId).val();
+      //     var inputArray = input.split('-');
+      //     if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
+      //       var date = new Date(input).toISOString();
+      //       if (textId.includes('Sys')) {
+      //         var dx = xScale(moment(date).toDate());
+      //         if ($('#endSysBox').val() < date) {
+      //           alert('cant do this');
+      //           return;
+      //         }
+      //         if (textId.includes('end')) {
+      //           dx = -(width - margin.left - dx);
+      //         }
+      //         $('#'+barId)[0].__data__.x = dx;
+      //         $('#'+barId).attr('transform', 'translate('+dx+', 0)');
+      //       }
+      //       else {
+      //         var dy = yScale(moment(date).toDate());
+      //         if (textId.includes('start')) {
+      //           dy = -(height-margin.top-margin.bottom-dy);
+      //         }
+      //         $('#'+barId).attr('transform', 'translate(0,'+dy+')');
+      //       }
+      //       writeQuery();
+      //       createFilledRectangle();
+      //     }
+      //     else {
+      //       window.alert('Please enter a valid date. \n [Example: 2015-08-14]');
+      //       return;
+      //     }
+      //   });
+      // }
+
+      // lineShifter('startSysBox', 'dragRight');
+      // lineShifter('endSysBox', 'dragLeft');
+      // lineShifter('startValBox', 'dragUp');
+      // lineShifter('endValBox', 'dragDown');
 
       //right vertical line
       lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft');
@@ -721,7 +794,7 @@ var barChart = function() {
       //top horizontal line
       lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
       $('#endValBox').val(format(yScale.invert(0)));
-      
+
       writeQuery();
       createFilledRectangle();
 
