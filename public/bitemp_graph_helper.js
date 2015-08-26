@@ -168,9 +168,10 @@ function cancel(chart) {
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
-
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
+  console.log('Logical uri: ' + logURI);
+  console.log('URI: '+uri);
   
   var collArr = getDocColls(uri);
   var tempCollections = getTemporalColl(uri);
@@ -191,6 +192,7 @@ function save(chart) {
   };
   var fail = function(data) {
     window.alert('PUT didn\'t work: ' + data);
+    console.log(data);
   };
   var contType;
   if (uri.endsWith('.json')) {
@@ -200,18 +202,21 @@ function save(chart) {
     contType = 'application/xml';
     //data = jQuery.stringify
   }
+
+  console.log('data is ' + data + ' and contType is ' + contType);
   
   $.ajax({
     type: 'PUT',
-    contentType: contType,
-    url: '/v1/documents/?uri='+uri+'&temporal-collection='+tempColl,
+    format: contType,
     processData: false,
+    url: '/v1/documents?uri='+uri,
     data: data,
     success: success,
-    error: fail
+    error: fail 
   });
   
 }
+
 
 function initNewXML(response) {
   var dialogArea = document.getElementById('newDocContents');
@@ -236,9 +241,8 @@ function initNewJSON(response) {
   dialogArea.value += '}';
 }
 
-function saveNewDoc(chart) {
+function saveNewDoc() {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
-  data = jQuery.parseJSON(data);
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -246,28 +250,18 @@ function saveNewDoc(chart) {
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
- 
+  var docData;
+
   if (format === 'JSON') {
+    docData = jQuery.parseJSON(data);
   } else {
     data = data.replace(/ /g, '');
   }
-
   $.ajax({
-    url: '/v1/documents/?temporal-collection=' + selectedColl,
+    url: '/v1/documents?uri=' + newURI,
     uri: newURI,
     type: 'PUT',
-    data: data,
-    docData = JSON.stringify(data);
-  } else {
-    data = data.replace(/ /g, '');
-    docData = jQuery.parseXML(data);
-  }
-
-  $.ajax({
-    url: '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl,
-    type: 'PUT',
-    data: data,
-    processData: false,
+    data: JSON.stringify(docData),
     success: function(data) {
       loadData(selectedColl);
     },

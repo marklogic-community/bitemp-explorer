@@ -332,13 +332,13 @@ function displayDocs(start, end, data) {
   //Loops through the documents to get the URI and the valid and system times
   //Calls functions to display the information on the search page
   //Checks if docs has a defined value
-  if(docs.values.length === undefined) {
+  if (docs.values && docs.values.length) {
     end = 1;
   }
-  else {
-    end = docs.values.length;
+  else if (docs.values) {
+    end = 0;
   }
-  for(var i = 0; i<end; i++) {
+  for (var i = 0; i<end; i++) {
     var doc = docs.values[i];
     if(docs.values.length === undefined || totalDocLen === 1) {
       doc = docs.values;
@@ -358,6 +358,9 @@ function displayDocs(start, end, data) {
         //tests that propName is of format <propName>, not </propName>
         if(!propName.startsWith('</')) {
           doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
+        }
+      }
+    }
 
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page
