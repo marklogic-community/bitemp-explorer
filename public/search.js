@@ -361,6 +361,21 @@ function displayDocs(start, end, data) {
         }
       }
     }
+    //Loops through the documents to get the URI and the valid and system times
+    //Calls functions to display the information on the search page
+    //Checks if docs has a defined value
+    for (var i=0; docs && i < docs.length ; i++)
+    {
+      var uri = docs[i].uri;
+      var uriLogical;
+      var collArr = docs[i].collections.collections;
+      console.log(collArr);
+      for (var t = 0; t < collArr.length; t++) {
+        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
+          uriLogical = collArr[t];
+        }
+      }
+    }
 
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page

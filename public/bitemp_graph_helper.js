@@ -168,10 +168,9 @@ function cancel(chart) {
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = jQuery.parseJSON(data);
+  
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
-  console.log('Logical uri: ' + logURI);
-  console.log('URI: '+uri);
   
   var collArr = getDocColls(uri);
   var tempCollections = getTemporalColl(uri);
@@ -241,8 +240,9 @@ function initNewJSON(response) {
   dialogArea.value += '}';
 }
 
-function saveNewDoc() {
+function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  data = jQuery.parseJSON(data);
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -250,18 +250,18 @@ function saveNewDoc() {
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
-  var docData;
-
+ 
   if (format === 'JSON') {
-    docData = jQuery.parseJSON(data);
+    data = JSON.stringify(data);
   } else {
     data = data.replace(/ /g, '');
+    docData = jQuery.parseXML(data);
   }
+
   $.ajax({
-    url: '/v1/documents?uri=' + newURI,
-    uri: newURI,
+    url: '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl,
     type: 'PUT',
-    data: JSON.stringify(docData),
+    data: data,
     success: function(data) {
       loadData(selectedColl);
     },
@@ -425,7 +425,7 @@ function deleteSuccess(response, tempColl, chart) {
       },
       error: function(jqXHR, textStatus) {
         cancel(chart);
-        window.alert('Delete didn\'t work, most likely an error in the date? Sample date: 2015-09-31T00:00:00Z');
+        window.alert('Delete didn\'t work, most likely an error in the date? Sample date: 2015-09-31T00:00:00Z\n\n Or perhaps LSQT is not set for this collecion');
       },
     });
   }
