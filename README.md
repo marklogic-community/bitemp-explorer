@@ -25,12 +25,13 @@ APP INSTRUCTIONS
 
 13. Go through the workspaces, referring to the graph at localhost:3000. Note how the graph changes with document inserts and deletes from the query console. 
 14. It is recommended to go through at least the first two workspaces and create one or two temporal collections before trying the features of the demo. 
-15. Use the features of the home/search pages to modify/view graphs. The graph is a visual representation of bitemporal, with 2 axes representing system and valid times of a physical document.
+15. Use the features of the home/search pages to modify/view graphs. The graph is a visual representation of bitemporal, with 2 axes representing system and valid times of a temporal document.
 16. The home page dropdown menu will drop down the properties of your documents being displayed in the graph. You can select and view new properties.
 17. Click boxes in the graph (which represent physical documents) to edit, view, and delete certain documents. Edit will create a new physical document. View to see the contents of a document. The delete button will cut off a system end time to the current real time, or a time that you specify. 
 18. Create a document (button) from the home page to create a new logical document with its first physical document.
 19. Try entering URIs into the appropriate textbox. This will display the graph to reflect the document URI. 
-20. Check out the search page (upper left corner) for a full list of temporal collections. Click the 3 dropdowns and select a temporal collection and/or a system time operator and/or a valid time operator and drag the bars to select your ranges. Click the 'Run Query' button to display the documents specified by the temporal collection and the operators/time ranges. 
+20. Check out the search page (upper left corner) for a full list of temporal collections. Click the 3 dropdowns and select a temporal collection and/or a system time operator and/or a valid time operator and drag the bars to select your ranges. Click the 'Run Query' button to display the documents specified by the temporal collection and the operators/time ranges.
+21. If a lot is new or confusing, look for highlighted words on the page for hovering over. A definition will pop up to help you cement your knowledge of bitemporal.
 
 
 Guide to Workspaces:
