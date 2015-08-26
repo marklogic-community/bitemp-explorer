@@ -233,7 +233,6 @@ function save(chart) {
     data = JSON.stringify(data);
   } else {
     contType = 'application/xml';
-    //data = jQuery.stringify
   }
 
   $.ajax({
