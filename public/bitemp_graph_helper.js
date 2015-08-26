@@ -261,11 +261,12 @@ function saveNewDoc(chart) {
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
 
+
   if (format === 'JSON') {
     data = JSON.stringify(data);
   } else {
     data = data.replace(/ /g, '');
-    docData = jQuery.parseXML(data);
+    data = jQuery.parseXML(data);
   }
 
   $.ajax({
