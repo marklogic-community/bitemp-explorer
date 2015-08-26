@@ -212,17 +212,12 @@ function save(chart) {
     cancel(chart);
     loadData(logURI);
   };
-<<<<<<< HEAD
   var fail = function(response) {
     console.log('PUT didn\'t work');
     if (response['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-SYSTEMTIME-BACKWARDS') {
       window.alert('Temporal time cannot go backwards, please use a future time');
       //cancel(chart);
     }
-=======
-  var fail = function(data) {
-    window.alert('POST didn\'t work: ' + data);
->>>>>>> rebasing
   };
   var contType;
   if (uri.endsWith('.json')) {
@@ -233,29 +228,22 @@ function save(chart) {
     //data = jQuery.stringify
   }
 
-<<<<<<< HEAD
   $.ajax({
     type: 'PUT',
     format: contType,
     processData: false,
     url: url,
-=======
-  console.log('data is ' + data + 'and contType is ' + contType);
   
   $.ajax({
-    type: 'POST',
+    type: 'PUT',
     format: contType,
+    processData: false,
     url: '/v1/documents?uri='+uri,
 >>>>>>> rebasing
     data: data,
     success: success,
     error: fail 
   });
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> rebasing
 }
 
 
@@ -294,38 +282,16 @@ function saveNewDoc(chart) {
   var format = formatList.options[formatList.selectedIndex].value;
 
   if (format === 'JSON') {
-<<<<<<< HEAD
     data = JSON.stringify(data);
-=======
-<<<<<<< HEAD
-=======
-    docData = jQuery.parseJSON(data);
->>>>>>> rebasing
->>>>>>> rebasing
   } else {
     data = data.replace(/ /g, '');
     docData = jQuery.parseXML(data);
   }
 
   $.ajax({
-<<<<<<< HEAD
     url: '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl,
     type: 'PUT',
     data: data,
-=======
-<<<<<<< HEAD
-    url: '/v1/documents/?temporal-collection=' + selectedColl,
-    uri: newURI,
-    type: 'PUT',
-    data: data,
-    processData: false,
-=======
-    url: '/v1/documents?uri=' + newURI,
-    uri: newURI,
-    type: 'PUT',
-    data: JSON.stringify(docData),
->>>>>>> rebasing
->>>>>>> rebasing
     success: function(data) {
       loadData(newURI);
     },

@@ -2,7 +2,7 @@
 Bitemporal + MarkLogic
 
 To clone the project when you have git installed: 
-  git clone https://github.com/fxue/bitemporal-demo.git
+  git clone https://github.com/marklogic/bitemp-explorer.git
 If not, you can download the project as ZIP file.
 
 
@@ -16,26 +16,21 @@ INSTALL INSTRUCTIONS
 6. Go to command line/terminal, cd under this repo directory, do "npm install"
 7. Check to see that there is no ERR
 8. Configure connection in env.js or create a local-env.js, if needed. local-env.js takes the same form as env.js, but does not get committed. 
-9. Run app with "node app.js"
-10. go to http://localhost:3000/ to see a blank graph with title
-11. go back to Query console and go from workspace 1 to 5, start from tab 1.
-__________
-12. Install curl with command: npm install. Use command: 
-curl --anyauth --user admin:admin -X PUT -i \ -H "Content-type: application/vnd.marklogic-javascript" \ --data-binary @./ext/operators.sjs \ http://localhost:8000/v1/config/resources/operators
+9. Deploy three REST extensions by running - "node deploy.js" -in your shell.
+10. Run app with "node app.js"
+11. go to http://localhost:3000/ to see a blank graph with title
+12. go back to Query console and go from workspace 1 to 5, start from tab 1.
 
-...Run the same command three times, but replace the two instances of 'operators' with 'temporal-range', and then 'axisSetup' in order to install the three curl extensions. Also, if your username and password aren't admin:admin, use yourUsername:yourPassword
+APP INSTRUCTIONS
 
 13. Go through the workspaces, referring to the graph at localhost:3000. Note how the graph changes with document inserts and deletes from the query console. 
 14. It is recommended to go through at least the first two workspaces and create one or two temporal collections before trying the features of the demo. 
-15. Use the features of the home/search pages to modify/view graphs. The graph is a visual representation of bitemporal, with 2 axes representing system and valid times of a temporal document.
+15. Use the features of the home/search pages to modify/view graphs. The graph is a visual representation of bitemporal, with 2 axes representing system and valid times of a physical document.
 16. The home page dropdown menu will drop down the properties of your documents being displayed in the graph. You can select and view new properties.
-17. Click boxes in the graph (which represent physical documents) to edit, view, and delete certain documents. The delete button will cut off a system end time to the current real time. 
-18. Create a document (button) from the home page.
+17. Click boxes in the graph (which represent physical documents) to edit, view, and delete certain documents. Edit will create a new physical document. View to see the contents of a document. The delete button will cut off a system end time to the current real time, or a time that you specify. 
+18. Create a document (button) from the home page to create a new logical document with its first physical document.
 19. Try entering URIs into the appropriate textbox. This will display the graph to reflect the document URI. 
-20. Check out the search page (upper left corner) for a full list of logical collections and physical documents. Click a physical document hyperlink to return to the home page and see that collection of documents. 
-21. Follow the instructions on the search page for querying. Drag and drop bars in the blank graph with different ALN and ISO operators to query your databases docs. View the query below the graph.
-
-22. (Note: create a document and edit buttons only works for mac users currently)
+20. Check out the search page (upper left corner) for a full list of temporal collections. Click the 3 dropdowns and select a temporal collection and/or a system time operator and/or a valid time operator and drag the bars to select your ranges. Click the 'Run Query' button to display the documents specified by the temporal collection and the operators/time ranges. 
 
 
 Guide to Workspaces:

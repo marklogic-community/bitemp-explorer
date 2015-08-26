@@ -353,29 +353,17 @@ function displayDocs(start, end, data) {
         xmlString: doc
       };
       var propName;
-      for(var j = 0; j < matchesArr.length; j++) {
-        propName = matchesArr[j];
-        //tests that propName is of format <propName>, not </propName>
-        if(!propName.startsWith('</')) {
-          doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
+      if(matchesArr) {
+        for(var j = 0; j < matchesArr.length; j++) {
+          propName = matchesArr[j];
+          //tests that propName is of format <propName>, not </propName>
+          if(!propName.startsWith('</')) {
+            doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
+          }
         }
+        doc = JSON.stringify(doc);
+        doc = JSON.parse(doc);
       }
-    }
-    //Loops through the documents to get the URI and the valid and system times
-    //Calls functions to display the information on the search page
-    //Checks if docs has a defined value
-    for (var i=0; docs && i < docs.length ; i++)
-    {
-      var uri = docs[i].uri;
-      var uriLogical;
-      var collArr = docs[i].collections.collections;
-      console.log(collArr);
-      for (var t = 0; t < collArr.length; t++) {
-        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
-          uriLogical = collArr[t];
-        }
-      }
-    }
 
     //Loops through the documents to get the URI and the valid and system times
     //Calls functions to display the information on the search page
@@ -401,12 +389,15 @@ function displayDocs(start, end, data) {
 }
 
 function createBulletList(doc) {
+  console.log(doc)
   var uri = doc.uri;
   var uriLogical;
   var collArr = doc.collections;
   var selectedColl = getSelected('dropdown');
   for (var t = 0; t < collArr.length; t++) {
+    console.log(collArr[t])
     if(collArr[t].includes('.json') || collArr[t].includes('.xml')) {
+      //console.log(collArr[t])
       uriLogical = collArr[t];
     }
   }
@@ -435,7 +426,7 @@ function createBulletList(doc) {
             .attr('href', '/?collection='+uriLogical)
             .attr('class', 'definition')
             .css('color', 'MediumBlue')
-            .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
+            .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations' + '\n' + JSON.stringify(doc, false, 2))
             .text('('+uriLogical+')')
         )
         .append(buildDate(new Date(valStart), new Date(valEnd), 'Valid Time: '))
@@ -487,8 +478,10 @@ function writeQuery() {
   var valOperator = getSelected('valDropdown');
   var sysOperator = getSelected('sysDropdown');
   var collection = getSelected('dropdown');
-  var valAxis = properTimes.valAxis;
-  var sysAxis = properTimes.sysAxis;
+  if(properTimes) {
+    var valAxis = properTimes.valAxis;
+    var sysAxis = properTimes.sysAxis;
+  }
   var valStart = new Date(document.getElementById('startValBox').value).toISOString();
   var valEnd =  new Date(document.getElementById('endValBox').value).toISOString();
   var sysStart =  new Date(document.getElementById('startSysBox').value).toISOString();
