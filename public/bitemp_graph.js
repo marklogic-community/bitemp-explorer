@@ -679,8 +679,6 @@ var barChart = function() {
           var dx = xScale(moment(date).toDate());
           if ($('#endSysBox').val() < date) {
             alert('Start time cannot be greater than or equal to end time');
-            // var scale = xScale.invert($('#dragRight')[0].__data__.x);
-            // $('#startSysBox').val(format(scale));
             return;
           }
           $('#dragRight').attr('transform', 'translate('+dx+', 0)');
@@ -698,8 +696,6 @@ var barChart = function() {
           var dx = -(width - margin.left - xScale(moment(date).toDate()));
           if ($('#startSysBox').val() > date) {
             alert('End time cannot be less than or equal to start time');
-            // var scale = xScale.invert($('#dragLeft')[0].__data__.x  + width - margin.left - margin.right );
-            // $('#endSysBox').val(format(scale));
             return;
           }
           $('#dragLeft')[0].__data__.x = dx;
@@ -715,17 +711,12 @@ var barChart = function() {
         if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
           var date = new Date(input).toISOString();
           var dy = -(height-margin.top-margin.bottom-yScale(moment(date).toDate()));
-          console.log(dy)
           if ($('#endValBox').val() < date) {
-            console.log($('#dragUp'))
             alert('Start time cannot be greater than or equal to end time');
-            // var scale = yScale.invert($('#dragUp')[0].__data__.y + height-margin.top-margin.bottom);
-            // $('#startValBox').val(format(scale));
             return;
           }
           $('#dragUp')[0].__data__.y = dy;
           $('#dragUp').attr('transform', 'translate(0,'+$('#dragUp')[0].__data__.y+')');
-          console.log($('#dragUp'))
           writeQuery();
           createFilledRectangle();
         }
@@ -739,9 +730,6 @@ var barChart = function() {
           var dy = yScale(moment(date).toDate());
           if ($('#startValBox').val() > date) {
             alert('End time cannot be less than or equal to start time');
-            // var scale = yScale.invert($('#dragDown')[0].__data__.y);
-            // console.log($('#dragDown')[0].__data__.y);
-            // $('#endValBox').val(format(scale));
             return;
           }
           $('#dragDown')[0].__data__.y = dy;
@@ -750,46 +738,6 @@ var barChart = function() {
           createFilledRectangle();
         }
       });
-
-      // function lineShifter(textId, barId)  {
-      //   $('#'+textId).change(function() {
-      //     var input = $('#'+textId).val();
-      //     var inputArray = input.split('-');
-      //     if (inputArray.length === 3 && inputArray[0].length === 4 && inputArray[1].length === 2 && inputArray[2].length === 2) {
-      //       var date = new Date(input).toISOString();
-      //       if (textId.includes('Sys')) {
-      //         var dx = xScale(moment(date).toDate());
-      //         if ($('#endSysBox').val() < date) {
-      //           alert('cant do this');
-      //           return;
-      //         }
-      //         if (textId.includes('end')) {
-      //           dx = -(width - margin.left - dx);
-      //         }
-      //         $('#'+barId)[0].__data__.x = dx;
-      //         $('#'+barId).attr('transform', 'translate('+dx+', 0)');
-      //       }
-      //       else {
-      //         var dy = yScale(moment(date).toDate());
-      //         if (textId.includes('start')) {
-      //           dy = -(height-margin.top-margin.bottom-dy);
-      //         }
-      //         $('#'+barId).attr('transform', 'translate(0,'+dy+')');
-      //       }
-      //       writeQuery();
-      //       createFilledRectangle();
-      //     }
-      //     else {
-      //       window.alert('Please enter a valid date. \n [Example: 2015-08-14]');
-      //       return;
-      //     }
-      //   });
-      // }
-
-      // lineShifter('startSysBox', 'dragRight');
-      // lineShifter('endSysBox', 'dragLeft');
-      // lineShifter('startValBox', 'dragUp');
-      // lineShifter('endValBox', 'dragDown');
 
       //right vertical line
       lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft');
