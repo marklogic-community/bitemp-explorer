@@ -169,21 +169,10 @@ function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   data = data.replace(/\//g, '');
   data = jQuery.parseJSON(data);
-
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
-  var url = '/v1/documents?uri='+logURI;
-
-  var collArr = getDocColls(uri);
-  var tempCollections = getTemporalColl(uri);
-  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
-
-  var tempColl;
-  if (collArr && tempCollArr) {
-    collArr = collArr.collections;
-    tempColl = findCommonColl(collArr, tempCollArr);
-    url += '&temporal-collection='+tempColl;
-  }
+  var tempColl = chart.getTempColl();
+  var url = '/v1/documents?uri='+uri+'&temporal-collection='+tempColl;
 
   if (document.getElementById('sysStartBox').value !== '') {
     var date = new Date(document.getElementById('sysStartBox').value).toISOString();
@@ -209,10 +198,8 @@ function save(chart) {
   };
 
   var fail = function(response) {
-    console.log('PUT didn\'t work');
     if (response['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-SYSTEMTIME-BACKWARDS') {
       window.alert('Temporal time cannot go backwards, please use a future time');
-      //cancel(chart);
     }
   };
   var contType;
@@ -221,9 +208,8 @@ function save(chart) {
     data = JSON.stringify(data);
   } else {
     contType = 'application/xml';
-    //data = jQuery.stringify
   }
-
+  
   $.ajax({
     type: 'PUT',
     format: contType,
@@ -231,9 +217,9 @@ function save(chart) {
     url: url,
     data: data,
     success: success,
-    error: fail
+    error: fail 
   });
-
+  
 }
 
 
@@ -297,6 +283,12 @@ function saveNewDoc(chart) {
     url: url,
     type: 'PUT',
     data: data,
+    processData: false,
+    url: '/v1/documents/?temporal-collection=' + selectedColl,
+    uri: newURI,
+    type: 'PUT',
+    data: data,
+    processData: false,
     success: function(data) {
       loadData(newURI);
     },
@@ -319,6 +311,10 @@ function setupTextArea(chart, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
+    var bool = chart.getLsqt();
+    if(isEditing && bool === 'false') {
+      $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+    }
     fillText(data, isEditing, 'contents', chart);
   };
   $.ajax({
@@ -400,20 +396,7 @@ function findCommonColl(collArr, tempCollArr) {
 }
 
 var deleteDoc = function (chart) {
-  var doc = chart.getLogicalURI();
-  if (!doc) {
-    window.alert('Select a document');
-    return;
-  }
-  var collArr = getDocColls(doc);
-  var tempCollections = getTemporalColl(doc);
-  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
-
-  var tempColl;
-  if (collArr && tempCollArr) {
-    collArr = collArr.collections;
-    tempColl = findCommonColl(collArr, tempCollArr);
-  }
+  var tempColl = chart.getTempColl();
 
   if (tempColl) {
     $.ajax( //Gets a temporal collection
@@ -578,6 +561,52 @@ function initButtons() {
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + 'null'.bold();
 }
 
+function initLsqt(chart) {
+  $.urlParam = function(name) {
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results === null) {
+      return null;
+    }
+    else {
+      return results[1] || 0;
+    }
+  };
+  var uriParameter = $.urlParam('collection');
+  if(chart.data().length === 0) {
+    //empty collection
+    return;
+  }
+
+  //gets temporal collection
+  var tempCollections = getTemporalColl(uriParameter);
+  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
+  var collArr = getDocColls(uriParameter);
+  var tempColl;
+
+  for(var i = 0; i < tempCollArr.length && !tempColl; i++) {
+    for(var j = 0; j < collArr.collections.length; j++) {
+      if(tempCollArr[i].nameref === collArr.collections[j]) {
+        tempColl = tempCollArr[i].nameref;
+      }
+    }
+  }
+
+  //gets lsqt for the collection and sets label on home page.
+  $.ajax({
+    url: 'http://localhost:3000/manage/v2/databases/Documents/temporal/collections/lsqt/properties?collection=' + tempColl + '&format=json',
+    async: false,
+    type: 'GET',
+    success: function(response, textStatus) {
+      document.getElementById('collectionAndLsqt').innerHTML = 'The temporal collection is ' + tempColl.bold() +  ' and the LSQT is set to ' + response['lsqt-enabled'].toString().bold();
+      chart.setTempColl(tempColl);
+      chart.setLsqt(response['lsqt-enabled'].toString());
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('problem: ' + errorThrown);
+    }
+  });
+}
+
 var getBarChart = function (params, docProp) {
   removeButtonEvents();
   var chart = drawChart(params, docProp);
@@ -587,6 +616,7 @@ var getBarChart = function (params, docProp) {
   }
   if (params.timeRanges === null) {
     initButtons();
+    initLsqt(chart);
   }
 
   $('#editButton').click(function() {

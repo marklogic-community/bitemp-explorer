@@ -198,6 +198,15 @@
         word-wrap: normal;
       }
 
+      #collectionAndLsqt {
+        font-size: 16px;
+        position: absolute;
+        left: 5px;
+        top: 70px;
+        width: 25em;
+        word-wrap: normal;
+      }
+
       .definition {
         background-color: white;
         opacity: 1px;
@@ -226,6 +235,11 @@
         margin-right:4px;
         margin-bottom:8px;
         font-size: 13px;
+      }
+
+      #time {
+        font-size: 16px;
+        font-family: 'Muli', sans-serif;
       }
 
       #select-prop {
@@ -293,6 +307,9 @@
     <p id="uriEntered"></p>
     <br></br>
 
+    <p id="collectionAndLsqt"></p>
+    <br></br>
+
     <div id="tooltip-txt" class="hidden">
       <p><span id="value"></span></p>
     </div>
@@ -332,6 +349,7 @@
           <p align="center"> These will be the document's contents, choose to your liking! </p>
           <textarea class="muliFont" rows="14" cols="45" id="newDocContents"> </textarea>
         </div>
+        <link rel="shortcut icon" href="http://marklogic.com" />
       </div>
       <div id="editViewDelButtons">
         <button id="createDoc"> Create a Document </button>
@@ -352,6 +370,17 @@
       </div>
       </div>
     </div> <!-- End editDocDiv -->
+    <h4>Current Time: <span id="time"/></h4>
+    <script type="text/javascript">
+      <!--
+      function updateTime() {
+        var currentTime = new Date().toISOString();
+        setTimeout("updateTime()",1000);
+        document.getElementById('time').innerHTML = currentTime.substring(0, currentTime.indexOf('.'));
+      }
+      updateTime();
+      //-->
+    </script>
 
     <script type="text/javascript">
       $('#saveButton').hide();

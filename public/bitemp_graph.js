@@ -15,6 +15,8 @@ var barChart = function() {
   var data;
   var displayedProps = [];
   var background;
+  var temporalCollection;
+  var lsqt;
 
   var systemStart, systemEnd, validStart, validEnd;
 
@@ -333,9 +335,6 @@ var barChart = function() {
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
-            if(str instanceof Array) {
-              str = '[' + str.toString() + ']';
-            }
           }
           else {
             str = path(d, 'content.' + displayProperty);
@@ -387,7 +386,7 @@ var barChart = function() {
             }
           }
         })
-        .attr('stroke', 'grey')
+        .attr('stroke', 'black')
         .attr('stroke-width', '1')
         .attr('fill', function(d) {
           setDefaultDispPropBehavior(d);
@@ -469,7 +468,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href.endsWith('/search')) {
+          if(window.location.href.endsWith('/search')) { 
             str = d.content.uri;
           }
           else {
@@ -478,7 +477,13 @@ var barChart = function() {
               str = d.content[displayProperty];
             }
             else {
-              str = path(d, 'content.' + displayProperty);
+              setDefaultDispPropBehavior(d);
+              if (displayProperty.indexOf('.') === -1) {
+                str = d.content[displayProperty];
+              }
+              else {
+                str = path(d, 'content.' + displayProperty);
+              }
             }
           }
           var alreadyInGraph = false;
@@ -1048,6 +1053,22 @@ var barChart = function() {
         console.log('problem: ' + errorThrown);
       }
     });
+  }
+
+  chart.setTempColl = function(collection) {
+    temporalCollection = collection;
+  };
+
+  chart.getTempColl = function() {
+    return temporalCollection;
+  }
+
+  chart.getLsqt = function() {
+    return lsqt;
+  }
+
+  chart.setLsqt = function(myLsqt) {
+    lsqt = myLsqt;
   }
 
   return chart;

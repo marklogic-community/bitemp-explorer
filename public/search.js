@@ -329,6 +329,7 @@ function displayDocs(start, end, data) {
   else {
     document.getElementById('numDocs').innerHTML = 'Displaying '+ start + ' to ' + end + ' of ' + totalDocLen + ' documents';
   }
+
   //Loops through the documents to get the URI and the valid and system times
   //Calls functions to display the information on the search page
   //Checks if docs has a defined value
@@ -353,15 +354,17 @@ function displayDocs(start, end, data) {
         xmlString: doc
       };
       var propName;
-      for(var j = 0; j < matchesArr.length; j++) {
-        propName = matchesArr[j];
-        //tests that propName is of format <propName>, not </propName>
-        if(!propName.startsWith('</')) {
-          doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
+      if(matchesArr) {
+        for(var j = 0; j < matchesArr.length; j++) {
+          propName = matchesArr[j];
+          //tests that propName is of format <propName>, not </propName>
+          if(!propName.startsWith('</')) {
+            doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
+          }
         }
+        doc = JSON.stringify(doc);
+        doc = JSON.parse(doc);
       }
-      doc = JSON.stringify(doc);
-      doc = JSON.parse(doc);
     }
     doc.uri = docs.uri[i];
     doc.collections = docs.collections[i];
@@ -376,6 +379,7 @@ function createBulletList(doc) {
   var selectedColl = getSelected('dropdown');
   for (var t = 0; t < collArr.length; t++) {
     if(collArr[t].includes('.json') || collArr[t].includes('.xml')) {
+      //console.log(collArr[t])
       uriLogical = collArr[t];
     }
   }
@@ -404,7 +408,7 @@ function createBulletList(doc) {
             .attr('href', '/?collection='+uriLogical)
             .attr('class', 'definition')
             .css('color', 'MediumBlue')
-            .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations')
+            .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations' + '\n' + JSON.stringify(doc, false, 2))
             .text('('+uriLogical+')')
         )
         .append(buildDate(new Date(valStart), new Date(valEnd), 'Valid Time: '))
