@@ -169,10 +169,9 @@ function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
   var sysStart = chart.getSystemStart();
 
-  var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
   var tempColl = chart.getTempColl();
-  var url = '/v1/documents?uri='+uri+'&temporal-collection='+tempColl;
+  var url = '/v1/documents?uri='+logURI+'&temporal-collection='+tempColl;
 
   if (document.getElementById('sysStartBox').value !== '') {
     var date = new Date(document.getElementById('sysStartBox').value).toISOString();
