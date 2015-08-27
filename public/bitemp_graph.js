@@ -750,7 +750,6 @@ var barChart = function() {
       lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
       $('#endValBox').val(format(yScale.invert(0)));
 
-      //writeQuery();
       createFilledRectangle();
 
       function createFilledRectangle() {

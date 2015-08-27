@@ -262,7 +262,6 @@ function initNewJSON(response) {
 
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
-  data = jQuery.parseJSON(data);
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -274,22 +273,24 @@ function saveNewDoc(chart) {
 
   //Check if lsqt is set
   chart.getAxisSetup(selectedColl, format, true);
-  var date = new Date(data[chart.getSystemStart()]).toISOString();
-
-  if (date !== 'Invalid Date') {
-    url += '&system-time=' + date;
-    data[chart.getSystemStart()] = date;
-  }
-  else {
-    window.alert('Invalid date in ' + chart.getSystemStart());
-    return;
-  }
-
+  var date;
   if (format === 'JSON') {
+    data = jQuery.parseJSON(data);
+    date = data[chart.getSystemStart()];
     data = JSON.stringify(data);
   } else {
     data = data.replace(/ /g, '');
     data = jQuery.parseXML(data);
+    date = data.getElementsByTagName(chart.getSystemStart())[0].innerHTML;
+  }
+
+  date = new Date(date).toISOString();
+  if (date && date !== 'Invalid Date') {
+    url += '&system-time=' + date;
+  }
+  else {
+    window.alert('Invalid date in ' + chart.getSystemStart());
+    return;
   }
 
   $.ajax({
