@@ -384,7 +384,7 @@ var barChart = function() {
             }
           }
         })
-        .attr('stroke', 'grey')
+        .attr('stroke', 'black')
         .attr('stroke-width', '1')
         .attr('fill', function(d) {
           setDefaultDispPropBehavior(d);

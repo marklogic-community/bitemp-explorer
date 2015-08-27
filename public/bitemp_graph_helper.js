@@ -186,10 +186,6 @@ function save(chart) {
   var logURI = chart.getLogicalURI();
   var url = '/v1/documents?uri='+logURI;
 
-  var collArr = getDocColls(uri);
-  var tempCollections = getTemporalColl(uri);
-  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
-
   var tempColl;
   if (collArr && tempCollArr) {
     collArr = collArr.collections;

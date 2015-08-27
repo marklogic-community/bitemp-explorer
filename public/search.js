@@ -329,6 +329,7 @@ function displayDocs(start, end, data) {
   else {
     document.getElementById('numDocs').innerHTML = 'Displaying '+ start + ' to ' + end + ' of ' + totalDocLen + ' documents';
   }
+
   //Loops through the documents to get the URI and the valid and system times
   //Calls functions to display the information on the search page
   //Checks if docs has a defined value
@@ -458,10 +459,6 @@ function writeQuery() {
   var valOperator = getSelected('valDropdown');
   var sysOperator = getSelected('sysDropdown');
   var collection = getSelected('dropdown');
-  if(properTimes) {
-    var valAxis = properTimes.valAxis;
-    var sysAxis = properTimes.sysAxis;
-  }
   var valStart = new Date(document.getElementById('startValBox').value).toISOString();
   var valEnd =  new Date(document.getElementById('endValBox').value).toISOString();
   var sysStart =  new Date(document.getElementById('startSysBox').value).toISOString();
