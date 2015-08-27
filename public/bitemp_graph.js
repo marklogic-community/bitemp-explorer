@@ -767,7 +767,7 @@ var barChart = function() {
 
         var x, y, widthRect, heightRect;
         if(getSelected('valDropdown') !== 'None' && getSelected('sysDropdown') !== 'None') {
-          x = x2+7;
+          x = x2 + 7;
           y = y2 + 7;
           widthRect = width - margin.left + x1 - x2 - 14;
           heightRect = height-margin.top-margin.bottom + y1 - y2 - 14;

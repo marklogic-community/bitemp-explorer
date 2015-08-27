@@ -167,8 +167,8 @@ function cancel(chart) {
 
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
-  data = data.replace(/\//g, '');
-  data = jQuery.parseJSON(data);
+  var sysStart = chart.getSystemStart();
+
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
   var tempColl = chart.getTempColl();
@@ -178,22 +178,10 @@ function save(chart) {
     var date = new Date(document.getElementById('sysStartBox').value).toISOString();
     if (date !== 'Invalid Date') {
       url += '&system-time=' + date;
-      data[chart.getSystemStart()] = date;
-    }
-  }
-  else if (data[chart.getSystemStart()] !== null) {
-    var date = new Date(data[chart.getSystemStart()]).toISOString();
-    if (date !== 'Invalid Date') {
-      url += '&system-time=' + date;
-      data[chart.getSystemStart()] = date;
-    }
-    else {
-      window.alert('Invalid date in ' + chart.getSystemStart());
     }
   }
 
   var success = function() {
-    cancel(chart);
     loadData(logURI);
   };
 
@@ -202,8 +190,10 @@ function save(chart) {
       window.alert('Temporal time cannot go backwards, please use a future time');
     }
   };
+
   var contType;
   if (uri.endsWith('.json')) {
+    data = jQuery.parseJSON(data);
     contType = 'application/json';
     data = JSON.stringify(data);
   } else {
@@ -248,6 +238,7 @@ function initNewJSON(response) {
 
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  var sysStart = chart.getSystemStart();
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -262,20 +253,19 @@ function saveNewDoc(chart) {
   var date;
   if (format === 'JSON') {
     data = jQuery.parseJSON(data);
-    date = data[chart.getSystemStart()];
+    date = data[sysStart];
     data = JSON.stringify(data);
   } else {
-    data = data.replace(/ /g, '');
-    data = jQuery.parseXML(data);
-    date = data.getElementsByTagName(chart.getSystemStart())[0].innerHTML;
+    var xmlObj = jQuery.parseXML(data);
+    date = xmlObj.getElementsByTagName(sysStart)[0].innerHTML;
   }
 
   date = new Date(date).toISOString();
-  if (date && date !== 'Invalid Date') {
+  if (date !== 'Invalid Date') {
     url += '&system-time=' + date;
   }
   else {
-    window.alert('Invalid date in ' + chart.getSystemStart());
+    window.alert('Invalid date in ' + sysStart);
     return;
   }
 
@@ -296,7 +286,7 @@ function saveNewDoc(chart) {
       window.alert('The creation of your new document did not work.');
       $('#dialogCreateDoc').dialog('close');
     },
-    contentType: 'application/' + format.toLowerCase(),
+    contentType: 'application/' + format.toLowerCase()
   });
 }
 
