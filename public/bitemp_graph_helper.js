@@ -198,7 +198,6 @@ function save(chart) {
   };
 
   var fail = function(response) {
-    console.log('PUT didn\'t work');
     if (response['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-SYSTEMTIME-BACKWARDS') {
       window.alert('Temporal time cannot go backwards, please use a future time');
     }
@@ -312,7 +311,6 @@ function setupTextArea(chart, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
-    console.log(chart.getLsqt());
     var bool = chart.getLsqt();
     if(isEditing && bool === 'false') {
       $('#sysTimeDiv').addClass('hideSysTimeBoxes');
@@ -399,7 +397,6 @@ function findCommonColl(collArr, tempCollArr) {
 
 var deleteDoc = function (chart) {
   var tempColl = chart.getTempColl();
-  console.log(tempColl);
 
   if (tempColl) {
     $.ajax( //Gets a temporal collection
