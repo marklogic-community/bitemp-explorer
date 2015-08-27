@@ -172,7 +172,7 @@ function save(chart) {
 
   var uri = chart.getCurrentURI();
   var logURI = chart.getLogicalURI();
-  var url = '/v1/documents?uri='+uri;
+  var url = '/v1/documents?uri='+logURI;
 
   var collArr = getDocColls(uri);
   var tempCollections = getTemporalColl(uri);
@@ -186,11 +186,20 @@ function save(chart) {
   }
 
   if (document.getElementById('sysStartBox').value !== '') {
-    console.log('Using date from lower text box');
     var date = new Date(document.getElementById('sysStartBox').value).toISOString();
     if (date !== 'Invalid Date') {
       url += '&system-time=' + date;
       data[chart.getSystemStart()] = date;
+    }
+  }
+  else if (data[chart.getSystemStart()] !== null) {
+    var date = new Date(data[chart.getSystemStart()]).toISOString();
+    if (date !== 'Invalid Date') {
+      url += '&system-time=' + date;
+      data[chart.getSystemStart()] = date;
+    }
+    else {
+      window.alert('Invalid date in ' + chart.getSystemStart());
     }
   }
 
@@ -198,6 +207,7 @@ function save(chart) {
     cancel(chart);
     loadData(logURI);
   };
+
   var fail = function(response) {
     console.log('PUT didn\'t work');
     if (response['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-SYSTEMTIME-BACKWARDS') {
@@ -252,24 +262,39 @@ function initNewJSON(response) {
 
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
-  data = jQuery.parseJSON(data);
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
   var newURI = document.getElementById('newUri').value;
+  var url = '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl;
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
 
+  //Check if lsqt is set
+  chart.getAxisSetup(selectedColl, format, true);
+  var date;
   if (format === 'JSON') {
+    data = jQuery.parseJSON(data);
+    date = data[chart.getSystemStart()];
     data = JSON.stringify(data);
   } else {
     data = data.replace(/ /g, '');
-    docData = jQuery.parseXML(data);
+    data = jQuery.parseXML(data);
+    date = data.getElementsByTagName(chart.getSystemStart())[0].innerHTML;
+  }
+
+  date = new Date(date).toISOString();
+  if (date && date !== 'Invalid Date') {
+    url += '&system-time=' + date;
+  }
+  else {
+    window.alert('Invalid date in ' + chart.getSystemStart());
+    return;
   }
 
   $.ajax({
-    url: '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl,
+    url: url,
     type: 'PUT',
     data: data,
     success: function(data) {

@@ -332,11 +332,11 @@ function displayDocs(start, end, data) {
   //Loops through the documents to get the URI and the valid and system times
   //Calls functions to display the information on the search page
   //Checks if docs has a defined value
-  if (docs.values && docs.values.length) {
+  if (docs.values.length === undefined) {
     end = 1;
   }
-  else if (docs.values) {
-    end = 0;
+  else {
+    end = docs.values.length;
   }
   for (var i = 0; i<end; i++) {
     var doc = docs.values[i];
@@ -358,37 +358,6 @@ function displayDocs(start, end, data) {
         //tests that propName is of format <propName>, not </propName>
         if(!propName.startsWith('</')) {
           doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
-        }
-      }
-    }
-    //Loops through the documents to get the URI and the valid and system times
-    //Calls functions to display the information on the search page
-    //Checks if docs has a defined value
-    for (var i=0; docs && i < docs.length ; i++)
-    {
-      var uri = docs[i].uri;
-      var uriLogical;
-      var collArr = docs[i].collections.collections;
-      console.log(collArr);
-      for (var t = 0; t < collArr.length; t++) {
-        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
-          uriLogical = collArr[t];
-        }
-      }
-    }
-
-    //Loops through the documents to get the URI and the valid and system times
-    //Calls functions to display the information on the search page
-    //Checks if docs has a defined value
-    for (var i=0; docs && i < docs.length ; i++)
-    {
-      var uri = docs[i].uri;
-      var uriLogical;
-      var collArr = docs[i].collections.collections;
-      console.log(collArr);
-      for (var t = 0; t < collArr.length; t++) {
-        if ( !collArr[t].includes( 'latest' ) && !collArr[t].includes(selectedColl)) {
-          uriLogical = collArr[t];
         }
       }
       doc = JSON.stringify(doc);
@@ -487,13 +456,15 @@ function writeQuery() {
   var valOperator = getSelected('valDropdown');
   var sysOperator = getSelected('sysDropdown');
   var collection = getSelected('dropdown');
-  var valAxis = properTimes.valAxis;
-  var sysAxis = properTimes.sysAxis;
   var valStart = new Date(document.getElementById('startValBox').value).toISOString();
   var valEnd =  new Date(document.getElementById('endValBox').value).toISOString();
   var sysStart =  new Date(document.getElementById('startSysBox').value).toISOString();
   var sysEnd =  new Date(document.getElementById('endSysBox').value).toISOString();
-
+  var valAxis, sysAxis;
+  if (properTimes !== undefined) {
+    valAxis = properTimes.valAxis;
+    sysAxis = properTimes.sysAxis;
+  }
   var text;
   if (valOperator !== 'None' && sysOperator !== 'None') {
     text = 'cts.search(\n' + '\tcts.andQuery([\n' + '\tcts.collectionQuery("'+collection+'"),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + valAxis +'",\n'+ '\t\t\t"' + valOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+valStart+'"),\n' + '\t\t\t\txs.dateTime("'+valEnd+'")\n' + '\t\t\t)\n' + '\t\t),\n' + '\t\tcts.periodRangeQuery(\n' + '\t\t\t"' + sysAxis +'",\n'+ '\t\t\t"' + sysOperator +'",\n'+ '\t\t\t' + 'cts.period(\n' + '\t\t\t\txs.dateTime("'+sysStart+'"),\n' + '\t\t\t\txs.dateTime("'+sysEnd+'")\n' + '\t\t\t)\n' + '\t\t)]\n' + '\t)\n' + ')';

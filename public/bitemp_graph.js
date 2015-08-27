@@ -35,7 +35,6 @@ var barChart = function() {
 
   function getAxisSetup() {
     var uriInGraph;
-    console.log("AXISSETUP");
     if(data.length > 0) {
       //get a uri of one of the physical documents being displayed
       for(var i = 0; i < data.length && !uriInGraph; i++) {
@@ -751,7 +750,6 @@ var barChart = function() {
       lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
       $('#endValBox').val(format(yScale.invert(0)));
 
-      writeQuery();
       createFilledRectangle();
 
       function createFilledRectangle() {
@@ -1029,16 +1027,21 @@ var barChart = function() {
   };
 
   //for creating a document in helper
-  chart.getAxisSetup = function(collection, format) {
+  chart.getAxisSetup = function(collection, format, save) {
     $.ajax({
       url: '/v1/resources/axisSetup?rs:collection=' + collection,
       async: false,
       success: function(response, textStatus) {
-        if(format === 'JSON') {
-          initNewJSON(response);
+        if (!save) {
+          if (format === 'JSON') {
+            initNewJSON(response);
+          }
+          else {
+            initNewXML(response);
+          }
         }
         else {
-          initNewXML(response);
+          systemStart = response.sysStart;
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {
