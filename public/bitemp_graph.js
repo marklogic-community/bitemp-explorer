@@ -35,7 +35,6 @@ var barChart = function() {
 
   function getAxisSetup() {
     var uriInGraph;
-    console.log("AXISSETUP");
     if(data.length > 0) {
       //get a uri of one of the physical documents being displayed
       for(var i = 0; i < data.length && !uriInGraph; i++) {
@@ -385,7 +384,7 @@ var barChart = function() {
             }
           }
         })
-        .attr('stroke', 'grey')
+        .attr('stroke', 'black')
         .attr('stroke-width', '1')
         .attr('fill', function(d) {
           setDefaultDispPropBehavior(d);

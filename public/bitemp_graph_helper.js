@@ -175,20 +175,7 @@ function save(chart) {
   var collArr = getDocColls(uri);
   var tempCollections = getTemporalColl(uri);
   var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
-
-  var tempColl;
-  if (collArr && tempCollArr) {
-    collArr = collArr.collections;
-    tempColl = findCommonColl(collArr, tempCollArr);
-  }
-
-  var uri = chart.getCurrentURI();
-  var logURI = chart.getLogicalURI();
   var url = '/v1/documents?uri='+uri;
-
-  var collArr = getDocColls(uri);
-  var tempCollections = getTemporalColl(uri);
-  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
 
   var tempColl;
   if (collArr && tempCollArr) {
@@ -204,6 +191,16 @@ function save(chart) {
       url += '&system-time=' + date;
       data[chart.getSystemStart()] = date;
     }
+  }
+  else if (data[chart.getSystemStart()] !== null) {   
+    var date = new Date(data[chart.getSystemStart()]).toISOString();    
+    if (date !== 'Invalid Date') {    
+      url += '&system-time=' + date;    
+      data[chart.getSystemStart()] = date;    
+    }   
+    else {    
+      window.alert('Invalid date in ' + chart.getSystemStart());    
+    }   
   }
 
   var success = function() {
@@ -229,7 +226,7 @@ function save(chart) {
     type: 'PUT',
     format: contType,
     processData: false,
-    url: '/v1/documents?uri='+uri,
+    url: url,
     data: data,
     success: success,
     error: fail 
