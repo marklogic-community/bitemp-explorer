@@ -312,6 +312,11 @@ function setupTextArea(chart, isEditing) {
     $('#saveButton').show();
   }
    var successFunc = function(data) {
+    console.log(chart.getLsqt());
+    var bool = chart.getLsqt();
+    if(isEditing && bool === 'false') {
+      $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+    }
     fillText(data, isEditing, 'contents', chart);
   };
   $.ajax({
