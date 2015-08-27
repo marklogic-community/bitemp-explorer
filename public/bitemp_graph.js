@@ -15,6 +15,8 @@ var barChart = function() {
   var data;
   var displayedProps = [];
   var background;
+  var temporalCollection;
+  var lsqt;
 
   var systemStart, systemEnd, validStart, validEnd;
 
@@ -1051,6 +1053,22 @@ var barChart = function() {
         console.log('problem: ' + errorThrown);
       }
     });
+  }
+
+  chart.setTempColl = function(collection) {
+    temporalCollection = collection;
+  };
+
+  chart.getTempColl = function() {
+    return temporalCollection;
+  }
+
+  chart.getLsqt = function() {
+    return lsqt;
+  }
+
+  chart.setLsqt = function(myLsqt) {
+    lsqt = myLsqt;
   }
 
   return chart;
