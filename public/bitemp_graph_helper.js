@@ -393,21 +393,6 @@ function findCommonColl(collArr, tempCollArr) {
 }
 
 var deleteDoc = function (chart) {
-  /*var doc = chart.getLogicalURI();
-  if (!doc) {
-    window.alert('Select a document');
-    return;
-  }
-  var collArr = getDocColls(doc);
-  var tempCollections = getTemporalColl(doc);
-  var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
-
-  var tempColl;
-  if (collArr && tempCollArr) {
-    collArr = collArr.collections;
-    tempColl = findCommonColl(collArr, tempCollArr);
-  }*/
-
   var tempColl = chart.getTempColl();
   console.log(tempColl);
 
@@ -585,9 +570,11 @@ function initLsqt(chart) {
     }
   };
   var uriParameter = $.urlParam('collection');
-  if (!uriParameter) {
-    uriParameter = 'addr.json';
+  if(chart.data().length === 0) {
+    //empty collection
+    return;
   }
+
   //gets temporal collection
   var tempCollections = getTemporalColl(uriParameter);
   var tempCollArr = tempCollections['temporal-collection-default-list']['list-items']['list-item'];
