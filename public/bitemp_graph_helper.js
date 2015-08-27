@@ -209,7 +209,7 @@ function save(chart) {
   } else {
     contType = 'application/xml';
   }
-
+  
   $.ajax({
     type: 'PUT',
     format: contType,
@@ -219,7 +219,7 @@ function save(chart) {
     success: success,
     error: fail 
   });
-
+  
 }
 
 
