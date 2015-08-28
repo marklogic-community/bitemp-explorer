@@ -398,11 +398,7 @@
       };
 
       var uri = $.urlParam("collection");
-      if (uri === null) {
-        uri = "addr.json";
-      }
-      loadData(uri);
-
+      loadData(uri); //May be null
     </script>
   </body>
 </html>

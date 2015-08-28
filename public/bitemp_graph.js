@@ -37,6 +37,9 @@ var barChart = function() {
 
   function getAxisSetup() {
     var uriInGraph;
+    if (data === null) {
+      return;
+    }
     if(data.length > 0) {
       //get a uri of one of the physical documents being displayed
       for(var i = 0; i < data.length && !uriInGraph; i++) {
@@ -44,10 +47,9 @@ var barChart = function() {
           uriInGraph = data[i].uri;
         }
       }
-      if(uriInGraph !== undefined) {
+      if(uriInGraph && uriInGraph !== undefined) {
         //find the emcompassing collection that the phys doc belongs to.
         var commonColl = getDocColls(uriInGraph);
-        commonColl = commonColl.collections;
         var temporalColl = getTemporalColl(uriInGraph);
         temporalColl = temporalColl['temporal-collection-default-list']['list-items']['list-item'];
         var myTempColl = findCommonColl(commonColl, temporalColl);
@@ -468,7 +470,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href.endsWith('/search')) { 
+          if(window.location.href.endsWith('/search')) {
             str = d.content.uri;
           }
           else {
@@ -829,7 +831,10 @@ var barChart = function() {
           displayProperty = 'data';
         }
 
-        if (data.length > 0) {
+        if (data.length === 1) {
+          document.getElementById('uriEntered').innerHTML = 'You are displaying documents in: ' + data[0].uri.bold() + ' with property: ' + displayProperty.bold();
+        }
+        else if (data.length > 0) {
           document.getElementById('uriEntered').innerHTML = 'You are displaying documents in: ' + uriParameter.bold() + ' with property: ' + displayProperty.bold();
         }
         else {
@@ -1032,7 +1037,7 @@ var barChart = function() {
   };
 
   //for creating a document in helper
-  chart.getAxisSetup = function(collection, format, save) {
+  chart.getAxisSetup = function(collection, format, save, newURI) {
     $.ajax({
       url: '/v1/resources/axisSetup?rs:collection=' + collection,
       async: false,
@@ -1047,6 +1052,9 @@ var barChart = function() {
         }
         else {
           systemStart = response.sysStart;
+          if (newURI) {
+            uri = newURI; //setting uri to null
+          }
         }
       },
       error: function(jqXHR, textStatus, errorThrown) {

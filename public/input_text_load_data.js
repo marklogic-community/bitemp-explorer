@@ -1,6 +1,10 @@
 /* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
 /* getBarChart */
 function parseData(data, collection, numParts) {
+  if (collection === null) {
+    return null;
+  }
+
   var split = data.split('--ML_BOUNDARY');
   var items = [];
   for (var i=numParts-1; i < split.length - 1; i=i+numParts) {
@@ -107,50 +111,53 @@ function parseData(data, collection, numParts) {
 
 function loadData(collection) {
   var url = '';
-  if (collection !== undefined) {
+  if (collection !== null && collection !== undefined) {
     url += '/' + collection;
   }
-  else {
-    collection = 'addr.json';
-  }
-
-  $.ajax({
-    url: '/v1/search?pageLength=1000',
-    data: {
-      collection: collection
-    },
-    type: 'POST',
-    headers: {
-      Accept: 'multipart/mixed'
-    },
-    async: false,
-    success: function(data) {
-      var arrData = parseData(data, collection, 1);
-      getBarChart({
-        data: arrData,
+  var params = {
+        data: [],
         width: 800,
         height: 600,
         xAxisLabel: 'System',
         yAxisLabel: 'Valid',
         timeRanges: null,
         draggableBars: false,
-        containerId: 'bar-chart-large'
-      }, null);
-      if(arrData.length === 0 && url !== '') {
-        document.getElementById('textBoxForSelectingURI').value = '';
-        if(url !== '/addr.json') {
+        containerId: 'bar-chart-large',
+        collection: collection
+      };
+
+  if (collection === null) {
+    getBarChart(params, null);
+  }
+  else {
+    $.ajax({
+      url: '/v1/search?pageLength=1000',
+      data: {
+        collection: collection
+      },
+      type: 'POST',
+      headers: {
+        Accept: 'multipart/mixed'
+      },
+      async: false,
+      success: function(data) {
+        var arrData = parseData(data, collection, 1);
+        params.data = arrData;
+        getBarChart(params, null);
+        if(arrData.length === 0 && url !== '') {
+          document.getElementById('textBoxForSelectingURI').value = '';
           window.alert('Attention!\n\nNo data found in document ' + collection);
         }
-      }
 
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      // something went wrong. Take a look in jqXHR and find the status code
-      if(textStatus === 'error') {
-        window.alert('ERROR!\n\nThe error status is ' + jqXHR.status + '. The error thrown is ' + errorThrown + '.');
-        return false;
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        // something went wrong. Take a look in jqXHR and find the status code
+        if(textStatus === 'error') {
+          window.alert('ERROR!\n\nThe error status is ' + jqXHR.status + '. The error thrown is ' + errorThrown + '.');
+          return false;
+        }
       }
-    }
-  });
+    });
+  }
 }
 
