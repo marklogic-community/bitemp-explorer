@@ -165,36 +165,30 @@ function cancel(chart) {
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
 }
 
+function initGraph(chart) {
+  cancel(chart);
+  initButtons();
+  $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+}
+
 function save(chart) {
   var data = document.getElementById('contents').value.replace(/\n/g, '');
-  data = data.replace(/\//g, '');
-  data = jQuery.parseJSON(data);
-  var uri = chart.getCurrentURI();
+  var sysStart = chart.getSystemStart();
+
   var logURI = chart.getLogicalURI();
   var tempColl = chart.getTempColl();
-  var url = '/v1/documents?uri='+uri+'&temporal-collection='+tempColl;
+  var url = '/v1/documents?uri='+logURI+'&temporal-collection='+tempColl;
 
   if (document.getElementById('sysStartBox').value !== '') {
     var date = new Date(document.getElementById('sysStartBox').value).toISOString();
     if (date !== 'Invalid Date') {
       url += '&system-time=' + date;
-      data[chart.getSystemStart()] = date;
-    }
-  }
-  else if (data[chart.getSystemStart()] !== null) {
-    var date = new Date(data[chart.getSystemStart()]).toISOString();
-    if (date !== 'Invalid Date') {
-      url += '&system-time=' + date;
-      data[chart.getSystemStart()] = date;
-    }
-    else {
-      window.alert('Invalid date in ' + chart.getSystemStart());
     }
   }
 
   var success = function() {
-    cancel(chart);
     loadData(logURI);
+    initGraph(chart);
   };
 
   var fail = function(response) {
@@ -202,14 +196,16 @@ function save(chart) {
       window.alert('Temporal time cannot go backwards, please use a future time');
     }
   };
+
   var contType;
-  if (uri.endsWith('.json')) {
+  if (logURI.endsWith('.json')) {
+    data = jQuery.parseJSON(data);
     contType = 'application/json';
     data = JSON.stringify(data);
   } else {
     contType = 'application/xml';
   }
-  
+
   $.ajax({
     type: 'PUT',
     format: contType,
@@ -217,9 +213,9 @@ function save(chart) {
     url: url,
     data: data,
     success: success,
-    error: fail 
+    error: fail
   });
-  
+
 }
 
 
@@ -246,36 +242,39 @@ function initNewJSON(response) {
   dialogArea.value += '}';
 }
 
+
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
   var newURI = document.getElementById('newUri').value;
+
+  chart.getAxisSetup(selectedColl, format, true, newURI);
+  var sysStart = chart.getSystemStart();
   var url = '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl;
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
+  //initLsqt(chart);
 
   //Check if lsqt is set
-  chart.getAxisSetup(selectedColl, format, true);
   var date;
   if (format === 'JSON') {
     data = jQuery.parseJSON(data);
-    date = data[chart.getSystemStart()];
+    date = data[sysStart];
     data = JSON.stringify(data);
   } else {
-    data = data.replace(/ /g, '');
-    data = jQuery.parseXML(data);
-    date = data.getElementsByTagName(chart.getSystemStart())[0].innerHTML;
+    var xmlObj = jQuery.parseXML(data);
+    date = xmlObj.getElementsByTagName(sysStart)[0].innerHTML;
   }
 
   date = new Date(date).toISOString();
-  if (date && date !== 'Invalid Date') {
+  if (date !== 'Invalid Date') {
     url += '&system-time=' + date;
   }
   else {
-    window.alert('Invalid date in ' + chart.getSystemStart());
+    window.alert('Invalid date in ' + sysStart);
     return;
   }
 
@@ -284,19 +283,19 @@ function saveNewDoc(chart) {
     type: 'PUT',
     data: data,
     processData: false,
-    url: '/v1/documents/?temporal-collection=' + selectedColl,
-    uri: newURI,
-    type: 'PUT',
-    data: data,
-    processData: false,
     success: function(data) {
       loadData(newURI);
     },
     error: function(jqXHR, textStatus) {
-      window.alert('The creation of your new document did not work.');
+      if (jqXHR['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-NOLSQT') {
+        window.alert('No LSQT set for this collection ('+selectedColl+')\n Set it and try again.');
+      }
+      else {
+        window.alert('The creation of your new document did not work.');
+      }
       $('#dialogCreateDoc').dialog('close');
     },
-    contentType: 'application/' + format.toLowerCase(),
+    contentType: 'application/' + format.toLowerCase()
   });
 }
 
@@ -364,16 +363,27 @@ function getTemporalColl(uri) {
 
 //Gets all collections the uri belongs to.
 function getDocColls(uri) {
-  var docColl = $.ajax({
-    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
-    success: function(data, textStatus) {},
+  var format = uri.substring(uri.lastIndexOf('.') + 1, uri.length);
+  var url = '/v1/documents?uri='+uri+'&category=collections&format='+format;
+  var docColl;
+  $.ajax({
+    url: url,
+    success: function(data, textStatus) {
+      docColl = data;
+    },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('problem');
+      docColl = null;
     },
-    async: false,
+    async: false
   });
 
- return JSON.parse(docColl.responseText);
+  if (docColl && docColl !== undefined) {
+    return docColl['collections'];
+  }
+  else {
+    return null;
+  }
 }
 
 /*
@@ -521,7 +531,6 @@ function findProperties(obj, path, properties) {
 
 function addDataToMenu(chart, params) {
   if(!params.timeRanges) {
-
     $('#select-prop').empty();
     var propsInGraph = {};
     var docProp = chart.getDisplayProperty();
@@ -558,6 +567,8 @@ function initButtons() {
   document.getElementById('editButton').disabled = true;
   document.getElementById('deleteButton').disabled = true;
   document.getElementById('viewButton').disabled = true;
+  document.getElementById('saveButton').hidden = true;
+  document.getElementById('cancelButton').hidden = true;
   document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + 'null'.bold();
 }
 
@@ -572,6 +583,11 @@ function initLsqt(chart) {
     }
   };
   var uriParameter = $.urlParam('collection');
+
+  if (document.getElementById('collectionAndLsqt') && uriParameter === null) {
+    document.getElementById('collectionAndLsqt').innerHTML = 'The temporal collection is not specified.'.bold();
+    return;
+  }
   if(chart.data().length === 0) {
     //empty collection
     return;
@@ -584,8 +600,8 @@ function initLsqt(chart) {
   var tempColl;
 
   for(var i = 0; i < tempCollArr.length && !tempColl; i++) {
-    for(var j = 0; j < collArr.collections.length; j++) {
-      if(tempCollArr[i].nameref === collArr.collections[j]) {
+    for(var j = 0; j < collArr.length; j++) {
+      if(tempCollArr[i].nameref === collArr[j]) {
         tempColl = tempCollArr[i].nameref;
       }
     }
@@ -608,14 +624,17 @@ function initLsqt(chart) {
 }
 
 var getBarChart = function (params, docProp) {
-  removeButtonEvents();
+  if (params.draggableBars === false) {
+    removeButtonEvents();
+    initButtons();
+  }
   var chart = drawChart(params, docProp);
+  if (params.collection) {
+    window.history.pushState('', 'Title', '/?collection='+params.collection);
+  }
 
   if (params) {
     addDataToMenu(chart, params);
-  }
-  if (params.timeRanges === null) {
-    initButtons();
     initLsqt(chart);
   }
 
