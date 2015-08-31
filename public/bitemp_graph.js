@@ -529,7 +529,7 @@ var barChart = function() {
     function addDragBars() {
       var format = d3.time.format('%Y-%m-%d');
 
-      function lineCreator(x1, x2, y1, y2, direction, id) {
+      function lineCreator(x1, x2, y1, y2, direction, id, pointer) {
         background
           .append('line')
           .attr('x1', x1)
@@ -538,7 +538,7 @@ var barChart = function() {
           .attr('y2', y2)
           .style('opacity', '.99')
           .style('position', 'relative')
-          .style('cursor', 'pointer')
+         .style('cursor', pointer)
           .style('z-index', '1')
           .attr('stroke-width', '8')
           .attr('stroke', 'Blue')
@@ -742,21 +742,22 @@ var barChart = function() {
       });
 
       //right vertical line
-      lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft');
+      lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft', 'ew-resize');
       $('#endSysBox').val(format(xScale.invert(width - margin.left - margin.right)));
 
       //left vertical line
-      lineCreator(3, 3, 0, height-margin.top-margin.bottom, dragRight, 'dragRight');
+      lineCreator(3, 3, 0, height-margin.top-margin.bottom, dragRight, 'dragRight', 'ew-resize');
       $('#startSysBox').val(format(xScale.invert(0)));
 
       //bottom horizontal line
-      lineCreator(0, width - margin.left, height - margin.bottom -margin.top-3, height - margin.bottom - margin.top-3 , dragUp, 'dragUp');
+      lineCreator(0, width - margin.left, height - margin.bottom -margin.top-3, height - margin.bottom - margin.top-3 , dragUp, 'dragUp', 'ns-resize');
       $('#startValBox').val(format(yScale.invert(height -margin.top- margin.bottom)));
 
       //top horizontal line
-      lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
+      lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown', 'ns-resize');
       $('#endValBox').val(format(yScale.invert(0)));
 
+      writeQuery();
       createFilledRectangle();
 
       function createFilledRectangle() {
@@ -832,10 +833,10 @@ var barChart = function() {
         }
 
         if (data.length === 1) {
-          document.getElementById('uriEntered').innerHTML = 'You are displaying documents in: ' + data[0].uri.bold() + ' with property: ' + displayProperty.bold();
+          document.getElementById('uriEntered').innerHTML = 'Logical URI: ' + data[0].uri.bold();
         }
         else if (data.length > 0) {
-          document.getElementById('uriEntered').innerHTML = 'You are displaying documents in: ' + uriParameter.bold() + ' with property: ' + displayProperty.bold();
+          document.getElementById('uriEntered').innerHTML = 'Logical URI: ' + uriParameter.bold();
         }
         else {
           document.getElementById('uriEntered').innerHTML = 'No data found in document.'.bold();

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Search</title>
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
     <link rel="shortcut icon" href="http://owwgdpc6ll4w6eh4717xd1x4.wpengine.netdna-cdn.com/wp-content/mu-plugins/images/favicon.ico?cache=2">
 
     <style>
@@ -17,10 +18,6 @@
         font-size: 12px;
       }
 
-      img {
-
-      }
-
       h1 {
         text-align: center;
         font-size: 23px;
@@ -31,24 +28,24 @@
       #startSysBox {
         resize: none;
         position: absolute;
-        left: 682px;
-        top: 178px;
+        left: 482px;
+        top: 278px;
         font-size: 1em;
       }
 
       #endSysBox {
         resize: none;
         position: absolute;
-        left: 682px;
-        top: 210px;
+        left: 482px;
+        top: 310px;
         font-size: 1em;
       }
 
       #startValBox {
         resize: none;
         position: absolute;
-        left: 175px;
-        top: 178px;
+        left: 125px;
+        top: 278px;
         z-index: 2px;
         font-size: 1em;
       }
@@ -56,39 +53,39 @@
       #endValBox {
         resize: none;
         position: absolute;
-        left: 175px;
-        top: 210px;
+        left: 125px;
+        top: 310px;
         font-size: 1em;
       }
 
       #vertBar1 {
         position: absolute;
-        left: 616px;
-        top: 170px;
+        left: 416px;
+        top: 270px;
       }
 
       #vertBar2 {
         position: absolute;
-        left: 622px;
-        top: 200px;
+        left: 422px;
+        top: 300px;
       }
 
       #horzBar1 {
         position: absolute;
-        left: 109px;
-        top: 170px;
+        left: 59px;
+        top: 270px;
       }
 
       #horzBar2 {
         position: absolute;
-        left: 115px;
-        top: 200px;
+        left: 65px;
+        top: 300px;
       }
 
       #resetBarsButton {
         position: absolute;
-        left: 398px;
-        top: 215px;
+        left: 498px;
+        top: -10px;
         height: 18px;
         width: 85px;
         font-size: 1em;
@@ -98,8 +95,8 @@
 
       #searchQueryButton {
         position: absolute;
-        left: 395px;
-        top: 175px;
+        left: 275px;
+        top: 265px;
         height: 27px;
         width: 90px;
         visibility: hidden;
@@ -155,8 +152,8 @@
 
       #resetButton {
         position: absolute;
-        left: 388px;
-        top: 182px;
+        left: 268px;
+        top: 282px;
         height: 20px;
         width: 110px;
         font-size: 1.2em;
@@ -221,14 +218,14 @@
 
       #bar-chart-large {
         position: absolute;
-        left: 70px;
-        top: 260px;
+        left: -70px;
+        top: 50px;
       }
 
       #ctsQuery {
         position: absolute;
-        left: 140px;
-        top: 750px;
+        left: 0px;
+        top: 90px;
         font-size: 14px;
         margin-bottom: 60px;
         font-family: 'Muli', sans-serif;
@@ -256,31 +253,17 @@
         top: 200px;
       }
 
-      #homeURL {
-        position: absolute;
-        left: 5px;
-        top: 4px;
-        font-size: 13px;
-        color: MediumBlue;
-        z-index: 1;
-        font-family: 'Muli', sans-serif;
-      }
-
-      #homeURL:hover {
-        color: #000080;
-      }
-
       #dropdown {
-        height: 40px;
+        height: 27px;
         position: relative;
-        left: 0px;
-        top: 20px;
+        left: 300px;
+        top: -15px;
         display: block;
         padding: 0 16px;
-        width: 266px;
+        width: 220px;
         cursor: pointer;
         background: #fff;
-        font-size: 1.55em;
+        font-size: 1.25em;
         color: #000000;
         font-weight: normal;
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -307,7 +290,7 @@
         width: 160px;
         cursor: pointer;
         background: #fff;
-        font-size: .8em;
+        font-size: 1em;
         color: #000000;
         font-weight: normal;
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -317,23 +300,24 @@
 
       #valTimes {
         position: relative;
-        left: 102px;
-        top: 30px;
+        left: 52px;
+        top: 145px;
+        width: 100px;
         margin-bottom: 0px;
-        font-size: 15px;
+        font-size: 12px;
         z-index: 20px;
         font-family: 'Muli', sans-serif;
       }
 
       #dragInstruct {
         position: absolute;
-        left: 290px;
-        top: 120px;
+        left: 200px;
+        top: 162px;
         font-size: 13px;
         text-wrap: normal;
         display: block;
-        width: 310px;
-        text-align: center;
+        width: 280px;
+        text-align: left;
         color: #000080;
         font-family: 'Muli', sans-serif;
         visibility: hidden;
@@ -346,7 +330,7 @@
         margin: 0;
         cursor: pointer;
         background: #fff;
-        font-size: .8em;
+        font-size: 1em;
         color: #000000;
         font-weight: normal;
         -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -356,9 +340,9 @@
 
       #sysTimes {
         position: absolute;
-        left: 614px;
-        top: 90px;
-        font-size: 15px;
+        left: 414px;
+        top: 205px;
+        font-size: 12px;
         font-family: 'Muli', sans-serif;
       }
 
@@ -374,24 +358,42 @@
 
       #instructSelect {
         position: absolute;
-        left: 0px;
-        top: -40px;
+        left: 60px;
+        top: 90px;
         font-weight: bold;
-        font-size: 1.45em;
+        font-size: 1.35em;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #timeRange {
+        position: absolute;
+        left: 60px;
+        top: 155px;
+        font-weight: bold;
+        font-size: 1.35em;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #docs {
+        position: absolute;
+        left: 0px;
+        top: 65px;
+        font-weight: bold;
+        font-size: 1.35em;
         font-family: 'Muli', sans-serif;
       }
 
       #bulletList {
         position: relative;
-        left: -40px;
-        top: 105px;
+        left: -20px;
+        top: 205px;
         font-size: 1.0em;
       }
 
       #prev {
         position: absolute;
-        left: 0px;
-        top: 125px;
+        left: 20px;
+        top: 165px;
         height: 15px;
         width: 40px;
         font-size: 1.0em;
@@ -413,8 +415,8 @@
 
       #numDocs {
         position: absolute;
-        left: 0px;
-        top: 70px;
+        left: 20px;
+        top: 110px;
         font-size: 1.2em;
         font-family: 'Muli', sans-serif;
         font-weight: bold;
@@ -423,8 +425,8 @@
 
       #next {
         position: absolute;
-        left: 225px;
-        top: 125px;
+        left: 245px;
+        top: 165px;
         height: 15px;
         width: 40px;
         font-size: 1.0em;
@@ -441,8 +443,8 @@
 
       #page {
         position: relative;
-        left: 820px;
-        top: -4px;
+        left: 630px;
+        top: -135px;
       }
 
       .result a {
@@ -489,6 +491,98 @@
         visibility: hidden;
       }
 
+      .container{
+        width: 800px;
+        margin: 0 auto;
+        position: absolute;
+        left: 60px;
+        top: 360px;
+      }
+
+      ul.tabs {
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+      }
+
+      ul.tabs li {
+        background: none;
+        color: black;
+        display: inline-block;
+        padding: 10px 15px;
+        cursor: pointer;
+        border: 2px solid black;
+        font-family: 'Muli', sans-serif;
+      }
+
+      ul.tabs li:hover {
+        background: #CCE0FF;
+      }
+
+      ul.tabs li.current {
+        background: #3399FF;
+        color: white;
+        border: 2px solid black;
+      }
+
+      .tab-content {
+        display: none;
+        background: none;
+        padding: 15px;
+      }
+
+      .tab-content.current {
+        display: inherit;
+      }
+
+      #dialogCreateDoc {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
+      }
+
+      #alignText {
+        float: left;
+        width: 230px;
+        height: 100px;
+        text-align: right;
+      }
+
+      #newDocContents {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        resize: none;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #alignBoxes {
+        float: right;
+        width: 270px;
+        height: 100px
+      }
+
+      #createDoc {
+        position: absolute;
+        top: 0px;
+        left: 140px;
+        width: 150px;
+        height: 30px;
+      }
+
+      #newUri {
+        position: absolute;
+        left: 268px;
+        top: 52px;
+      }
+
+      #uriText {
+        position: absolute;
+        left: 216px;
+        top: 54px;
+      }
+
     </style>
 
   </head>
@@ -496,13 +590,11 @@
     <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it
 possible to rewind the information “as it actually was” in combination with
 “as it was recorded” at some point in time.">Bitemporal</span> Search Page</h1>
-    <a href="/" id="homeURL">Home</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    <button id="searchQueryButton">Run Query</button>
-    <button id="resetBarsButton" type='reset' class="hide">Reset Bars</button>
-    <button id="resetButton">Reset Graph</button>
+    <button id="searchQueryButton">Search</button>
+    <button id="resetButton">Reset</button>
     <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries.
 Temporal queries, for example, are interval operations on time period such as,
 period equalities, containment and overlaps." class="definition">Operators:</p>
@@ -515,16 +607,19 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
       <p class='definition' title='The time at which something is recorded in the database'><b>System Time:</b></p>
       <select id="sysDropdown" disabled></select>
     </div>
+    <p id="instructSelect" >Choose a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection:</span></p>
+    <select id="dropdown" class="font"></select>
+    <p id='timeRange'>Set Time Range:</p>
       <div id= "page">
-        <p id="instructSelect">Choose a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection:</span></p>
-        <select id="dropdown" class="font"></select>
+        <p id='docs'>Documents:</p>
         <button type="button" id="next">Next</button>
         <button type="button" id="prev">Prev</button>
         <p id="numDocs">No documents displaying</p>
-          <ul id="bulletList"></ul>
+        <ul id="bulletList"></ul>
       </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
     <script src="/public/search.js"></script>
     <script type="text/javascript" src="public/moment.min.js"></script>
     <script type="text/javascript" src="public/d3.min.js"></script>
@@ -533,12 +628,6 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
     <script> addTempColls("dropdown", true); </script>
     <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
-    <div id="bar-chart-large"></div>
-
-    <div id="ctsQuery">
-      <p id='ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
-      <textarea rows="10" cols="57" color="blue" id="queryText" readonly></textarea>
-    </div>
     <div class="hide sysTimesDisplay">
       <p id="vertBar1">Start Time:</p>
       <textarea rows="1" cols="10" color="blue" id="startSysBox" style="border:solid 1px black;"></textarea>
@@ -552,6 +641,63 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
       <textarea rows="1" cols="10" color="blue" id="endValBox" style="border:solid 1px black;"></textarea>
     </div>
 
+    <div class="container">
+      <ul class="tabs">
+        <li class= "tab-link current" data-tab= "bar-chart-large">Graph View</li>
+        <li class= "tab-link" data-tab= "ctsQuery">Query View</li>
+      </ul>
+      <div id= "bar-chart-large" class= "tab-content current">
+        <button id="resetBarsButton" type='reset' class="hide">Reset Bars</button>
+      </div>
+      <div id= "ctsQuery" class="tab-content">
+        <p id= 'ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
+        <textarea rows="10" cols="57" color="blue" id="queryText" readonly></textarea>
+      </div>
+    </div>
+    <div style="border-left:medium #000080 solid; height:800px; position:absolute; left:600px; top:100px;"/>
+    <button id="createDoc"> Create a Document </button>
+    <div id="dialogCreateDoc" hidden title="Create a New Document">
+        <!-- Add contents of creating a document. -->
+        <div class="muliFont" id="createDocStuff" hidden="true">
+          <div id="alignText">
+            <b> Temporal Collection: </b>
+            <br></br>
+            <b id='uriText'> URI: </b>
+            <br></br>
+            <b>Format: </b>
+          </div>
+          <div id="alignBoxes">
+            <select id="selectTempColl" class="dialogue">
+              <option>Choose a temporal collection</option>
+            </select>
+            <br class="break"></br>
+            <input type="text" id="newUri" placeholder="A custom uri here" class="dialogue">
+            <br class="break"></br>
+            <select id="docFormat" title="Format" class="dialogue">
+              <option>JSON</option>
+              <option>XML</option>
+            </select>
+          </div>
+          <p align="center"> These will be the document's contents, choose to your liking! </p>
+          <textarea class="muliFont" rows="14" cols="45" id="newDocContents"> </textarea>
+        </div>
+      </div>
+
+      <script>
+        $(document).ready(function(){
+    
+        $('ul.tabs li').click(function(){
+            var tab_id = $(this).attr('data-tab');
+
+            $('ul.tabs li').removeClass('current');
+            $('.tab-content').removeClass('current');
+
+            $(this).addClass('current');
+            $("#"+tab_id).addClass('current');
+          })
+
+        })
+      </script>
 
   </body>
 </html>

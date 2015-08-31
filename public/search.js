@@ -127,7 +127,7 @@ function runSearchQuery(firstDoc, lastDoc) {
 
   if (valSelectedOp === 'None' && sysSelectedOp === 'None') {
     $('#searchQueryButton, #filledRect').css({'visibility': 'hidden'});
-    document.getElementById('queryText').value = 'No ALN and ISO operator query was run';
+    document.getElementById('queryText').value = 'No ALN or ISO operators were used';
     document.getElementById('dragInstruct').innerHTML = '*View all the documents for this collection on the right and click reset to reload the page*'.bold();
     $('#resetButton').css({'visibility': 'visible'});
     document.getElementById('valDropdown').disabled = true;
@@ -223,7 +223,7 @@ function ajaxTimesCall(selectedColl, dataToDisplay, visibleBars, firstDoc, lastD
         else {
           getBarChart({
             data: data,
-            width: 600,
+            width: 570,
             height: 445,
             xAxisLabel: 'System',
             yAxisLabel: 'Valid',
@@ -321,7 +321,12 @@ function displayDocs(start, end, data) {
 
   if (parseInt(totalDocLen) === 0) {
     $('#next, #prev').css({'visibility': 'hidden'});
-    document.getElementById('numDocs').innerHTML = 'There are no documents in this selected time range';
+    if (getSelected('valDropdown') === 'None' && getSelected('sysDropdown') === 'None') {
+      document.getElementById('numDocs').innerHTML = 'There are no documents in this collection';
+    }
+    else {
+      document.getElementById('numDocs').innerHTML = 'There are no documents in this selected time range';
+    }
   }
   else if (totalDocLen === 1){
     document.getElementById('numDocs').innerHTML = 'Displaying one document';
@@ -333,7 +338,7 @@ function displayDocs(start, end, data) {
   //Loops through the documents to get the URI and the valid and system times
   //Calls functions to display the information on the search page
   //Checks if docs has a defined value
-  if (docs.values.length === undefined) {
+  if(docs.values === null || docs.values.length === undefined) {
     end = 1;
   }
   else {
@@ -354,18 +359,17 @@ function displayDocs(start, end, data) {
         xmlString: doc
       };
       var propName;
-      if(matchesArr) {
-        for(var j = 0; j < matchesArr.length; j++) {
-          propName = matchesArr[j];
-          //tests that propName is of format <propName>, not </propName>
-          if(!propName.startsWith('</')) {
-            doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
-          }
+      for(var j = 0; j < matchesArr.length; j++) {
+        propName = matchesArr[j];
+        //tests that propName is of format <propName>, not </propName>
+        if(!propName.startsWith('</')) {
+          doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
         }
-        doc = JSON.stringify(doc);
-        doc = JSON.parse(doc);
       }
+      doc = JSON.stringify(doc);    
+      doc = JSON.parse(doc);
     }
+
     doc.uri = docs.uri[i];
     doc.collections = docs.collections[i];
     createBulletList(doc);
@@ -379,7 +383,6 @@ function createBulletList(doc) {
   var selectedColl = getSelected('dropdown');
   for (var t = 0; t < collArr.length; t++) {
     if(collArr[t].includes('.json') || collArr[t].includes('.xml')) {
-      //console.log(collArr[t])
       uriLogical = collArr[t];
     }
   }

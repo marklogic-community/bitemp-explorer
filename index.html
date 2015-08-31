@@ -31,7 +31,7 @@
       #instructions {
         position: absolute;
         left: 850px;
-        top: 78px;
+        top: 255px;
         font-size: 15px;
         width: 24em;
         word-wrap: normal;
@@ -115,7 +115,7 @@
       #editDocDiv{
         position: absolute;
         left:850px;
-        top: 470px;
+        top: 350px;
         width: 30em;
       }
 
@@ -131,6 +131,12 @@
         z-index: 2;
       }
       .svg-chart .g { fill: #4682B4; }
+
+      #bar-chart-large {
+        position: absolute;
+        left: 0px;
+        top: 100px;
+      }
 
       .tooltip-txt {
         font-family: Helvetica;
@@ -177,34 +183,9 @@
         font-family: 'Muli', sans-serif;
       }
 
-      #dialogCreateDoc {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 15px;
-      }
-
       .tick {
         stroke: black;
         stroke-width: 1;
-      }
-
-      #uriEntered {
-        font-size: 16px;
-        position: absolute;
-        left: 5px;
-        top: 28px;
-        width: 25em;
-        word-wrap: normal;
-      }
-
-      #collectionAndLsqt {
-        font-size: 16px;
-        position: absolute;
-        left: 5px;
-        top: 70px;
-        width: 25em;
-        word-wrap: normal;
       }
 
       .definition {
@@ -238,8 +219,11 @@
       }
 
       #time {
-        font-size: 16px;
+        font-size: 14px;
         font-family: 'Muli', sans-serif;
+        position: absolute;
+        top: 40px;
+        left: 10px;
       }
 
       #select-prop {
@@ -261,16 +245,12 @@
         -o-transition: all 0.15s linear;
         transition: all 0.15s linear;
         font-family: 'Muli', sans-serif;
-        top: 310px;
-        left: 0px;
+        top: 14px;
+        left: 132px;
       }
 
       .enterInstruct, #contents, #sysStartTxt {
         font-size: 15px;
-      }
-
-      #selectedURI {
-        font-size: 13px;
       }
 
       #editViewDelButtons {
@@ -279,35 +259,32 @@
         left: 0px;
       }
 
+      #display {
+        position: absolute;
+        left: 850px;
+        top: 85px;
+        width: 1000px;
+        font-family: 'Muli', sans-serif;
+        font-size: 15px;
+      }
+
     </style>
   </head>
 
   <body>
     <h1>MarkLogic <span class="definition" title="Bitemporal: Handles historical data along two different time lines, making it possible to rewind the information “as it actually was” in combination with “as it was recorded” at some point in time">Bitemporal</span> Visualization Demo</h1>
-    <a href="search" id="searchURL">Search</a>
+    <a href="search" id="searchURL">Home</a>
     <div id="instructions">
-      <p>Change the logical document display to the specified URI of a logical document.</p>
-      <p>Don't forget to include the "dot extension" ie .json.</p>
-
-      <b class="enterInstruct">Enter <span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span></b><br>
-      <input class= "muliFont" type="text" name="collection" id="textBoxForSelectingURI" value="">
-      <input class= "muliFont" type="button" id="pick-doc" value="Submit">
-
-      <p>Enter a document property to display in the graph or choose one from the drop down menu.</p>
-
-      <b class="enterInstruct">Enter Document Property:</b><br>
-      <input class= "muliFont" type="text" id="changeDocProp" name="documentProperty" value="">
-
-      <input class="muliFont" type="button" id="change-prop" value="Submit">
-      <p>Select a Property:</p><br><br>
-
+      <p>Select a Property:</p>
       <select id="select-prop"></select>
     </div>
 
-    <p id="uriEntered"></p>
-    <br></br>
-
-    <p id="collectionAndLsqt"></p>
+    <div id='display'>
+      <p id="collection"></p>
+      <p id="uriEntered"></p>
+      <p id="selectedURI">Selected<span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span> <b> null </b></p>
+      <p id="lsqt"></p>
+    </div>
     <br></br>
 
     <div id="tooltip-txt" class="hidden">
@@ -352,15 +329,13 @@
         <link rel="shortcut icon" href="http://marklogic.com" />
       </div>
       <div id="editViewDelButtons">
-        <button id="createDoc"> Create a Document </button>
-        <p id="selectedURI"> Selected URI: <b> null </b></p>
         <button id="editButton" disabled> Edit </button>
         <button id="viewButton" disabled> View </button>
         <button id="deleteButton" disabled> Delete </button>
         <p id="deleteErrMessage"> </p>
         <button id="saveButton" hidden="true"> Save </button>
         <button id="cancelButton" hidden="true"> Cancel </button>
-        <textarea class="muliFont" rows="12" cols="50" id="contents" hidden = "true"> </textarea>
+        <textarea class="muliFont" rows="12" cols="40" id="contents" hidden = "true"> </textarea>
         <div id="sysTimeDiv" class="hideSysTimeBoxes" class="muliFont">
           <p id="sysStartTxt"> <b> sysStart: </b> <input spellcheck="false" class="muliFont" type="text" id="sysStartBox">
         </div>
@@ -370,13 +345,13 @@
       </div>
       </div>
     </div> <!-- End editDocDiv -->
-    <h4>Current Time: <span id="time"/></h4>
+    <p id="time"></p>
     <script type="text/javascript">
       <!--
       function updateTime() {
         var currentTime = new Date().toISOString();
         setTimeout("updateTime()",1000);
-        document.getElementById('time').innerHTML = currentTime.substring(0, currentTime.indexOf('.'));
+        document.getElementById('time').innerHTML = 'Current Time: '.bold() + currentTime.substring(0, currentTime.indexOf('.'));
       }
       updateTime();
       //-->
