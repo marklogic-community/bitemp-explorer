@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Bitemporal Search</title>
+    <link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
     <link rel="shortcut icon" href="http://owwgdpc6ll4w6eh4717xd1x4.wpengine.netdna-cdn.com/wp-content/mu-plugins/images/favicon.ico?cache=2">
 
     <style>
@@ -15,10 +16,6 @@
         background-repeat: no-repeat;
         font-family: 'Muli', sans-serif;
         font-size: 12px;
-      }
-
-      img {
-
       }
 
       h1 {
@@ -87,8 +84,8 @@
 
       #resetBarsButton {
         position: absolute;
-        left: 278px;
-        top: 305px;
+        left: 498px;
+        top: -10px;
         height: 18px;
         width: 85px;
         font-size: 1em;
@@ -254,20 +251,6 @@
         position: absolute;
         left: 120px;
         top: 200px;
-      }
-
-      #homeURL {
-        position: absolute;
-        left: 5px;
-        top: 4px;
-        font-size: 13px;
-        color: MediumBlue;
-        z-index: 1;
-        font-family: 'Muli', sans-serif;
-      }
-
-      #homeURL:hover {
-        color: #000080;
       }
 
       #dropdown {
@@ -509,48 +492,96 @@
       }
 
       .container{
-            width: 800px;
-            margin: 0 auto;
-            position: absolute;
-            left: 60px;
-            top: 360px;
-        }
+        width: 800px;
+        margin: 0 auto;
+        position: absolute;
+        left: 60px;
+        top: 360px;
+      }
 
-        ul.tabs {
-            margin: 0px;
-            padding: 0px;
-            list-style: none;
-        }
+      ul.tabs {
+        margin: 0px;
+        padding: 0px;
+        list-style: none;
+      }
 
-        ul.tabs li {
-            background: none;
-            color: black;
-            display: inline-block;
-            padding: 10px 15px;
-            cursor: pointer;
-            border: 2px solid black;
-            font-family: 'Muli', sans-serif;
-        }
+      ul.tabs li {
+        background: none;
+        color: black;
+        display: inline-block;
+        padding: 10px 15px;
+        cursor: pointer;
+        border: 2px solid black;
+        font-family: 'Muli', sans-serif;
+      }
 
-        ul.tabs li:hover {
-          background: #CCE0FF;
-        }
+      ul.tabs li:hover {
+        background: #CCE0FF;
+      }
 
-        ul.tabs li.current {
-            background: #3399FF;
-            color: white;
-            border: 2px solid black;
-        }
+      ul.tabs li.current {
+        background: #3399FF;
+        color: white;
+        border: 2px solid black;
+      }
 
-        .tab-content {
-            display: none;
-            background: none;
-            padding: 15px;
-        }
+      .tab-content {
+        display: none;
+        background: none;
+        padding: 15px;
+      }
 
-        .tab-content.current {
-            display: inherit;
-        }
+      .tab-content.current {
+        display: inherit;
+      }
+
+      #dialogCreateDoc {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 15px;
+      }
+
+      #alignText {
+        float: left;
+        width: 230px;
+        height: 100px;
+        text-align: right;
+      }
+
+      #newDocContents {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        resize: none;
+        font-family: 'Muli', sans-serif;
+      }
+
+      #alignBoxes {
+        float: right;
+        width: 270px;
+        height: 100px
+      }
+
+      #createDoc {
+        position: absolute;
+        top: 0px;
+        left: 140px;
+        width: 150px;
+        height: 30px;
+      }
+
+      #newUri {
+        position: absolute;
+        left: 268px;
+        top: 52px;
+      }
+
+      #uriText {
+        position: absolute;
+        left: 216px;
+        top: 54px;
+      }
 
     </style>
 
@@ -559,13 +590,11 @@
     <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it
 possible to rewind the information “as it actually was” in combination with
 “as it was recorded” at some point in time.">Bitemporal</span> Search Page</h1>
-    <a href="/" id="homeURL">Home</a>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
-    <button id="searchQueryButton">Run Query</button>
-    <button id="resetBarsButton" type='reset' class="hide">Reset Bars</button>
-    <button id="resetButton">Reset Graph</button>
+    <button id="searchQueryButton">Search</button>
+    <button id="resetButton">Reset</button>
     <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries.
 Temporal queries, for example, are interval operations on time period such as,
 period equalities, containment and overlaps." class="definition">Operators:</p>
@@ -590,6 +619,7 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
       </div>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
     <script src="/public/search.js"></script>
     <script type="text/javascript" src="public/moment.min.js"></script>
     <script type="text/javascript" src="public/d3.min.js"></script>
@@ -613,16 +643,45 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
 
     <div class="container">
       <ul class="tabs">
-        <li class= "tab-link current" data-tab= "bar-chart-large">Graph</li>
-        <li class= "tab-link" data-tab= "ctsQuery">CTS Query</li>
+        <li class= "tab-link current" data-tab= "bar-chart-large">Graph View</li>
+        <li class= "tab-link" data-tab= "ctsQuery">Query View</li>
       </ul>
-      <div id= "bar-chart-large" class= "tab-content current"></div>
+      <div id= "bar-chart-large" class= "tab-content current">
+        <button id="resetBarsButton" type='reset' class="hide">Reset Bars</button>
+      </div>
       <div id= "ctsQuery" class="tab-content">
         <p id= 'ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
         <textarea rows="10" cols="57" color="blue" id="queryText" readonly></textarea>
       </div>
     </div>
-    <div style="border-left:medium #000080 solid; height:800px; position:absolute; left:600px; top:100px;" />
+    <div style="border-left:medium #000080 solid; height:800px; position:absolute; left:600px; top:100px;"/>
+    <button id="createDoc"> Create a Document </button>
+    <div id="dialogCreateDoc" hidden title="Create a New Document">
+        <!-- Add contents of creating a document. -->
+        <div class="muliFont" id="createDocStuff" hidden="true">
+          <div id="alignText">
+            <b> Temporal Collection: </b>
+            <br></br>
+            <b id='uriText'> URI: </b>
+            <br></br>
+            <b>Format: </b>
+          </div>
+          <div id="alignBoxes">
+            <select id="selectTempColl" class="dialogue">
+              <option>Choose a temporal collection</option>
+            </select>
+            <br class="break"></br>
+            <input type="text" id="newUri" placeholder="A custom uri here" class="dialogue">
+            <br class="break"></br>
+            <select id="docFormat" title="Format" class="dialogue">
+              <option>JSON</option>
+              <option>XML</option>
+            </select>
+          </div>
+          <p align="center"> These will be the document's contents, choose to your liking! </p>
+          <textarea class="muliFont" rows="14" cols="45" id="newDocContents"> </textarea>
+        </div>
+      </div>
 
       <script>
         $(document).ready(function(){

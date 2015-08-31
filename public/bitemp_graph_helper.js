@@ -97,7 +97,9 @@ function clearTextArea() {
   var currDate = new Date();
   document.getElementById('contents').value = '';
   document.getElementById('sysStartBox').value = '';
-  document.getElementById('newDocContents').value = '';
+  if(window.location.href.endsWith('/search')) {
+    document.getElementById('newDocContents').value = '';
+  }
 }
 
 function fillText(data, isEditing, id, chart) {
@@ -148,6 +150,14 @@ function fillText(data, isEditing, id, chart) {
     textArea.value = JSON.stringify(data, null, 2);
     textArea.readOnly = !isEditing;
   }
+
+
+  // else {//view json doc
+  //   var strToAdd = '';
+  //   strToAdd += JSON.stringify(data, null, 2);
+  //   textArea.value += strToAdd;
+  //   textArea.readOnly = !isEditing;
+  // }
 }
 
 function cancel(chart) {
@@ -208,7 +218,8 @@ function save(chart) {
 
   $.ajax({
     type: 'PUT',
-    format: contType,
+    contentType: 'application/json',
+    url: '/v1/documents/?uri=' + chart.getCurrentURI(),
     processData: false,
     url: url,
     data: data,
@@ -245,6 +256,8 @@ function initNewJSON(response) {
 
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  data = jQuery.parseJSON(data);
+  alert('Document was saved');
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -284,7 +297,9 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      loadData(newURI);
+      if(!window.location.href.endsWith('/search')) {
+        loadData(newURI);
+      }
     },
     error: function(jqXHR, textStatus) {
       if (jqXHR['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-NOLSQT') {
@@ -453,7 +468,7 @@ function deleteSuccess(response, tempColl, chart) {
       },
       error: function(jqXHR, textStatus) {
         cancel(chart);
-        window.alert('Delete didn\'t work, most likely an error in the date? Sample date: 2015-09-31T00:00:00Z\n\n Or perhaps LSQT is not set for this collecion');
+        window.alert('Delete didn\'t work, most likely an error in the date? Sample date: 2015-09-31T00:00:00Z\n\n Or perhaps LSQT is not set for this collection');
       },
     });
   }

@@ -1,5 +1,5 @@
 /*global d3, moment*/
-
+ 
 var barChart = function() {
   // default values for configurable input parameters
   var width = 600;
@@ -19,7 +19,7 @@ var barChart = function() {
   var lsqt;
 
   var systemStart, systemEnd, validStart, validEnd;
-
+ 
   var margin = {
     top: 0,
     right: 0,
@@ -28,13 +28,13 @@ var barChart = function() {
   };
   var xAxisLabel = 'System Time';
   var yAxisLabel = 'Valid Time';
-
+ 
   var color = d3.scale.category10();
-
+ 
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
-
+ 
   function getAxisSetup() {
     var uriInGraph;
     if (data === null) {
@@ -69,19 +69,19 @@ var barChart = function() {
       }
     }
   }
-
+ 
   var chart = function(container) {
-
+ 
     function setupXAxis() {
       // minStart: earliest system start
       // maxEnd: latest non-infinty system end
       // maxStart: max system start time
       var minStart, maxEnd, maxStart;
-
+ 
       if (xMin) {
         minStart = xMin;
       }
-
+ 
       else {
         if (data.length) {
           minStart =  moment.min(data.map(function(d){
@@ -92,12 +92,12 @@ var barChart = function() {
           minStart = moment('2001-01-01T00:00:00').toDate();
         }
       }
-
+ 
       maxStart =
         moment.max(data.map(function(d){
           return moment(d.content[systemStart]);
         })).add(10, 'y');
-
+ 
       if (xMax) {
         maxEnd = xMax;
       }
@@ -117,38 +117,38 @@ var barChart = function() {
           maxEnd = moment('2020-01-01T00:00:00').toDate();
         }
       }
-
+ 
       maxStart = maxStart.toDate();
-
+ 
       if(maxStart > maxEnd) {
         maxEnd = maxStart;
       }
-
+ 
       xScale = d3.time.scale()
         .domain([minStart, maxEnd])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
-
+ 
       if (data.length > 12 && width < 500) {
         xAxisCssClass = 'axis-font-small';
       } else {
         xAxisCssClass = '';
       }
-
+ 
       xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(10)
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(10,0)
         .orient('end');
-
+ 
     }
-
+ 
     function setupYAxis() {
       // minStart: earliest valid start
       // maxEnd: latest non-infinty valid end
       // maxStart: max valid start time
       var minStart, maxEnd, maxStart;
-
+ 
       if (yMin) {
         minStart = yMin;
       }
@@ -167,7 +167,7 @@ var barChart = function() {
         moment.max(data.map(function(d){
           return moment(d.content[validStart]);
         })).add(10, 'y');
-
+ 
       if (yMax) {
         maxEnd = yMax;
       }
@@ -187,42 +187,42 @@ var barChart = function() {
           maxEnd = moment('2015-01-01T00:00:00').toDate();
         }
       }
-
+ 
       yScale = d3.time.scale()
         .domain([minStart, maxEnd])
         .range([height - axisLabelMargin - margin.top - margin.bottom, axisLabelMargin]);
-
+ 
       var yAxisCssClass;
       if (data.length > 12 && width < 500) {
         yAxisCssClass = 'axis-font-small';
       } else {
         yAxisCssClass = '';
       }
-
+ 
       yAxis = d3.svg.axis()
         .scale(yScale)
         .orient('left')
         .tickFormat(d3.time.format('%Y-%m-%d'))
         .tickSize(10,0);
     }
-
+ 
     function setupBarChartLayout() {
-
+ 
       g = container.append('svg')
         .attr('class', 'svg-chart')
         .attr('width', width)
         .attr('height', height)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
+ 
       var colorDomain = [];
       data.map(function(d){
         colorDomain.push(d.content.data);
       });
-
+ 
       color.domain(colorDomain);
     }
-
+ 
     function addXAxisLabel() {
       //Rotate ticks
       g.append('g')
@@ -235,7 +235,7 @@ var barChart = function() {
           .attr('dx', '-1.4em')
           .attr('dy', '0.8em')
           .attr('transform', 'rotate(-60)');
-
+ 
       //Add x axis label
       g.append('g')
         .append('text')
@@ -244,16 +244,16 @@ var barChart = function() {
         .attr('x', (width - margin.left-120)/2)
         .text(xAxisLabel);
     }
-
+ 
     function addYAxisLabel() {
-
+ 
       g.append('g')
         .attr('class', 'yaxis ')
         .attr('transform', 'translate('+axisLabelMargin+', 0)')
         .call(yAxis)
         .selectAll('text')
           .attr('dy', '0.5em');
-
+ 
       g.append('g')
         .append('text')
         .attr('class', 'axis-label')
@@ -263,7 +263,7 @@ var barChart = function() {
         .style('text-anchor', 'left')
         .text(yAxisLabel);
     }
-
+ 
     function addRectangle() {
       g.append('rect')
         .style('stroke', 'black')
@@ -286,26 +286,26 @@ var barChart = function() {
           }
         });
     }
-
+ 
     function setLastDoc(ld) {
       lastDoc = ld;
     }
-
+ 
     function getLastDoc() {
       return lastDoc;
     }
-
+ 
     function addBarChartData() {
-
+ 
       var split = g.selectAll('.split');
-
+ 
       split = g.selectAll('.split')
         .data(data)
         .enter()
         .append('g')
         .attr('class','split')
         .attr('stroke', 'black');
-
+ 
       var r;
       var propTooltip = d3.select('body')
         .append('div')
@@ -316,7 +316,7 @@ var barChart = function() {
         .style('font-size', '18px')
         .style('width', '32em')
         .text('');
-
+ 
       //factor out some code appearing multiple times
       function setDefaultDispPropBehavior(d) {
         if (!displayProperty || displayProperty === 'data') {
@@ -326,14 +326,14 @@ var barChart = function() {
           }
         }
       }
-
+ 
       r = split
         .append('rect')
         .style('cursor', 'pointer')
         .on('mouseover', function(d) {
           d3.select(this).attr('fill-opacity', 0.7);
           var str = '';
-
+ 
           setDefaultDispPropBehavior(d);
           if (displayProperty.indexOf('.') === -1) {
             str = d.content[displayProperty];
@@ -416,7 +416,7 @@ var barChart = function() {
           var bValStart = yScale(moment(d.content[validStart]).toDate());
           var bValEnd = yScale(moment(d.content[validEnd]).toDate());
           var h=-bValEnd+bValStart;
-
+ 
           return h;
         })
         .attr('width', function(d) {
@@ -428,7 +428,7 @@ var barChart = function() {
           var w=bSysEnd-bSysStart;
           return w;
         });
-
+ 
       split.append('text')
         .attr('id', 'box')
         .style('fill', 'DarkMagenta')
@@ -503,7 +503,7 @@ var barChart = function() {
           }
         });
     }
-
+ 
     function path(object, fullPath) {
       var selection = object;
       fullPath.split('.').forEach(function(path) {
@@ -511,7 +511,7 @@ var barChart = function() {
       });
       return selection;
     }
-
+ 
     function addBackground() {
       background = g.append('svg')
         .attr('class', 'background1')
@@ -523,13 +523,13 @@ var barChart = function() {
         .attr('y', -axisLabelMargin)
         .attr('width', width - axisLabelMargin - margin.left - margin.right)
         .attr('height', height - margin.top - margin.bottom);
-
+ 
     }
-
+ 
     function addDragBars() {
       var format = d3.time.format('%Y-%m-%d');
-
-      function lineCreator(x1, x2, y1, y2, direction, id) {
+ 
+      function lineCreator(x1, x2, y1, y2, direction, id, pointer) {
         background
           .append('line')
           .attr('x1', x1)
@@ -538,7 +538,7 @@ var barChart = function() {
           .attr('y2', y2)
           .style('opacity', '.99')
           .style('position', 'relative')
-          .style('cursor', 'pointer')
+         .style('cursor', pointer)
           .style('z-index', '1')
           .attr('stroke-width', '8')
           .attr('stroke', 'Blue')
@@ -547,7 +547,7 @@ var barChart = function() {
           .attr('id', id)
           .call(direction);
       }
-
+ 
       var dragLeft = d3.behavior.drag()
         .on('dragend', function(d,i) {
           $('#endSysBox').css({'border': '1px solid black'});
@@ -578,7 +578,7 @@ var barChart = function() {
             return 'translate(' + [ d.x,d.y ] + ')';
         });
       });
-
+ 
       var dragRight = d3.behavior.drag()
         .on('dragend', function(d,i) {
           $('#startSysBox').css({'border': '1px solid black'});
@@ -609,7 +609,7 @@ var barChart = function() {
             return 'translate(' + [ d.x,d.y ] + ')';
           });
       });
-
+ 
       var dragUp = d3.behavior.drag()
         .on('dragend', function(d,i) {
           $('#startValBox').css({'border': '1px solid black'});
@@ -639,9 +639,9 @@ var barChart = function() {
           d3.select(this).attr('transform', function(d,i){
             return 'translate(' + [ d.x,d.y ] + ')';
           });
-
+ 
       });
-
+ 
       var dragDown = d3.behavior.drag()
         .on('dragend', function(d,i) {
           $('#endValBox').css({'border': '1px solid black'});
@@ -672,7 +672,7 @@ var barChart = function() {
             return 'translate(' + [d.x, d.y] + ')';
         });
       });
-
+ 
       $('#startSysBox').change(function() {
         var input = $(this).val();
         var inputArray = input.split('-');
@@ -688,8 +688,8 @@ var barChart = function() {
           createFilledRectangle();
         }
       });
-
-
+ 
+ 
       $('#endSysBox').change(function() {
         var input = $(this).val();
         var inputArray = input.split('-');
@@ -706,7 +706,7 @@ var barChart = function() {
           createFilledRectangle();
         }
       });
-
+ 
       $('#startValBox').change(function() {
         var input = $(this).val();
         var inputArray = input.split('-');
@@ -723,7 +723,7 @@ var barChart = function() {
           createFilledRectangle();
         }
       });
-
+ 
       $('#endValBox').change(function() {
         var input = $(this).val();
         var inputArray = input.split('-');
@@ -740,25 +740,26 @@ var barChart = function() {
           createFilledRectangle();
         }
       });
-
+ 
       //right vertical line
-      lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft');
+      lineCreator(width - margin.left-4, width - margin.left-4, 1, height-margin.top-margin.bottom, dragLeft, 'dragLeft', 'ew-resize');
       $('#endSysBox').val(format(xScale.invert(width - margin.left - margin.right)));
-
+ 
       //left vertical line
-      lineCreator(3, 3, 0, height-margin.top-margin.bottom, dragRight, 'dragRight');
+      lineCreator(3, 3, 0, height-margin.top-margin.bottom, dragRight, 'dragRight', 'ew-resize');
       $('#startSysBox').val(format(xScale.invert(0)));
-
+ 
       //bottom horizontal line
-      lineCreator(0, width - margin.left, height - margin.bottom -margin.top-3, height - margin.bottom - margin.top-3 , dragUp, 'dragUp');
+      lineCreator(0, width - margin.left, height - margin.bottom -margin.top-3, height - margin.bottom - margin.top-3 , dragUp, 'dragUp', 'ns-resize');
       $('#startValBox').val(format(yScale.invert(height -margin.top- margin.bottom)));
-
+ 
       //top horizontal line
-      lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown');
+      lineCreator(0, width - margin.left, 3, 3, dragDown, 'dragDown', 'ns-resize');
       $('#endValBox').val(format(yScale.invert(0)));
-
+ 
+      writeQuery();
       createFilledRectangle();
-
+ 
       function createFilledRectangle() {
         $('#filledRect').remove();
         //these variables define the area of a rectangle
@@ -766,7 +767,7 @@ var barChart = function() {
         x2 = $('#dragRight')[0].__data__.x;
         y1 = $('#dragUp')[0].__data__.y;
         y2 = $('#dragDown')[0].__data__.y;
-
+ 
         var x, y, widthRect, heightRect;
         if(getSelected('valDropdown') !== 'None' && getSelected('sysDropdown') !== 'None') {
           x = x2 + 7;
@@ -774,7 +775,7 @@ var barChart = function() {
           widthRect = width - margin.left + x1 - x2 - 14;
           heightRect = height-margin.top-margin.bottom + y1 - y2 - 14;
         }
-
+ 
         else if(getSelected('valDropdown') !== 'None') {
           //only have val times
           x = 0;
@@ -789,14 +790,14 @@ var barChart = function() {
           widthRect = width - margin.left + x1 - x2 - 14;
           heightRect = height-margin.top-margin.bottom;
         }
-
+ 
         else {
           x=0;
           y=0;
           widthRect = width - margin.left;
           heightRect = height-margin.top-margin.bottom;
         }
-
+ 
         g.append('rect')
         .style('stroke', 'black')
         .style('fill', '#3399FF')
@@ -808,9 +809,9 @@ var barChart = function() {
         .attr('width', widthRect)
         .attr('height',  heightRect);
       }
-
+ 
     }
-
+ 
     function addDisplayDocAndPropData() {
       if (document.getElementById('uriEntered')) {
         $.urlParam = function(name) {
@@ -822,7 +823,7 @@ var barChart = function() {
             return results[1] || 0;
           }
         };
-
+ 
         var uriParameter = $.urlParam('collection');
         if (!uriParameter) {
           uriParameter = 'addr.json';
@@ -842,7 +843,7 @@ var barChart = function() {
         }
       }
     }
-
+ 
     getAxisSetup();
     axisLabelMargin = 0;
     setupXAxis();
@@ -857,15 +858,15 @@ var barChart = function() {
       addDragBars();
     }
     addDisplayDocAndPropData();
-
+ 
   };
-
+ 
   d3.selection.prototype.size = function() {
     var n = 0;
     this.each(function() { ++n; });
     return n;
   };
-
+ 
   chart.data = function(value) {
     if (!arguments.length) {
       return data;
@@ -873,7 +874,7 @@ var barChart = function() {
     data = value;
     return chart;
   };
-
+ 
   chart.width = function(value) {
     if (!arguments.length) {
       return width;
@@ -881,7 +882,7 @@ var barChart = function() {
     width = value;
     return chart;
   };
-
+ 
   chart.height = function(value) {
     if (!arguments.length) {
       return height;
@@ -889,7 +890,7 @@ var barChart = function() {
     height = value;
     return chart;
   };
-
+ 
   chart.xMin = function(value) {
     if (!arguments.length) {
       return xMin;
@@ -897,7 +898,7 @@ var barChart = function() {
     xMin = value;
     return chart;
   };
-
+ 
   chart.xMax = function(value) {
     if (!arguments.length) {
       return xMax;
@@ -905,7 +906,7 @@ var barChart = function() {
     xMax = value;
     return chart;
   };
-
+ 
   chart.yMin = function(value) {
     if (!arguments.length) {
       return yMin;
@@ -913,7 +914,7 @@ var barChart = function() {
     yMin = value;
     return chart;
   };
-
+ 
   chart.yMax = function(value) {
     if (!arguments.length) {
       return yMax;
@@ -921,7 +922,7 @@ var barChart = function() {
     yMax = value;
     return chart;
   };
-
+ 
   chart.draggableBars = function(value) {
     if (!arguments.length) {
       return draggableBars;
@@ -929,7 +930,7 @@ var barChart = function() {
     draggableBars = value;
     return chart;
   };
-
+ 
   chart.margin = function(value) {
     if (!arguments.length) {
       return margin;
@@ -937,35 +938,35 @@ var barChart = function() {
     margin = value;
     return chart;
   };
-
+ 
   chart.getDeleting = function() {
     return isDeleting;
   };
-
+ 
   chart.setDeleting = function(bool) {
     isDeleting = bool;
   };
-
+ 
   chart.getEditing = function() {
     return isEditing;
   };
-
+ 
   chart.setEditing = function(bool) {
     isEditing = bool;
   };
-
+ 
   chart.getViewing = function() {
     return isViewing;
   };
-
+ 
   chart.setViewing = function(bool) {
     isViewing = bool;
   };
-
+ 
   chart.getCurrentURI = function() {
     return uri;
   };
-
+ 
   chart.setCurrentURI = function(u) {
     uri = u;
     if (uri === null) {
@@ -979,7 +980,7 @@ var barChart = function() {
       document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
     }
   };
-
+ 
   chart.xAxisLabel = function(value) {
     if (!arguments.length) {
       return xAxisLabel;
@@ -987,7 +988,7 @@ var barChart = function() {
     xAxisLabel = value;
     return chart;
   };
-
+ 
   chart.yAxisLabel = function(value) {
     if (!arguments.length) {
       return yAxisLabel;
@@ -995,11 +996,11 @@ var barChart = function() {
     yAxisLabel = value;
     return chart;
   };
-
+ 
   chart.getDisplayProperty = function() {
     return displayProperty;
   };
-
+ 
   chart.getLogicalURI = function() {
     if (!uri) {
       return 'NoLogicalUriSpecified';
@@ -1012,7 +1013,7 @@ var barChart = function() {
     }
     return logicURI;
   };
-
+ 
   chart.setDisplayProperty = function(str) {
     if (!str) {
       displayProperty = 'data';
@@ -1022,7 +1023,7 @@ var barChart = function() {
     }
     return chart;
   };
-
+ 
   chart.getSystemStart = function() {
     return systemStart;
   };
@@ -1035,7 +1036,7 @@ var barChart = function() {
   chart.getValidEnd = function() {
     return validEnd;
   };
-
+ 
   //for creating a document in helper
   chart.getAxisSetup = function(collection, format, save, newURI) {
     $.ajax({
