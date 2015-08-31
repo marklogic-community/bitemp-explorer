@@ -219,7 +219,7 @@ var barChart = function() {
       data.map(function(d){
         colorDomain.push(d.content.data);
       });
- 
+
       color.domain(colorDomain);
     }
 
