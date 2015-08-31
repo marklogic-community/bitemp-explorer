@@ -107,7 +107,7 @@ function fillText(data, isEditing, id, chart) {
 
   var textArea = document.getElementById(id);
 
-  if(data.contentType && data.contentType.indexOf('xml') > -1) {
+  if (data.contentType && data.contentType.indexOf('xml') > -1) {
     var xmlStr = data.childNodes[0].outerHTML;
     //https://gist.github.com/sente/1083506
     //to format pretty printing of xml
@@ -122,7 +122,7 @@ function fillText(data, isEditing, id, chart) {
           indent = 0;
         } else if (node.match( /^<\/\w/ )) {
           if (pad != 0) {
-            pad -= 1;
+            --pad;
           }
         } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
           indent = 1;
@@ -315,7 +315,7 @@ function setupTextArea(chart, isEditing) {
   if (isEditing) {
     $('#saveButton').show();
   }
-   var successFunc = function(data) {
+  var successFunc = function(data) {
     var bool = chart.getLsqt();
     if(isEditing && bool === 'false') {
       $('#sysTimeDiv').addClass('hideSysTimeBoxes');
