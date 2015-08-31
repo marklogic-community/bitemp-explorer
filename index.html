@@ -188,24 +188,6 @@
         stroke-width: 1;
       }
 
-      #uriEntered {
-        font-size: 16px;
-        position: absolute;
-        left: 5px;
-        top: 28px;
-        width: 25em;
-        word-wrap: normal;
-      }
-
-      #collectionAndLsqt {
-        font-size: 16px;
-        position: absolute;
-        left: 5px;
-        top: 70px;
-        width: 25em;
-        word-wrap: normal;
-      }
-
       .definition {
         background-color: white;
         opacity: 1px;
@@ -237,8 +219,11 @@
       }
 
       #time {
-        font-size: 16px;
+        font-size: 14px;
         font-family: 'Muli', sans-serif;
+        position: absolute;
+        top: 40px;
+        left: 10px;
       }
 
       #select-prop {
@@ -296,12 +281,10 @@
 
     <div id='display'>
       <p id="collection"></p>
-      <p id="lsqt"></p>
       <p id="uriEntered"></p>
       <p id="selectedURI">Selected<span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span> <b> null </b></p>
+      <p id="lsqt"></p>
     </div>
-
-    <p id="collectionAndLsqt"></p>
     <br></br>
 
     <div id="tooltip-txt" class="hidden">
@@ -352,7 +335,7 @@
         <p id="deleteErrMessage"> </p>
         <button id="saveButton" hidden="true"> Save </button>
         <button id="cancelButton" hidden="true"> Cancel </button>
-        <textarea class="muliFont" rows="12" cols="50" id="contents" hidden = "true"> </textarea>
+        <textarea class="muliFont" rows="12" cols="40" id="contents" hidden = "true"> </textarea>
         <div id="sysTimeDiv" class="hideSysTimeBoxes" class="muliFont">
           <p id="sysStartTxt"> <b> sysStart: </b> <input spellcheck="false" class="muliFont" type="text" id="sysStartBox">
         </div>
@@ -362,13 +345,13 @@
       </div>
       </div>
     </div> <!-- End editDocDiv -->
-    <h4>Current Time: <span id="time"/></h4>
+    <p id="time"></p>
     <script type="text/javascript">
       <!--
       function updateTime() {
         var currentTime = new Date().toISOString();
         setTimeout("updateTime()",1000);
-        document.getElementById('time').innerHTML = currentTime.substring(0, currentTime.indexOf('.'));
+        document.getElementById('time').innerHTML = 'Current Time: '.bold() + currentTime.substring(0, currentTime.indexOf('.'));
       }
       updateTime();
       //-->

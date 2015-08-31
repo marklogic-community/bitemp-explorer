@@ -833,10 +833,10 @@ var barChart = function() {
         }
 
         if (data.length === 1) {
-          document.getElementById('uriEntered').innerHTML = 'You are displaying documents in: ' + data[0].uri.bold() + ' with property: ' + displayProperty.bold();
+          document.getElementById('uriEntered').innerHTML = 'Logical URI: ' + data[0].uri.bold();
         }
         else if (data.length > 0) {
-          document.getElementById('uriEntered').innerHTML = 'You are displaying documents in: ' + uriParameter.bold() + ' with property: ' + displayProperty.bold();
+          document.getElementById('uriEntered').innerHTML = 'Logical URI: ' + uriParameter.bold();
         }
         else {
           document.getElementById('uriEntered').innerHTML = 'No data found in document.'.bold();

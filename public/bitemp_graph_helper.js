@@ -628,7 +628,8 @@ function initLsqt(chart) {
     async: false,
     type: 'GET',
     success: function(response, textStatus) {
-      document.getElementById('collectionAndLsqt').innerHTML = 'The temporal collection is ' + tempColl.bold() +  ' and the LSQT is set to ' + response['lsqt-enabled'].toString().bold();
+      document.getElementById('collection').innerHTML = 'Temporal collection: ' + tempColl.bold();
+      document.getElementById('lsqt').innerHTML = 'LSQT: ' + response['lsqt-enabled'].toString().bold();
       chart.setTempColl(tempColl);
       chart.setLsqt(response['lsqt-enabled'].toString());
     },
