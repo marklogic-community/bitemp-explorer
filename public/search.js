@@ -408,7 +408,7 @@ function createBulletList(doc) {
         )
         .append(
           $('<a>')
-            .attr('href', '/?collection='+uriLogical)
+            .attr('href', '/view?collection='+uriLogical)
             .attr('class', 'definition')
             .css('color', 'MediumBlue')
             .attr('title', 'Logical Document: Represent the structure and meaning of a document, with only suggested renderings for their appearance which may or may not be followed by various browsers under various system configurations' + '\n' + JSON.stringify(doc, false, 2))
