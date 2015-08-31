@@ -97,6 +97,7 @@ function clearTextArea() {
   var currDate = new Date();
   document.getElementById('contents').value = '';
   document.getElementById('sysStartBox').value = '';
+  document.getElementById('sysEndBox').value = '';
   if(window.location.href.endsWith('/search')) {
     document.getElementById('newDocContents').value = '';
   }
@@ -164,6 +165,7 @@ function cancel(chart) {
   chart.setViewing(false);
   chart.setDeleting(false);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+  $('#sysEndDiv').addClass('hideSysTimeBoxes');
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
 }
 
@@ -435,7 +437,7 @@ function deleteSuccess(response, tempColl, chart) {
   var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
 
   //Add a system time to ajax request if specified
-  var sysBoxDate = document.getElementById('sysStartBox').value;
+  var sysBoxDate = document.getElementById('sysEndBox').value;
   if (sysBoxDate !== '') {
     sysBoxDate = new Date(sysBoxDate);
     url += '&system-time='+sysBoxDate.toISOString();
@@ -466,7 +468,7 @@ function deleteSuccess(response, tempColl, chart) {
   }
   clearTextArea();
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
-  $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+  $('#sysEndDiv').addClass('hideSysTimeBoxes');
 }
 
 function setupDelete(chart) {
@@ -474,14 +476,14 @@ function setupDelete(chart) {
   document.getElementById('deleteErrMessage').innerHTML = '';
   var date = moment().toISOString();
   date = date.split('.');
-  $("#sysStartBox").val(date[0]);
+  $("#sysEndBox").val(date[0]);
   if (!uri) { // No uri selected
     return;
   }
   $('#editButton').hide();
   $('#viewButton').hide();
   $('#deleteButton').hide();
-  $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
+  $('#sysEndDiv').removeClass('hideSysTimeBoxes');
   $('#deleteButtonsDiv').removeClass('hideSysTimeBoxes');
 }
 
@@ -634,7 +636,7 @@ var getBarChart = function (params, docProp) {
   }
   var chart = drawChart(params, docProp);
   if (params.collection) {
-    window.history.pushState('', 'Title', '/?collection='+params.collection);
+    window.history.pushState('', 'Title', '/view?collection='+params.collection);
   }
 
   if (params) {
@@ -684,9 +686,15 @@ var getBarChart = function (params, docProp) {
         Save: function() {
           saveNewDoc(chart);
           $(this).dialog('close');
+          $("#selectTempColl").val("Choose a temporal collection");
+          $('#newUri').val('');
+          $('#newDocContents').val('');
         },
         Cancel: function() {
           $(this).dialog('close');
+          $("#selectTempColl").val("Choose a temporal collection");
+          $('#newUri').val('');
+          $('#newDocContents').val('');
         }
       },
     });
@@ -729,7 +737,7 @@ var getBarChart = function (params, docProp) {
       window.alert('Please enter a uri.');
     }
     else {
-      window.history.pushState('', 'Title', '/?collection='+uriCollection);
+      window.history.pushState('', 'Title', '/view?collection='+uriCollection);
       loadData(uriCollection);
       cancel(chart);
     }
