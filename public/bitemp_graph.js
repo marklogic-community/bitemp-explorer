@@ -77,7 +77,7 @@ var barChart = function() {
       // maxEnd: latest non-infinty system end
       // maxStart: max system start time
       var minStart, maxEnd, maxStart;
-      
+
       if (xMin) {
         minStart = xMin;
       }

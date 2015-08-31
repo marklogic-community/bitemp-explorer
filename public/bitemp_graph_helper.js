@@ -248,8 +248,6 @@ function initNewJSON(response) {
 
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
-  data = jQuery.parseJSON(data);
-  alert('Document was saved');
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -288,7 +286,7 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      if(!window.location.href.endsWith('/search')) {
+      if(!window.location.href === 'http://localhost:3000/') {
         loadData(newURI);
       }
     },
@@ -630,7 +628,7 @@ function initLsqt(chart) {
 }
 
 var getBarChart = function (params, docProp) {
-  if (params.draggableBars === false) {
+  if (document.getElementById('editButton')) {
     removeButtonEvents();
     initButtons();
   }
