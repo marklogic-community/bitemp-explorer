@@ -736,4 +736,3 @@ var getBarChart = function (params, docProp) {
   });
 };
 
-
