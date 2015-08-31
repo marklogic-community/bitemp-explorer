@@ -2,8 +2,8 @@ var dev =  {
   host: 'localhost',    // The database app server host
   port: 8000,           // By default port 8000 is enabled
   //database : 'Documents',
-  user: 'adattalo',       // A user with at least the rest-writer role
-  password: 'srstar411',   // Probably not your password
+  user: 'admin',       // A user with at least the rest-writer role
+  password: 'admin',   // Probably not your password
   authType: 'DIGEST'    // The default auth
 };
 

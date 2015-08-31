@@ -150,14 +150,6 @@ function fillText(data, isEditing, id, chart) {
     textArea.value = JSON.stringify(data, null, 2);
     textArea.readOnly = !isEditing;
   }
-
-
-  // else {//view json doc
-  //   var strToAdd = '';
-  //   strToAdd += JSON.stringify(data, null, 2);
-  //   textArea.value += strToAdd;
-  //   textArea.readOnly = !isEditing;
-  // }
 }
 
 function cancel(chart) {

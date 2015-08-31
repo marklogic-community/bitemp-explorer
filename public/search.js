@@ -139,7 +139,6 @@ function runSearchQuery(firstDoc, lastDoc) {
       url: url,
       success: function(response, textStatus)
       {
-        console.log(response)
         ajaxTimesCall(response.collection, response, false, firstDoc, lastDoc);
       },
       error: function(jqXHR, textStatus, errorThrown)
@@ -384,7 +383,6 @@ function createBulletList(doc) {
   var selectedColl = getSelected('dropdown');
   for (var t = 0; t < collArr.length; t++) {
     if(collArr[t].includes('.json') || collArr[t].includes('.xml')) {
-      //console.log(collArr[t])
       uriLogical = collArr[t];
     }
   }
