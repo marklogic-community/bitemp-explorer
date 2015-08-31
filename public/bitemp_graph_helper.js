@@ -148,8 +148,8 @@ function fillText(data, isEditing, id, chart) {
       data[chart.getSystemEnd()] = null;
     }
     textArea.value = JSON.stringify(data, null, 2);
-    textArea.readOnly = !isEditing;
   }
+  textArea.readOnly = !isEditing;
 }
 
 function cancel(chart) {
@@ -261,7 +261,6 @@ function saveNewDoc(chart) {
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
-  //initLsqt(chart);
 
   //Check if lsqt is set
   var date;
@@ -371,10 +370,9 @@ function getTemporalColl(uri) {
 //Gets all collections the uri belongs to.
 function getDocColls(uri) {
   var format = uri.substring(uri.lastIndexOf('.') + 1, uri.length);
-  var url = '/v1/documents?uri='+uri+'&category=collections&format='+format;
   var docColl;
   $.ajax({
-    url: url,
+    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
     success: function(data, textStatus) {
       docColl = data;
     },
