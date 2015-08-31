@@ -274,8 +274,8 @@ $('#next').click(function() {
 
 //function when the prev button is clicked
 $('#prev').click(function() {
-  firstDoc-=10;
-  lastDoc-=10;
+  firstDoc -= 10;
+  lastDoc -= 10;
   runSearchQuery(firstDoc, lastDoc);
 });
 
