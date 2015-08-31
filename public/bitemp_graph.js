@@ -30,7 +30,7 @@ var barChart = function() {
   var yAxisLabel = 'Valid Time';
 
   var color = d3.scale.category10();
- 
+
   var xScale, xAxis, xAxisCssClass;
   var yScale, yAxis, g;
   var axisLabelMargin;
@@ -97,7 +97,7 @@ var barChart = function() {
         moment.max(data.map(function(d){
           return moment(d.content[systemStart]);
         })).add(10, 'y');
- 
+
       if (xMax) {
         maxEnd = xMax;
       }
@@ -119,7 +119,7 @@ var barChart = function() {
       }
 
       maxStart = maxStart.toDate();
- 
+
       if(maxStart > maxEnd) {
         maxEnd = maxStart;
       }
@@ -127,13 +127,13 @@ var barChart = function() {
       xScale = d3.time.scale()
         .domain([minStart, maxEnd])
         .range([axisLabelMargin,width-margin.left-margin.right-axisLabelMargin]);
- 
+
       if (data.length > 12 && width < 500) {
         xAxisCssClass = 'axis-font-small';
       } else {
         xAxisCssClass = '';
       }
- 
+
       xAxis = d3.svg.axis()
         .scale(xScale)
         .ticks(10)
@@ -148,7 +148,7 @@ var barChart = function() {
       // maxEnd: latest non-infinty valid end
       // maxStart: max valid start time
       var minStart, maxEnd, maxStart;
- 
+
       if (yMin) {
         minStart = yMin;
       }
@@ -167,7 +167,7 @@ var barChart = function() {
         moment.max(data.map(function(d){
           return moment(d.content[validStart]);
         })).add(10, 'y');
- 
+
       if (yMax) {
         maxEnd = yMax;
       }
@@ -207,7 +207,7 @@ var barChart = function() {
     }
 
     function setupBarChartLayout() {
- 
+
       g = container.append('svg')
         .attr('class', 'svg-chart')
         .attr('width', width)
@@ -416,7 +416,7 @@ var barChart = function() {
           var bValStart = yScale(moment(d.content[validStart]).toDate());
           var bValEnd = yScale(moment(d.content[validEnd]).toDate());
           var h=-bValEnd+bValStart;
- 
+
           return h;
         })
         .attr('width', function(d) {
@@ -528,7 +528,7 @@ var barChart = function() {
 
     function addDragBars() {
       var format = d3.time.format('%Y-%m-%d');
- 
+
       function lineCreator(x1, x2, y1, y2, direction, id, pointer) {
         background
           .append('line')
