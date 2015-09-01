@@ -288,7 +288,7 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      if(!window.location.href === 'http://localhost:3000/') {
+      if(document.getElementById('editButton')) {
         loadData(newURI);
       }
     },
