@@ -288,9 +288,7 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      if(document.getElementById('editButton')) {
-        loadData(newURI);
-      }
+      window.alert('Document was saved');
     },
     error: function(jqXHR, textStatus) {
       if (jqXHR['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-NOLSQT') {
@@ -589,8 +587,8 @@ function initLsqt(chart) {
   };
   var uriParameter = $.urlParam('collection');
 
-  if (document.getElementById('collectionAndLsqt') && uriParameter === null) {
-    document.getElementById('collectionAndLsqt').innerHTML = 'The temporal collection is not specified.'.bold();
+   if (document.getElementById('collection') && uriParameter === null) {
+    document.getElementById('collection').innerHTML = 'The temporal collection is not specified.'.bold();
     return;
   }
   if(chart.data().length === 0) {

@@ -366,7 +366,7 @@ function displayDocs(start, end, data) {
           doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
         }
       }
-      doc = JSON.stringify(doc);    
+      doc = JSON.stringify(doc);
       doc = JSON.parse(doc);
     }
 
