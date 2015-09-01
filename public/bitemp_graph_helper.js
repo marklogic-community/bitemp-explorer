@@ -288,7 +288,7 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      alert('Document was saved');
+      window.alert('Document was saved');
     },
     error: function(jqXHR, textStatus) {
       if (jqXHR['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-NOLSQT') {
