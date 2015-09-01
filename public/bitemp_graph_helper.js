@@ -288,9 +288,6 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      if(document.getElementById('editButton')) {
-        loadData(newURI);
-      }
       alert('Document was saved');
     },
     error: function(jqXHR, textStatus) {
