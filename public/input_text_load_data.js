@@ -112,7 +112,7 @@ function parseData(data, collection, numParts) {
 function loadData(collection) {
   var url = '';
   if (collection !== null && collection !== undefined) {
-    url += '/' + collection;
+    url += '/view?' + collection;
   }
   var params = {
         data: [],

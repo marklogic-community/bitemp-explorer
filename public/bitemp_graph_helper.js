@@ -248,8 +248,6 @@ function initNewJSON(response) {
 
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
-  data = jQuery.parseJSON(data);
-  alert('Document was saved');
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -289,9 +287,10 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      if(!window.location.href.endsWith('/search')) {
+      if(!window.location.href === 'http://localhost:3000/') {
         loadData(newURI);
       }
+      alert('Document was saved');
     },
     error: function(jqXHR, textStatus) {
       if (jqXHR['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-NOLSQT') {
@@ -591,8 +590,8 @@ function initLsqt(chart) {
   };
   var uriParameter = $.urlParam('collection');
 
-  if (document.getElementById('collectionAndLsqt') && uriParameter === null) {
-    document.getElementById('collectionAndLsqt').innerHTML = 'The temporal collection is not specified.'.bold();
+   if (document.getElementById('collection') && uriParameter === null) {
+    document.getElementById('collection').innerHTML = 'The temporal collection is not specified.'.bold();
     return;
   }
   if(chart.data().length === 0) {
@@ -638,7 +637,7 @@ var getBarChart = function (params, docProp) {
   }
   var chart = drawChart(params, docProp);
   if (params.collection) {
-    window.history.pushState('', 'Title', '/?collection='+params.collection);
+    window.history.pushState('', 'Title', '/view?collection='+params.collection);
   }
 
   if (params) {
@@ -733,7 +732,7 @@ var getBarChart = function (params, docProp) {
       window.alert('Please enter a uri.');
     }
     else {
-      window.history.pushState('', 'Title', '/?collection='+uriCollection);
+      window.history.pushState('', 'Title', '/view?collection='+uriCollection);
       loadData(uriCollection);
       cancel(chart);
     }
