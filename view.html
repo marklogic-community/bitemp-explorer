@@ -339,6 +339,9 @@
         <div id="sysTimeDiv" class="hideSysTimeBoxes" class="muliFont">
           <p id="sysStartTxt"> <b> sysStart: </b> <input spellcheck="false" class="muliFont" type="text" id="sysStartBox">
         </div>
+        <div id="sysEndDiv" class="hideSysTimeBoxes" class="muliFont">
+          <p id="sysEndTxt"> <b> sysEnd: </b> <input spellcheck="false" class="muliFont" type="text" id="sysEndBox">
+        </div>
         <div id="deleteButtonsDiv" class="hideSysTimeBoxes">
           <button id="deleteOKButton"> OK </button>
           <button id="deleteCancelButton"> Cancel </button>
@@ -347,14 +350,12 @@
     </div> <!-- End editDocDiv -->
     <p id="time"></p>
     <script type="text/javascript">
-      <!--
       function updateTime() {
         var currentTime = new Date().toISOString();
         setTimeout("updateTime()",1000);
         document.getElementById('time').innerHTML = 'Current Time: '.bold() + currentTime.substring(0, currentTime.indexOf('.'));
       }
       updateTime();
-      //-->
     </script>
 
     <script type="text/javascript">

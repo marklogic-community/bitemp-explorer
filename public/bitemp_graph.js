@@ -384,7 +384,18 @@ var barChart = function() {
               setLastDoc(this);
             }
             if (chart.getViewing()) {
-              fillText(datum.content, false, 'contents');
+              var successFunc = function(data) {
+                var bool = chart.getLsqt();
+                if(isEditing && bool === 'false') {
+                  $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+                }
+                fillText(data, isEditing, 'contents', chart);
+              };
+              $.ajax({
+                url: '/v1/documents/?uri=' + chart.getCurrentURI(),
+                success: successFunc,
+                format: 'json'
+              });
             }
           }
         })

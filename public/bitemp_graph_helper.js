@@ -97,6 +97,7 @@ function clearTextArea() {
   var currDate = new Date();
   document.getElementById('contents').value = '';
   document.getElementById('sysStartBox').value = '';
+  document.getElementById('sysEndBox').value = '';
   if(window.location.href.endsWith('/search')) {
     document.getElementById('newDocContents').value = '';
   }
@@ -107,7 +108,7 @@ function fillText(data, isEditing, id, chart) {
 
   var textArea = document.getElementById(id);
 
-  if(data.contentType && data.contentType.indexOf('xml') > -1) {
+  if (data.contentType && data.contentType.indexOf('xml') > -1) {
     var xmlStr = data.childNodes[0].outerHTML;
     //https://gist.github.com/sente/1083506
     //to format pretty printing of xml
@@ -122,7 +123,7 @@ function fillText(data, isEditing, id, chart) {
           indent = 0;
         } else if (node.match( /^<\/\w/ )) {
           if (pad != 0) {
-            pad -= 1;
+            --pad;
           }
         } else if (node.match( /^<\w[^>]*[^\/]>.*$/ )) {
           indent = 1;
@@ -148,8 +149,8 @@ function fillText(data, isEditing, id, chart) {
       data[chart.getSystemEnd()] = null;
     }
     textArea.value = JSON.stringify(data, null, 2);
-    textArea.readOnly = !isEditing;
   }
+  textArea.readOnly = !isEditing;
 }
 
 function cancel(chart) {
@@ -164,6 +165,7 @@ function cancel(chart) {
   chart.setViewing(false);
   chart.setDeleting(false);
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+  $('#sysEndDiv').addClass('hideSysTimeBoxes');
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
 }
 
@@ -248,8 +250,6 @@ function initNewJSON(response) {
 
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
-  data = jQuery.parseJSON(data);
-  alert('Document was saved');
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -261,7 +261,6 @@ function saveNewDoc(chart) {
 
   var formatList = document.getElementById('docFormat');
   var format = formatList.options[formatList.selectedIndex].value;
-  //initLsqt(chart);
 
   //Check if lsqt is set
   var date;
@@ -289,7 +288,7 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      if(!window.location.href.endsWith('/search')) {
+      if(document.getElementById('editButton')) {
         loadData(newURI);
       }
     },
@@ -316,7 +315,7 @@ function setupTextArea(chart, isEditing) {
   if (isEditing) {
     $('#saveButton').show();
   }
-   var successFunc = function(data) {
+  var successFunc = function(data) {
     var bool = chart.getLsqt();
     if(isEditing && bool === 'false') {
       $('#sysTimeDiv').addClass('hideSysTimeBoxes');
@@ -371,10 +370,9 @@ function getTemporalColl(uri) {
 //Gets all collections the uri belongs to.
 function getDocColls(uri) {
   var format = uri.substring(uri.lastIndexOf('.') + 1, uri.length);
-  var url = '/v1/documents?uri='+uri+'&category=collections&format='+format;
   var docColl;
   $.ajax({
-    url: url,
+    url: '/v1/documents?uri='+uri+'&category=collections&format=json',
     success: function(data, textStatus) {
       docColl = data;
     },
@@ -439,7 +437,7 @@ function deleteSuccess(response, tempColl, chart) {
   var url = '/v1/documents?uri=' + chart.getLogicalURI() + '&temporal-collection=' + tempColl;
 
   //Add a system time to ajax request if specified
-  var sysBoxDate = document.getElementById('sysStartBox').value;
+  var sysBoxDate = document.getElementById('sysEndBox').value;
   if (sysBoxDate !== '') {
     sysBoxDate = new Date(sysBoxDate);
     url += '&system-time='+sysBoxDate.toISOString();
@@ -470,7 +468,7 @@ function deleteSuccess(response, tempColl, chart) {
   }
   clearTextArea();
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
-  $('#sysTimeDiv').addClass('hideSysTimeBoxes');
+  $('#sysEndDiv').addClass('hideSysTimeBoxes');
 }
 
 function setupDelete(chart) {
@@ -478,14 +476,14 @@ function setupDelete(chart) {
   document.getElementById('deleteErrMessage').innerHTML = '';
   var date = moment().toISOString();
   date = date.split('.');
-  $("#sysStartBox").val(date[0]);
+  $("#sysEndBox").val(date[0]);
   if (!uri) { // No uri selected
     return;
   }
   $('#editButton').hide();
   $('#viewButton').hide();
   $('#deleteButton').hide();
-  $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
+  $('#sysEndDiv').removeClass('hideSysTimeBoxes');
   $('#deleteButtonsDiv').removeClass('hideSysTimeBoxes');
 }
 
@@ -632,13 +630,13 @@ function initLsqt(chart) {
 }
 
 var getBarChart = function (params, docProp) {
-  if (params.draggableBars === false) {
+  if (document.getElementById('editButton')) {
     removeButtonEvents();
     initButtons();
   }
   var chart = drawChart(params, docProp);
   if (params.collection) {
-    window.history.pushState('', 'Title', '/?collection='+params.collection);
+    window.history.pushState('', 'Title', '/view?collection='+params.collection);
   }
 
   if (params) {
@@ -688,9 +686,15 @@ var getBarChart = function (params, docProp) {
         Save: function() {
           saveNewDoc(chart);
           $(this).dialog('close');
+          $("#selectTempColl").val("Choose a temporal collection");
+          $('#newUri').val('');
+          $('#newDocContents').val('');
         },
         Cancel: function() {
           $(this).dialog('close');
+          $("#selectTempColl").val("Choose a temporal collection");
+          $('#newUri').val('');
+          $('#newDocContents').val('');
         }
       },
     });
@@ -733,11 +737,10 @@ var getBarChart = function (params, docProp) {
       window.alert('Please enter a uri.');
     }
     else {
-      window.history.pushState('', 'Title', '/?collection='+uriCollection);
+      window.history.pushState('', 'Title', '/view?collection='+uriCollection);
       loadData(uriCollection);
       cancel(chart);
     }
   });
 };
-
 
