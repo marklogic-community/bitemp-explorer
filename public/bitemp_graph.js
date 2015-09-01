@@ -526,7 +526,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href.endsWith('/search')) {
+          if(window.location.href.endsWith('/')) {
             str = d.content.uri;
           }
           else {
@@ -563,7 +563,12 @@ var barChart = function() {
     function path(object, fullPath) {
       var selection = object;
       fullPath.split('.').forEach(function(path) {
-        selection = selection[path];
+        if(selection[path] !== undefined) {
+          selection = selection[path];
+        }
+        else {
+          selection = '';
+        }
       });
       return selection;
     }
