@@ -23,15 +23,17 @@ INSTALL INSTRUCTIONS
 
 APP INSTRUCTIONS
 
-13. Go through the workspaces, referring to the graph at localhost:3000. Note how the graph changes with document inserts and deletes from the query console. 
+13. Go through the workspaces.
 14. It is recommended to go through at least the first two workspaces and create one or two temporal collections before trying the features of the demo. 
-15. Use the features of the home/search pages to modify/view graphs. The graph is a visual representation of bitemporal, with 2 axes representing system and valid times of a temporal document.
-16. The home page dropdown menu will drop down the properties of your documents being displayed in the graph. You can select and view new properties.
-17. Click boxes in the graph (which represent physical documents) to edit, view, and delete certain documents. Edit will create a new physical document. View to see the contents of a document. The delete button will cut off a system end time to the current real time, or a time that you specify. 
-18. Create a document (button) from the home page to create a new logical document with its first physical document.
-19. Try entering URIs into the appropriate textbox. This will display the graph to reflect the document URI. 
-20. Check out the search page (upper left corner) for a full list of temporal collections. Click the 3 dropdowns and select a temporal collection and/or a system time operator and/or a valid time operator and drag the bars to select your ranges. Click the 'Run Query' button to display the documents specified by the temporal collection and the operators/time ranges.
-21. If a lot is new or confusing, look for highlighted words on the page for hovering over. A definition will pop up to help you cement your knowledge of bitemporal.
+15. On the home page, choose a temporal collection from the dropdown menu. Click the 'Search' button to get a list of all the documents within that temoral collection. Click one of the blue links to redirect you to the view page.
+16. The graph on the view page is a visual representation of bitemporal, with 2 axes representing system and valid times of a temporal document.
+17. The view page dropdown menu will drop down the properties of your documents being displayed in the graph. You can select and view new properties.
+18. Click boxes (that represent physical documents) in the graph to edit, view, and delete certain documents. Edit will create a new physical document. View to see the contents of a document. The delete button will cut off a system end time to the current real time, or a time that you specify. 
+19. Click the 'Home' link in the upper lefthand corner to go back to the home page.
+20. Back on the home page, you can also choose a system time operator and/or a valid time operator from the dropdown menus and drag the blue bars on the graph to select your ranges. Click the 'Search' button to display the documents specified by the temporal collection and the operators/time ranges.
+21. To run another query, click the 'Reset' button and repeat the steps above.
+22. Click the 'Create a Document' button to create a new logical document with its first physical document.
+23. If a lot is new or confusing, look for highlighted words on the page for hovering over. A definition will pop up to help you cement your knowledge of bitemporal.
 
 
 Guide to Workspaces:
