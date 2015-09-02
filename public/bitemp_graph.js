@@ -844,12 +844,13 @@ var barChart = function() {
         }
 
         if (data.length === 1) {
-          document.getElementById('uriEntered').innerHTML = 'Logical URI: ' + data[0].uri.bold();
+          document.getElementById('uriEntered').innerHTML = data[0].uri.bold();
         }
         else if (data.length > 0) {
-          document.getElementById('uriEntered').innerHTML = 'Logical URI: ' + uriParameter.bold();
+          document.getElementById('uriEntered').innerHTML = uriParameter.bold();
         }
         else {
+          document.getElementById('uriEnteredText').innerHTML = '';
           document.getElementById('uriEntered').innerHTML = 'No data found in document.'.bold();
         }
       }
@@ -988,7 +989,7 @@ var barChart = function() {
       document.getElementById('deleteButton').disabled = uri === 'null';
       document.getElementById('viewButton').disabled = uri === 'null';
       document.getElementById('deleteErrMessage').innerHTML = '';
-      document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + uri.bold();
+      document.getElementById('selectedURI').innerHTML = uri.bold();
     }
   };
 

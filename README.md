@@ -51,5 +51,5 @@ MLW5-BitemporalLSQT.xml - special use case, proceed when done with 1 to 3
 MLW6-IngestYourOwn - some helper code to ingest your own data
 
 
-Documentation - Temporal Developer's Guide http://pubs.marklogic.com:8011/guide/temporal
+Documentation - Temporal Developer's Guide http://docs.marklogic.com/guide/temporal
 
