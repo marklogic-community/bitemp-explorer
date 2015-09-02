@@ -31,7 +31,7 @@
       #instructions {
         position: absolute;
         left: 850px;
-        top: 255px;
+        top: 275px;
         font-size: 15px;
         width: 24em;
         word-wrap: normal;
@@ -115,7 +115,7 @@
       #editDocDiv{
         position: absolute;
         left:850px;
-        top: 350px;
+        top: 375px;
         width: 30em;
       }
 
@@ -280,10 +280,20 @@
     </div>
 
     <div id='display'>
-      <p id="collection"></p>
-      <p id="uriEntered"></p>
-      <p id="selectedURI">Selected<span class= "definition" title = "URI (Uniform Resource Identifier): A string of characters used to identify a name of a resource">URI:</span> <b> null </b></p>
-      <p id="lsqt"></p>
+      <p class="definition" title="Temporal Collection: A logical grouping of temporal documents that share the same axes with
+timestamps defined by the same range indices. You can create additional temporal collections if
+you have documents that require a different schema for the timestamps.">Temporal Collection: </p>
+      <p id="collection" style="display:inline"></p></br>
+      <p id="uriEnteredText" class="definition" title="Logical URI: The name of a logical document which represents the structure and
+meaning of a document, with only suggested renderings for their appearance
+which may or may not be followed by various browsers under various system configurations">Logical URI:</p>
+      <p id="uriEntered" style="display:inline"></p></br>
+      <p id="selectedURIText" class="definition" title="Physical URI: The name of a physical document which represents
+specific visual effects which are intended to be reproduced in a
+precise manner, and carry no connotation as to their semantic meaning">Selected URI:</p>
+      <p id="selectedURI" style="display:inline"></p></br>
+      <p class="definition" title ="LSQT (Last Stable Query Time): Allows a user to use custom times for creating, editing, and deleting a document">LSQT: </p>
+      <p id="lsqt" style="display:inline"></p></br>
     </div>
     <br></br>
 

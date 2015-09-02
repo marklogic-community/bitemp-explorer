@@ -59,7 +59,7 @@ var addTempColls = function(id, search) {
       }
     },
     error: function(jqXHR, textStatus, errorThrown) {
-      console.log('problem');
+      console.log(jqXHR);
     }
   });
 };
@@ -572,7 +572,7 @@ function initButtons() {
   document.getElementById('viewButton').disabled = true;
   document.getElementById('saveButton').hidden = true;
   document.getElementById('cancelButton').hidden = true;
-  document.getElementById('selectedURI').innerHTML = 'Selected URI: ' + 'null'.bold();
+  document.getElementById('selectedURI').innerHTML = 'null'.bold();
 }
 
 function initLsqt(chart) {
@@ -616,8 +616,8 @@ function initLsqt(chart) {
     async: false,
     type: 'GET',
     success: function(response, textStatus) {
-      document.getElementById('collection').innerHTML = 'Temporal collection: ' + tempColl.bold();
-      document.getElementById('lsqt').innerHTML = 'LSQT: ' + response['lsqt-enabled'].toString().bold();
+      document.getElementById('collection').innerHTML = tempColl.bold();
+      document.getElementById('lsqt').innerHTML = response['lsqt-enabled'].toString().bold();
       chart.setTempColl(tempColl);
       chart.setLsqt(response['lsqt-enabled'].toString());
     },
