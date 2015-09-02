@@ -172,7 +172,7 @@ function initGraph(chart) {
 }
 
 function save(chart) {
-  var data = document.getElementById('contents').value.replace(/\n/g, '');
+  var data = document.getElementById('contents').value;
 
   var logURI = chart.getLogicalURI();
   var tempColl = chart.getTempColl();
@@ -209,7 +209,7 @@ function save(chart) {
 }
 
 function saveNewDoc(chart) {
-  var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  var data = document.getElementById('newDocContents').value;
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -301,7 +301,7 @@ function view(chart) {
 function edit(chart) {
   if (chart.getCurrentURI()) {
     setupTextArea(chart, true); //true so function knows the document is being edited
-    $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
+    $('#sysTimeDiv').css({'visibility': 'visible'});
   }
   else {
     window.alert('Please click a doc first');
@@ -549,7 +549,6 @@ function initLsqt(chart) {
     type: 'GET',
     success: function(response, textStatus) {
       document.getElementById('collection').innerHTML = 'Temporal Collection: ' + tempColl.bold();
-      document.getElementById('lsqt').innerHTML = 'LSQT: ';
       chart.setTempColl(tempColl);
       chart.setLsqt(response['lsqt-enabled'].toString());
       document.getElementById('myonoffswitch').checked = response['lsqt-enabled'];
@@ -654,7 +653,6 @@ var getBarChart = function (params, docProp) {
     if (chart.getEditing() && lsqtBool === false ) {
       $('#sysTimeDiv').css({'visibility': 'hidden'});
     }
-    document.getElementById('lsqt').innerHTML = 'LSQT: ';
     setLsqt(chart.getTempColl(), lsqtBool);
     chart.setLsqt(lsqtBool.toString());
   });
