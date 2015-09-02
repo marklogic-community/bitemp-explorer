@@ -36,7 +36,7 @@ var addTempColls = function(id, search) {
       //sorts alphabetically
       dropArray.sort();
 
-      //Append the collection names to the drop down list
+      //Append the u names to the drop down list
       for (var k = 0; k < dropArray.length; k++) {
         addToDrop.append($('<option>').text(dropArray[k]));
         if( k === 0 && search) {
@@ -152,6 +152,7 @@ function cancel(chart) {
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
   $('#sysEndDiv').addClass('hideSysTimeBoxes');
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
+  $('#sysTimeDiv').css({'visibility': 'hidden'});
 }
 
 function initButtons() {
@@ -240,7 +241,7 @@ function saveNewDoc(chart) {
     window.alert('Invalid date in ' + sysStart);
     return;
   }
-
+  setLsqt(selectedColl, true)
   $.ajax({
     url: url,
     type: 'PUT',
@@ -547,10 +548,11 @@ function initLsqt(chart) {
     async: false,
     type: 'GET',
     success: function(response, textStatus) {
-      document.getElementById('collection').innerHTML = tempColl.bold();
-      document.getElementById('lsqt').innerHTML = response['lsqt-enabled'].toString().bold();
+      document.getElementById('collection').innerHTML = 'Temporal Collection: ' + tempColl.bold();
+      document.getElementById('lsqt').innerHTML = 'LSQT: ';
       chart.setTempColl(tempColl);
       chart.setLsqt(response['lsqt-enabled'].toString());
+      document.getElementById('myonoffswitch').checked = response['lsqt-enabled'];
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('problem: ' + errorThrown);
@@ -644,6 +646,19 @@ var getBarChart = function (params, docProp) {
     getBarChart(params, selectedText);
   });
 
+  $('#myonoffswitch').change( function() {
+    var lsqtBool = document.getElementById('myonoffswitch').checked;
+    if(chart.getEditing() && lsqtBool === true) {
+      $('#sysTimeDiv').css({'visibility': 'visible'});
+    }
+    if (chart.getEditing() && lsqtBool === false ) {
+      $('#sysTimeDiv').css({'visibility': 'hidden'});
+    }
+    document.getElementById('lsqt').innerHTML = 'LSQT: ';
+    setLsqt(chart.getTempColl(), lsqtBool);
+    chart.setLsqt(lsqtBool.toString());
+  });
+
   function XMLOrJSONTextForCollection() {
     var formatOption = $('#docFormat').find('option:selected').text();
     var tempColl = $('#selectTempColl').find('option:selected').text();
@@ -672,4 +687,3 @@ var getBarChart = function (params, docProp) {
     }
   });
 };
-
