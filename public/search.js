@@ -61,7 +61,7 @@ $('#searchQueryButton').click(function() {
   runSearchQuery(firstDoc, lastDoc);
 });
 
-$('#resetBarsButton').click(function() {
+$(document).on('click','#resetBarsButton',function(){
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
 });
@@ -366,7 +366,7 @@ function displayDocs(start, end, data) {
           doc[propName.substring(1,propName.length-1)] = $xml.find(propName.substring(1,propName.length-1)).text();
         }
       }
-      doc = JSON.stringify(doc);    
+      doc = JSON.stringify(doc);
       doc = JSON.parse(doc);
     }
 

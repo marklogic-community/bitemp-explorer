@@ -148,7 +148,6 @@ function loadData(collection) {
           document.getElementById('textBoxForSelectingURI').value = '';
           window.alert('Attention!\n\nNo data found in document ' + collection);
         }
-
       },
       error: function(jqXHR, textStatus, errorThrown) {
         // something went wrong. Take a look in jqXHR and find the status code

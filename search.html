@@ -492,7 +492,7 @@
       }
 
       .container{
-        width: 800px;
+        width: 300px;
         margin: 0 auto;
         position: absolute;
         left: 60px;
@@ -587,17 +587,19 @@
 
   </head>
   <body>
-    <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two different timelines, making it
-possible to rewind the information “as it actually was” in combination with
-“as it was recorded” at some point in time.">Bitemporal</span> Search Page</h1>
+    <h1>MarkLogic <span class= "definition" title= "Bitemporal: Handles historical data along two
+      different timelines, making it possible to rewind the information “as it actually was” in
+      combination with “as it was recorded” at some point in time.">Bitemporal</span> Search Page
+    </h1>
     <div id="tooltip" class="hidden">
       <p><span id="value"></span></p>
     </div>
     <button id="searchQueryButton">Search</button>
     <button id="resetButton">Reset</button>
     <p id="ops" title="Operator: Of type Allen and ISO SQL algebra that can be used in search queries.
-Temporal queries, for example, are interval operations on time period such as,
-period equalities, containment and overlaps." class="definition">Operators:</p>
+      Temporal queries, for example, are interval operations on time period such as,
+      period equalities, containment and overlaps." class="definition"> Operators:
+    </p>
     <div id="valTimes">
       <p class='definition' title='The time at which something actually occured'><b>Valid Time:</b></p>
       <select id="valDropdown" disabled></select>
@@ -607,7 +609,10 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
       <p class='definition' title='The time at which something is recorded in the database'><b>System Time:</b></p>
       <select id="sysDropdown" disabled></select>
     </div>
-    <p id="instructSelect" >Choose a <span class= "definition" title= "Temporal Collection: A logical grouping of temporal documents that share the same axes with timestamps defined by the same range indices. You can create additional temporal collections if you have documents that require a different schema for the timestamps.">Temporal Collection:</span></p>
+    <p id="instructSelect" >Choose a <span class= "definition" title= "Temporal Collection: A logical
+      grouping of temporal documents that share the same axes with timestamps defined by the same range
+      indices. You can create additional temporal collections if you have documents that require a
+      different schema for the timestamps.">Temporal Collection:</span></p>
     <select id="dropdown" class="font"></select>
     <p id='timeRange'>Set Time Range:</p>
       <div id= "page">
@@ -643,14 +648,16 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
 
     <div class="container">
       <ul class="tabs">
-        <li class= "tab-link current" data-tab= "bar-chart-large">Graph View</li>
-        <li class= "tab-link" data-tab= "ctsQuery">Query View</li>
+        <li class="tab-link current" data-tab="bar-chart-large">Graph View</li>
+        <li class="tab-link" data-tab="ctsQuery">Query View</li>
       </ul>
       <div id= "bar-chart-large" class= "tab-content current">
         <button id="resetBarsButton" type='reset' class="hide">Reset Bars</button>
       </div>
       <div id= "ctsQuery" class="tab-content">
-        <p id= 'ctsQueryLabel' class="definition" title="cts:query: An expression used for searching temporal document by matching documents that have relevant time ranges">cts:query</p>
+        <p id= 'ctsQueryLabel' class="definition" title="cts:query: An expression used for searching
+          temporal document by matching documents that have relevant time ranges"> cts:query
+        </p>
         <textarea rows="10" cols="57" color="blue" id="queryText" readonly></textarea>
       </div>
     </div>
@@ -685,7 +692,7 @@ period equalities, containment and overlaps." class="definition">Operators:</p>
 
       <script>
         $(document).ready(function(){
-    
+
         $('ul.tabs li').click(function(){
             var tab_id = $(this).attr('data-tab');
 

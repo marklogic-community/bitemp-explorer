@@ -288,9 +288,7 @@ function saveNewDoc(chart) {
     data: data,
     processData: false,
     success: function(data) {
-      if(document.getElementById('editButton')) {
-        loadData(newURI);
-      }
+      //On search page,
     },
     error: function(jqXHR, textStatus) {
       if (jqXHR['responseJSON']['errorResponse']['messageCode'] === 'TEMPORAL-NOLSQT') {
