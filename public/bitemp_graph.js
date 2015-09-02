@@ -1,4 +1,49 @@
-/*global d3, moment*/
+/*global d3, moment, getDocColls,
+  getTemporalColl, writeQuery, cancel,
+  fillText, getSelected, writeQuery*/
+
+function initNewXML(response) {
+  var dialogArea = document.getElementById('newDocContents');
+  dialogArea.value = '<record>\n';
+  dialogArea.value += '  <'+ response.sysStart +'>2015-01-01T00:00:00Z</'+ response.sysStart +'>\n';
+  dialogArea.value += '  <'+ response.sysEnd +'>2018-01-01T00:00:00Z</'+ response.sysEnd +'>\n';
+  dialogArea.value += '  <'+ response.valStart +'>2009-01-01T00:00:00Z</'+ response.valStart +'>\n';
+  dialogArea.value += '  <'+ response.valEnd +'>2017-01-01T00:00:00Z</'+ response.valEnd +'>\n';
+  dialogArea.value += '  <data>Some cool data of yours</data>\n';
+  dialogArea.value += '  <YourProperty>Your Own Data</YourProperty>\n';
+  dialogArea.value += '</record>';
+}
+
+function initNewJSON(response) {
+  var dialogArea = document.getElementById('newDocContents');
+  dialogArea.value = '{\n  "'+ response.sysStart + '": \"2015-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.sysEnd + '": \"2018-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.valStart + '": \"2009-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "'+ response.valEnd + '": \"2017-01-01T00:00:00Z\",\n';
+  dialogArea.value += '\  "data\": \"Some cool data\",\n';
+  dialogArea.value += '\  "Your Own Property\": \"Your Own Data\"\n';
+  dialogArea.value += '}';
+}
+
+/*
+@params:
+collArr is an array of strings of collection names
+tempCollArr is an array of objects with 'nameref' properties
+*/
+function findCommonColl(collArr, tempCollArr) {
+  var response;
+  while (!response) {
+    for (var i in collArr) {
+      for (var j in tempCollArr) {
+        if (collArr[i] === tempCollArr[j].nameref) {
+          response = collArr[i];
+        }
+      }
+    }
+  }
+  return response;
+}
+
 
 var barChart = function() {
   // default values for configurable input parameters
@@ -40,10 +85,10 @@ var barChart = function() {
     if (data === null) {
       return;
     }
-    if(data.length > 0) {
+    if (data.length > 0) {
       //get a uri of one of the physical documents being displayed
-      for(var i = 0; i < data.length && !uriInGraph; i++) {
-        if(data[i].uri) {
+      for (var i = 0; i < data.length && !uriInGraph; i++) {
+        if (data[i].uri) {
           uriInGraph = data[i].uri;
         }
       }
@@ -598,7 +643,7 @@ var barChart = function() {
           createFilledRectangle();
         })
         .on('drag', function(d,i) {
-          if ($('#dragRight').css( "stroke" ) === 'rgb(0, 0, 128)') {
+          if ($('#dragRight').css( 'stroke' ) === 'rgb(0, 0, 128)') {
             dragRight.on('drag', null);
           }
           $('#startSysBox').css({'border': '2px solid Blue'});
@@ -629,7 +674,7 @@ var barChart = function() {
           createFilledRectangle();
         })
         .on('drag', function(d,i) {
-          if ($('#dragUp').css( "stroke" ) === 'rgb(0, 0, 128)') {
+          if ($('#dragUp').css('stroke') === 'rgb(0, 0, 128)') {
             dragUp.on('drag', null);
           }
           $('#startValBox').css({'border': '2px solid Blue'});
@@ -661,7 +706,7 @@ var barChart = function() {
           createFilledRectangle();
         })
         .on('drag', function(d,i) {
-          if ($('#dragDown').css( "stroke" ) === 'rgb(0, 0, 128)') {
+          if ($('#dragDown').css('stroke') === 'rgb(0, 0, 128)') {
             dragDown.on('drag', null);
           }
           $('#endValBox').css({'border': '2px solid Blue'});
@@ -691,7 +736,7 @@ var barChart = function() {
           var date = new Date(input).toISOString();
           var dx = xScale(moment(date).toDate());
           if ($('#endSysBox').val() < date) {
-            alert('Start time cannot be greater than or equal to end time');
+            window.alert('Start time cannot be greater than or equal to end time');
             return;
           }
           $('#dragRight').attr('transform', 'translate('+dx+', 0)');
@@ -708,7 +753,7 @@ var barChart = function() {
           var date = new Date(input).toISOString();
           var dx = -(width - margin.left - xScale(moment(date).toDate()));
           if ($('#startSysBox').val() > date) {
-            alert('End time cannot be less than or equal to start time');
+            window.alert('End time cannot be less than or equal to start time');
             return;
           }
           $('#dragLeft')[0].__data__.x = dx;
@@ -725,7 +770,7 @@ var barChart = function() {
           var date = new Date(input).toISOString();
           var dy = -(height-margin.top-margin.bottom-yScale(moment(date).toDate()));
           if ($('#endValBox').val() < date) {
-            alert('Start time cannot be greater than or equal to end time');
+            window.alert('Start time cannot be greater than or equal to end time');
             return;
           }
           $('#dragUp')[0].__data__.y = dy;
@@ -742,7 +787,7 @@ var barChart = function() {
           var date = new Date(input).toISOString();
           var dy = yScale(moment(date).toDate());
           if ($('#startValBox').val() > date) {
-            alert('End time cannot be less than or equal to start time');
+            window.alert('End time cannot be less than or equal to start time');
             return;
           }
           $('#dragDown')[0].__data__.y = dy;
@@ -769,15 +814,14 @@ var barChart = function() {
       $('#endValBox').val(format(yScale.invert(0)));
 
       writeQuery();
-      createFilledRectangle();
 
       function createFilledRectangle() {
         $('#filledRect').remove();
         //these variables define the area of a rectangle
-        x1 = $('#dragLeft')[0].__data__.x;
-        x2 = $('#dragRight')[0].__data__.x;
-        y1 = $('#dragUp')[0].__data__.y;
-        y2 = $('#dragDown')[0].__data__.y;
+        var x1 = $('#dragLeft')[0].__data__.x;
+        var x2 = $('#dragRight')[0].__data__.x;
+        var y1 = $('#dragUp')[0].__data__.y;
+        var y2 = $('#dragDown')[0].__data__.y;
 
         var x, y, widthRect, heightRect;
         if(getSelected('valDropdown') !== 'None' && getSelected('sysDropdown') !== 'None') {
@@ -820,6 +864,8 @@ var barChart = function() {
         .attr('width', widthRect)
         .attr('height',  heightRect);
       }
+
+      createFilledRectangle();
 
     }
 
@@ -1074,7 +1120,7 @@ var barChart = function() {
         console.log('problem: ' + errorThrown);
       }
     });
-  }
+  };
 
   chart.setTempColl = function(collection) {
     temporalCollection = collection;
@@ -1082,15 +1128,15 @@ var barChart = function() {
 
   chart.getTempColl = function() {
     return temporalCollection;
-  }
+  };
 
   chart.getLsqt = function() {
     return lsqt;
-  }
+  };
 
   chart.setLsqt = function(myLsqt) {
     lsqt = myLsqt;
-  }
+  };
 
   return chart;
 };
