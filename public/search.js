@@ -61,7 +61,7 @@ $('#searchQueryButton').click(function() {
   runSearchQuery(firstDoc, lastDoc);
 });
 
-$('#resetBarsButton').click(function() {
+$(document).on('click','#resetBarsButton',function(){
   var selectedColl = getSelected('dropdown');
   ajaxTimesCall(selectedColl, null, true);
 });

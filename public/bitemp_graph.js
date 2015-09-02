@@ -40,10 +40,10 @@ var barChart = function() {
     if (data === null) {
       return;
     }
-    if(data.length > 0) {
+    if (data.length > 0) {
       //get a uri of one of the physical documents being displayed
-      for(var i = 0; i < data.length && !uriInGraph; i++) {
-        if(data[i].uri) {
+      for (var i = 0; i < data.length && !uriInGraph; i++) {
+        if (data[i].uri) {
           uriInGraph = data[i].uri;
         }
       }
