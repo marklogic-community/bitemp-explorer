@@ -1,7 +1,7 @@
-/*global d3, moment, getDocColls, 
+/*global d3, moment, getDocColls,
   getTemporalColl, writeQuery, cancel,
   fillText, getSelected, writeQuery*/
-   
+
 function initNewXML(response) {
   var dialogArea = document.getElementById('newDocContents');
   dialogArea.value = '<record>\n';
@@ -23,7 +23,7 @@ function initNewJSON(response) {
   dialogArea.value += '\  "data\": \"Some cool data\",\n';
   dialogArea.value += '\  "Your Own Property\": \"Your Own Data\"\n';
   dialogArea.value += '}';
-}  
+}
 
 /*
 @params:
@@ -43,7 +43,7 @@ function findCommonColl(collArr, tempCollArr) {
   }
   return response;
 }
-  
+
 
 var barChart = function() {
   // default values for configurable input parameters
@@ -864,7 +864,7 @@ var barChart = function() {
         .attr('width', widthRect)
         .attr('height',  heightRect);
       }
-      
+
       createFilledRectangle();
 
     }
