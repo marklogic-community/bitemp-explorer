@@ -621,6 +621,12 @@ var getBarChart = function (params, docProp) {
           else if (!$('#newUri').val().endsWith('.json') && !$('#newUri').val().endsWith('.xml')) {
             window.alert('Please append .json or .xml to your custom URI');
           }
+          else if ($('#newUri').val().endsWith('.json') && getSelected('docFormat') === 'XML') {
+            window.alert('Please append .xml to your URI to match the document format');
+          }
+          else if ($('#newUri').val().endsWith('.xml') && getSelected('docFormat') === 'JSON') {
+            window.alert('Please append .json to your URI to match the document format');
+          }
           else {
             saveNewDoc(chart);
             $(this).dialog('close');
