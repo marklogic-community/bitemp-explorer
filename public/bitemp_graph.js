@@ -526,7 +526,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.pathname('/')) {
+          if(window.location.pathname === '/') {
             str = d.content.uri;
           }
           else {
