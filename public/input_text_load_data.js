@@ -45,6 +45,7 @@ function parseData(data, collection, numParts) {
     var matches4;
     //Handles XML docs (converts to JSON, organizes timestamps)
     if(item.contentType === 'application/xml') {
+      var itemContent;
       matches4 = split[ndx].match(/(<[^]*>)/);
       var xml = matches4[0];
       var itemContent = matches4[0];
