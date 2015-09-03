@@ -1,5 +1,5 @@
 /* takes a string containing a multipart/mixed response from MarkLogic and a collection name like addr.json and returns an array of objects representing physical documents.*/
-/*global getBarChart*/
+/* getBarChart */
 function parseData(data, collection, numParts) {
   if (collection === null) {
     return null;
@@ -45,9 +45,9 @@ function parseData(data, collection, numParts) {
     var matches4;
     //Handles XML docs (converts to JSON, organizes timestamps)
     if(item.contentType === 'application/xml') {
+      var itemContent;
       matches4 = split[ndx].match(/(<[^]*>)/);
-      var xml = matches4[0];
-      var itemContent = matches4[0];
+      var xml = itemContent = matches4[0];
       var xmlDoc = $.parseXML(xml);
       var $xml = $(xmlDoc);
 

@@ -657,14 +657,14 @@ var getBarChart = function (params, docProp) {
 
   $('#lsqtSwitch').change( function() {
     var lsqtBool = document.getElementById('lsqtSwitch').checked;
+    setLsqt(chart.getTempColl(), lsqtBool);
+    chart.setLsqt(lsqtBool.toString());
     if(chart.getEditing() && lsqtBool === true) {
       $('#sysTimeDiv').css({'visibility': 'visible'});
     }
     if (chart.getEditing() && lsqtBool === false ) {
       $('#sysTimeDiv').css({'visibility': 'hidden'});
     }
-    setLsqt(chart.getTempColl(), lsqtBool);
-    chart.setLsqt(lsqtBool.toString());
   });
 
   function XMLOrJSONTextForCollection() {
