@@ -12,16 +12,18 @@ function generateOps() {
 
 function getSysAndVal() {
   var selectedColl = getSelected('dropdown');
-  $.ajax({
-    url: '/v1/resources/axisSetup?rs:collection=' + selectedColl,
-    async: false,
-    success: function(response, textStatus) {
-      properTimes = response;
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.log('problem: ' + errorThrown);
-    }
-  });
+  if (selectedColl !== '--Select--') {
+    $.ajax({
+      url: '/v1/resources/axisSetup?rs:collection=' + selectedColl,
+      async: false,
+      success: function(response, textStatus) {
+        properTimes = response;
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log('problem: ' + errorThrown);
+      }
+    });
+  }
 }
 
 function getSelected(id) {
