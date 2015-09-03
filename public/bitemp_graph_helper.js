@@ -20,7 +20,7 @@ var addTempColls = function(id, search) {
       }
       else {
         $('#' + id).empty();
-        $('#' + id).append($('<option>').text('Choose a temporal collection'));
+        $('#' + id).append($('<option>').text('--Select--'));
       }
       //adds names of the collections to the drop down list
       var addToDrop = $('#' + id);
@@ -210,13 +210,9 @@ function save(chart) {
 function saveNewDoc(chart) {
   var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
 
-  var dropDownList = document.getElementById('selectTempColl');
-  var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
+  var selectedColl = getSelected('selectTempColl');
   var newURI = document.getElementById('newUri').value;
-
-  var formatList = document.getElementById('docFormat');
-  var format = formatList.options[formatList.selectedIndex].value;
-
+  var format = getSelected('docFormat');
   chart.getAxisSetup(selectedColl, format, true, newURI);
   var sysStart = chart.getSystemStart();
   var url = '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl;
@@ -605,6 +601,9 @@ var getBarChart = function (params, docProp) {
   addTempColls('selectTempColl', false);
   $('#createDoc').click(function() {
     $('#createDocStuff').show();
+    document.getElementById('selectTempColl').value = getSelected('dropdown');
+    $('#newUri').val('');
+    XMLOrJSONTextForCollection();
     $('#dialogCreateDoc').dialog({
       autoOpen: true,
       modal: true,
@@ -613,17 +612,22 @@ var getBarChart = function (params, docProp) {
       height: 500,
       buttons: {
         Save: function() {
-          saveNewDoc(chart);
-          $(this).dialog('close');
-          $('#selectTempColl').val('Choose a temporal collection');
-          $('#newUri').val('');
-          $('#newDocContents').val('');
+          if (getSelected('selectTempColl') === '--Select--') {
+            window.alert('Please choose a temporal collection from the dropdown');
+          }
+          else if ($("#newUri").val().length <= 0) {
+            window.alert('Please create a custom URI for your document');
+          }
+          else if (!$('#newUri').val().endsWith('.json') && !$('#newUri').val().endsWith('.xml')) {
+            window.alert('Please append .json or .xml to your custom URI');
+          }
+          else {
+            saveNewDoc(chart);
+            $(this).dialog('close');
+          }
         },
         Cancel: function() {
           $(this).dialog('close');
-          $('#selectTempColl').val('Choose a temporal collection');
-          $('#newUri').val('');
-          $('#newDocContents').val('');
         }
       },
     });
@@ -640,14 +644,14 @@ var getBarChart = function (params, docProp) {
   $('#select-prop').change(function() {
     var selectedText = $(this).find('option:selected').text();
     $('#selectTempColl').empty();
-    $('#selectTempColl').append($('<option>').text('Choose a temporal collection'));
+    $('#selectTempColl').append($('<option>').text('--Select--'));
     getBarChart(params, selectedText);
   });
 
   function XMLOrJSONTextForCollection() {
     var formatOption = $('#docFormat').find('option:selected').text();
     var tempColl = $('#selectTempColl').find('option:selected').text();
-    if(tempColl !== 'Choose a temporal collection') {
+    if(tempColl !== '--Select--') {
       chart.getAxisSetup(tempColl, formatOption);
     }
   }
