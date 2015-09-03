@@ -212,10 +212,7 @@ function saveNewDoc(chart) {
 
   var selectedColl = getSelected('selectTempColl');
   var newURI = document.getElementById('newUri').value;
-<<<<<<< HEAD
   var format = getSelected('docFormat');
-=======
->>>>>>> 5132ca43d6093115e4956f226a42672f65e3f4bd
   chart.getAxisSetup(selectedColl, format, true, newURI);
   var sysStart = chart.getSystemStart();
   var url = '/v1/documents/?uri='+newURI+'&temporal-collection='+selectedColl;
