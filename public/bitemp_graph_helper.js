@@ -36,7 +36,7 @@ var addTempColls = function(id, search) {
       //sorts alphabetically
       dropArray.sort();
 
-      //Append the u names to the drop down list
+      //Append the collection names to the drop down list
       for (var k = 0; k < dropArray.length; k++) {
         addToDrop.append($('<option>').text(dropArray[k]));
         if( k === 0 && search) {
@@ -551,7 +551,7 @@ function initLsqt(chart) {
       document.getElementById('collection').innerHTML = 'Temporal Collection: ' + tempColl.bold();
       chart.setTempColl(tempColl);
       chart.setLsqt(response['lsqt-enabled'].toString());
-      document.getElementById('myonoffswitch').checked = response['lsqt-enabled'];
+      document.getElementById('lsqtSwitch').checked = response['lsqt-enabled'];
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('problem: ' + errorThrown);
@@ -645,8 +645,8 @@ var getBarChart = function (params, docProp) {
     getBarChart(params, selectedText);
   });
 
-  $('#myonoffswitch').change( function() {
-    var lsqtBool = document.getElementById('myonoffswitch').checked;
+  $('#lsqtSwitch').change( function() {
+    var lsqtBool = document.getElementById('lsqtSwitch').checked;
     if(chart.getEditing() && lsqtBool === true) {
       $('#sysTimeDiv').css({'visibility': 'visible'});
     }
