@@ -160,3 +160,17 @@ function loadData(collection) {
   }
 }
 
+function setLsqt(collection, bool) {
+  $.ajax({
+    url: '/manage/v2/databases/Documents/temporal/collections/lsqt/properties?collection='+collection+'&format=json',
+    type: 'PUT',
+    contentType: 'application/json',
+    data: JSON.stringify({'lsqt-enabled': bool}),
+    async: false,
+
+    success: function(response, textStatus) {},
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log('problem: ' + errorThrown);
+    }
+  });
+}

@@ -323,7 +323,7 @@ var barChart = function() {
           if (!chart.getEditing() && !chart.getViewing() && !chart.getDeleting()) {
             chart.setCurrentURI(null);
             if (getLastDoc()) {
-              $(getLastDoc()).attr('stroke', 'grey');
+              $(getLastDoc()).attr('stroke', 'black');
               $(getLastDoc()).attr('stroke-width', '1');
               $(getLastDoc()).attr('fill-opacity', 1);
             }
@@ -414,7 +414,7 @@ var barChart = function() {
             $(this).attr('stroke-width', '4');
             $(this).attr('stroke', 'black');
             $(this).attr('fill-opacity', 0.4);
-            $(lastDoc).attr('stroke', 'grey');
+            $(lastDoc).attr('stroke', 'black');
             $(lastDoc).attr('stroke-width', '1');
             $(lastDoc).attr('fill-opacity', 1);
             if (lastDoc === this) {
@@ -473,7 +473,7 @@ var barChart = function() {
           var bValEnd = yScale(moment(d.content[validEnd]).toDate());
           var h=-bValEnd+bValStart;
 
-          return h;
+          return h-1;
         })
         .attr('width', function(d) {
           var bSysStart = xScale(moment(d.content[systemStart]).toDate());
@@ -482,7 +482,7 @@ var barChart = function() {
             bSysEnd=width-axisLabelMargin;
           }
           var w=bSysEnd-bSysStart;
-          return w;
+          return w-1;
         });
 
       split.append('text')
@@ -526,7 +526,7 @@ var barChart = function() {
         })
         .text(function(d) {
           var str = '';
-          if(window.location.href.endsWith('/search')) {
+          if(window.location.pathname === '/') {
             str = d.content.uri;
           }
           else {
@@ -563,7 +563,12 @@ var barChart = function() {
     function path(object, fullPath) {
       var selection = object;
       fullPath.split('.').forEach(function(path) {
-        selection = selection[path];
+        if(selection[path] !== undefined) {
+          selection = selection[path];
+        }
+        else {
+          selection = '';
+        }
       });
       return selection;
     }

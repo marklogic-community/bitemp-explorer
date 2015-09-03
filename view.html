@@ -269,6 +269,58 @@
         font-size: 15px;
       }
 
+      .onoffswitch {
+        position: relative; width: 72px;
+        -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+      }
+      .onoffswitch-checkbox {
+        display: none;
+      }
+      .onoffswitch-label {
+        display: block; overflow: hidden; cursor: pointer;
+        border: 2px solid #999999; border-radius: 20px;
+      }
+      .onoffswitch-inner {
+        display: block; width: 200%; margin-left: -100%;
+        transition: margin 0.3s ease-in 0s;
+      }
+      .onoffswitch-inner:before, .onoffswitch-inner:after {
+        display: block; float: left; width: 50%; height: 18px; padding: 0; line-height: 18px;
+        font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+        box-sizing: border-box;
+      }
+      .onoffswitch-inner:before {
+        content: "True";
+        padding-left: 10px;
+        background-color: #34A7C1; color: #FFFFFF;
+      }
+      .onoffswitch-inner:after {
+        content: "False";
+        padding-right: 10px;
+        background-color: #EEEEEE; color: #999999;
+        text-align: right;
+      }
+      .onoffswitch-switch {
+        display: block; width: 18px; margin: 0px;
+        background: #FFFFFF;
+        position: absolute; top: 0; bottom: 0;
+        right: 50px;
+        border: 2px solid #999999; border-radius: 20px;
+        transition: all 0.3s ease-in 0s; 
+      }
+      .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+        margin-left: 0;
+      }
+      .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+        right: 0px; 
+      }
+
+      #onOffButton {
+        position: absolute;
+        top: 160px;
+        left: 50px;
+      }
+
     </style>
   </head>
 
@@ -295,7 +347,13 @@ precise manner, and carry no connotation as to their semantic meaning">Selected 
       <p id="selectedURI" style="display:inline"></p></br>
       <p class="definition" title ="LSQT (Last Stable Query Time): Allows a user to use custom times for creating, editing, and deleting a document">LSQT: </p>
       <p id="lsqt" style="display:inline"></p></br>
-
+      <div class="onoffswitch" id="onOffButton">
+        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="lsqtSwitch" checked>
+        <label class="onoffswitch-label" for="lsqtSwitch">
+            <span class="onoffswitch-inner"></span>
+            <span class="onoffswitch-switch"></span>
+        </label>
+      </div>
     </div>
     <br></br>
 
@@ -310,7 +368,6 @@ precise manner, and carry no connotation as to their semantic meaning">Selected 
     <script type="text/javascript" src="public/bitemp_graph.js"></script>
     <script type="text/javascript" src="public/input_text_load_data.js"></script>
     <script type="text/javascript" src="public/bitemp_graph_helper.js"></script>
-
     <div id="bar-chart-large"> </div>
     <div id="editDocDiv">
       <div id="dialogCreateDoc" hidden title="Create a New Document">
@@ -347,7 +404,7 @@ precise manner, and carry no connotation as to their semantic meaning">Selected 
         <p id="deleteErrMessage"> </p>
         <button id="saveButton" hidden="true"> Save </button>
         <button id="cancelButton" hidden="true"> Cancel </button>
-        <textarea class="muliFont" rows="12" cols="40" id="contents" hidden = "true"> </textarea>
+        <textarea class="muliFont" rows="14"  cols="40" id="contents" hidden = "true"> </textarea>
         <div id="sysTimeDiv" class="hideSysTimeBoxes" class="muliFont">
           <p id="sysStartTxt"> <b> sysStart: </b> <input spellcheck="false" class="muliFont" type="text" id="sysStartBox">
         </div>

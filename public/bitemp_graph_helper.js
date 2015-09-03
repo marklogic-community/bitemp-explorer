@@ -152,6 +152,7 @@ function cancel(chart) {
   $('#sysTimeDiv').addClass('hideSysTimeBoxes');
   $('#sysEndDiv').addClass('hideSysTimeBoxes');
   $('#deleteButtonsDiv').addClass('hideSysTimeBoxes');
+  $('#sysTimeDiv').css({'visibility': 'hidden'});
 }
 
 function initButtons() {
@@ -171,7 +172,7 @@ function initGraph(chart) {
 }
 
 function save(chart) {
-  var data = document.getElementById('contents').value.replace(/\n/g, '');
+  var data = document.getElementById('contents').value;
 
   var logURI = chart.getLogicalURI();
   var tempColl = chart.getTempColl();
@@ -208,7 +209,7 @@ function save(chart) {
 }
 
 function saveNewDoc(chart) {
-  var data = document.getElementById('newDocContents').value.replace(/\n/g, '');
+  var data = document.getElementById('newDocContents').value;
 
   var dropDownList = document.getElementById('selectTempColl');
   var selectedColl = dropDownList.options[dropDownList.selectedIndex].value;
@@ -240,7 +241,7 @@ function saveNewDoc(chart) {
     window.alert('Invalid date in ' + sysStart);
     return;
   }
-
+  setLsqt(selectedColl, true)
   $.ajax({
     url: url,
     type: 'PUT',
@@ -300,7 +301,7 @@ function view(chart) {
 function edit(chart) {
   if (chart.getCurrentURI()) {
     setupTextArea(chart, true); //true so function knows the document is being edited
-    $('#sysTimeDiv').removeClass('hideSysTimeBoxes');
+    $('#sysTimeDiv').css({'visibility': 'visible'});
   }
   else {
     window.alert('Please click a doc first');
@@ -547,10 +548,10 @@ function initLsqt(chart) {
     async: false,
     type: 'GET',
     success: function(response, textStatus) {
-      document.getElementById('collection').innerHTML = tempColl.bold();
-      document.getElementById('lsqt').innerHTML = response['lsqt-enabled'].toString().bold();
+      document.getElementById('collection').innerHTML = 'Temporal Collection: ' + tempColl.bold();
       chart.setTempColl(tempColl);
       chart.setLsqt(response['lsqt-enabled'].toString());
+      document.getElementById('lsqtSwitch').checked = response['lsqt-enabled'];
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.log('problem: ' + errorThrown);
@@ -644,6 +645,18 @@ var getBarChart = function (params, docProp) {
     getBarChart(params, selectedText);
   });
 
+  $('#lsqtSwitch').change( function() {
+    var lsqtBool = document.getElementById('lsqtSwitch').checked;
+    if(chart.getEditing() && lsqtBool === true) {
+      $('#sysTimeDiv').css({'visibility': 'visible'});
+    }
+    if (chart.getEditing() && lsqtBool === false ) {
+      $('#sysTimeDiv').css({'visibility': 'hidden'});
+    }
+    setLsqt(chart.getTempColl(), lsqtBool);
+    chart.setLsqt(lsqtBool.toString());
+  });
+
   function XMLOrJSONTextForCollection() {
     var formatOption = $('#docFormat').find('option:selected').text();
     var tempColl = $('#selectTempColl').find('option:selected').text();
@@ -672,4 +685,3 @@ var getBarChart = function (params, docProp) {
     }
   });
 };
-
